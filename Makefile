@@ -1,9 +1,8 @@
 NAME =	Minishell
 
-SRC =	get_next.c\
-		philo3.c\
-		philo4.c\
-		ft_atoi.c
+SRC =	parsing.c\
+		get_next_line.c\
+		get_next_line_utils.c
 		
 
 

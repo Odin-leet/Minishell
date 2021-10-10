@@ -10,7 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "minishell.h"
+# include <sys/types.h>
+# include <sys/uio.h>
 
 char	*ft_calloc(size_t count, size_t size)
 {
@@ -66,7 +68,7 @@ int		res_handel(char **res, char **line, int n, char *buffer)
 	return (1);
 }
 
-int		handle_buffer(char *buffer, char **res, char **line, int fd)
+int		handle_buffer(char *buffer, char **res, char **line, int fd, int BUFFER_SIZE)
 {
 	int		n;
 
@@ -95,7 +97,7 @@ int		handle_buffer(char *buffer, char **res, char **line, int fd)
 	return (-1);
 }
 
-int		get_next_line(int fd, char **line)
+int		get_next_line(int fd, char **line, int BUFFER_SIZE)
 {
 	char			*buffer;
 	static	char	*res;
@@ -108,6 +110,6 @@ int		get_next_line(int fd, char **line)
 		return (res_handel(&res, line, 0, NULL));
 	if (!(buffer = malloc(sizeof(char) * (BUFFER_SIZE + 1))))
 		return (-1);
-	return (handle_buffer(buffer, &res, line, fd));
+	return (handle_buffer(buffer, &res, line, fd, BUFFER_SIZE));
 	return (-1);
 }

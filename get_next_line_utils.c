@@ -10,7 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+# include "minishell.h"
+# include <sys/types.h>
+# include <sys/uio.h>
 
 char	*ft_strchr(char *s, int c)
 {
