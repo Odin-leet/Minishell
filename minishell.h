@@ -6,8 +6,13 @@
 # include <unistd.h>
 # include <stdio.h>
 
+ typedef struct s_file{
+     char *file;
+     int    type;
+ }          t_file;
+
 typedef struct s_ll {
-    void    *data;
+    t_file   *data;
     struct  s_ll *next;
 }               t_linked_list;
 
@@ -17,10 +22,6 @@ typedef struct command {
 }           t_command;
 
 
- typedef struct s_file{
-     char *file;
-     int    type;
- }          t_file;
 
 
 

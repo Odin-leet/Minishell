@@ -4,39 +4,15 @@
 //{
 //
 //}
-int		ft_strncmp(const char *s1, const char *s2, size_t n)
-{
-	unsigned int	j;
-	unsigned long	k;
-
-	k = 1;
-	j = 0;
-	if (n == 0)
-		return (0);
-	while ((s1[j] != '\0' && s2[j] != '\0') && (k < n))
-	{
-		if (s1[j] == s2[j])
-		{
-			j++;
-		}
-		k++;
-	}
-	return ((unsigned char)s1[j] - (unsigned char)s2[j]);
-}
-void append(t_linked_list **head_ref, char * new_data, int type)
+void append(struct Node** head_ref, char * new_data, int type)
 {
 	/* 1. allocate node */
-	t_linked_list * new_node = (t_linked_list *) malloc(sizeof(t_linked_list));
+	t_linked_list * new_node = (struct Node*) malloc(sizeof(t_linked_list));
 
 	t_linked_list *last = *head_ref;  /* used in step 5*/
 
 	/* 2. put in the data  */
-    new_node->data = malloc(sizeof(t_file*));
-    new_node->data->file = ft_substr(new_data, 0,ft_strlen(new_data));
-                        //        printf("loool im here  \n ");
-
-	//new_node->data->file = new_data;
-    new_node->data->type = type;
+	new_node->data->file = new_data;
 
 	/* 3. This new node is going to be the last node, so make next
 	   of it as NULL*/
@@ -191,23 +167,7 @@ char				**ft_split(char const *s, char c)
 	split[i] = NULL;
 	return (split);
 }
-int     findtype(char *s)
-{
-        if (ft_strncmp(s, "|",1 ) == 0)
-            return(1);
-        //pipe == 1
-         if (ft_strncmp(s, "<",1 ) == 0)
-            return(2);
-        //redirection input
-        if (ft_strncmp(s, ">",1 ) == 0)
-            return(3);
-        //redirection output
-        if (ft_strncmp(s, ">>",2 ) == 0)
-            return(4);
-        return(0);
-        //Appending Redirected Output
-
-}
+	int     findtype()
 int    main()
 {
 	int i;
@@ -224,9 +184,9 @@ int    main()
 	t_file *file;
 
 	file = (t_file*)malloc(sizeof(t_file));
-//	while (1)
-//{
-	i = 0;
+	while (1)
+
+	{i = 0;
 		write(1, "Minishell:0.0> ", 15);
 		buffer = malloc(sizeof(char) * (1025));
 		n = read(STDIN_FILENO, buffer, 1024);
@@ -243,21 +203,10 @@ int    main()
 
 			type = findtype(split[n]);
 			append(&head, split[n], type);
-
-            n++;
-		}
-		t_linked_list *ptr;
-		ptr = head;
-
-
-		while (ptr->next != NULL)
-		{
-			printf(" %d -- |%s| \n",ptr->data->type,ptr->data->file);
-			ptr = ptr->next;
 		}
 
-	//}
-    return(0);
+
+	}
 
 }
 
