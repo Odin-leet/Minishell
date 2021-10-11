@@ -24,9 +24,9 @@ int		ft_strncmp(const char *s1, const char *s2, size_t n)
 	return ((unsigned char)s1[j] - (unsigned char)s2[j]);
 }
 
-void append(t_linked_list **head_ref, void *data)
+void append(t_linked_list **head_ref,void * new_data)
 {
-//	t_file *file;
+	//t_file *file;
 
 
 	/* 1. allocate node */
@@ -36,12 +36,13 @@ void append(t_linked_list **head_ref, void *data)
 
 	/* 2. put in the data  */
 	
-	new_node->data = (void *)data;
+
+	new_node->data = new_data;
 	new_node->next = NULL;
 
 
 	/* 4. If the Linked List is empty, then make the new node as head */
-	if (*head_ref == NULL)
+	if (*head_ref ==  NULL)
 	{
 		*head_ref = new_node;
 		return;
@@ -191,18 +192,18 @@ char				**ft_split(char const *s, char c)
 }
 int     findtype(char *s)
 {
-        if (ft_strncmp(s, "|",ft_strlen(s) ) == 0)
+        if (ft_strncmp(s, "|",1 ) == 0)
             return(1);
         //pipe == 1
-         if (ft_strncmp(s, "<",ft_strlen(s)) == 0)
+         if (ft_strncmp(s, "<",1 ) == 0)
             return(2);
         //redirection input
-        if (ft_strncmp(s, ">",ft_strlen(s) ) == 0)
+        if (ft_strncmp(s, ">",1 ) == 0)
             return(3);
         //redirection output
-        if (ft_strncmp(s, ">>",  ft_strlen(s)) == 0)
+        if (ft_strncmp(s, ">>",  2) == 0)
             return(4);
-		if (ft_strncmp(s, "<<",  ft_strlen(s)) == 0)
+		if (ft_strncmp(s, "<<",  2) == 0)
             return(5);
         return(0);
         //Appending Redirected Output
@@ -221,9 +222,9 @@ int    main()
 	t_linked_list *head =NULL;
 
 
-	
+	t_file *file;
 
-//	file = (t_file*)malloc(sizeof(t_file));
+	file = (t_file*)malloc(sizeof(t_file));
 //	while (1)
 //{
 	i = 0;
@@ -239,27 +240,32 @@ int    main()
 			n++;
 		}
 		n = 0;
-
-		t_file *file2 = NULL;
+		t_file *file2 ;
 		while (split[n]){
-		file2 = (t_file *)malloc(sizeof(t_file));
-
-		file2->file = split[n];
-		file2->type = type;
 
 			type = findtype(split[n]);
-			append(&head, file2);
+			file2 = (t_file *)malloc(sizeof(t_file));
+			file2->file = split[n];
+			file2->type = type;
+			append(&head,(void*)file2);
+			free(file2);
+			printf("%d , %s \n",file2->type,file2->file);
 
             n++;
 		}
 		t_linked_list *ptr;
 		ptr = head;
-		t_file *f;
 
+
+		printf("|| %d. %s \n", ((t_file *)head->data)->type,((t_file *)head->data)->file );
+		
+		t_file *fil;
+		//fil = (t_file*)head->data;
 		while (ptr != NULL)
 		{
-			f = (t_file *)(ptr->data);
-			printf(" %d -- |%s| \n", f->type, f->file);
+			
+			fil = (t_file *)(ptr->data);
+			printf(" %d -- |%s| \n", fil->type, fil->file);
 			ptr = ptr->next;
 		}
 		//ptr = head;
@@ -302,9 +308,10 @@ int    main()
 //			error;
 //		}
 //		if (token->type == PIPE) {
-//			append(&(head),)
+//			
+//			
 //		}
 //	}
-
-
+//
+//
 //}
