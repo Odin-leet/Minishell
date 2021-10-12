@@ -35,7 +35,6 @@ void append(t_linked_list **head_ref, void *data)
 	t_linked_list *last = *head_ref;  /* used in step 5*/
 
 	/* 2. put in the data  */
-	
 	new_node->data = (void *)data;
 	new_node->next = NULL;
 
@@ -200,14 +199,57 @@ int     findtype(char *s)
         if (ft_strncmp(s, ">",ft_strlen(s) ) == 0)
             return(3);
         //redirection output
-        if (ft_strncmp(s, ">>",  ft_strlen(s)) == 0)
+        if (ft_strncmp(s, ">>",  ft_strlen(s) + 1) == 0)
             return(4);
-		if (ft_strncmp(s, "<<",  ft_strlen(s)) == 0)
+		if (ft_strncmp(s, "<<",  ft_strlen(s) + 1) == 0)
             return(5);
         return(0);
         //Appending Redirected Output
 
 }
+t_linked_list *parser(t_linked_list *lexer){ 
+	t_linked_list *head = NULL;
+	t_command *command;
+
+	t_file *token;
+
+	//allocate command ;
+	command = (t_command *)malloc(sizeof(t_command));
+	command->files = NULL;
+	command->nameargs = NULL;
+
+	while (lexer) {
+		//printf("%d --  %s \n",((t_file*)lexer->data)->type,((t_file*)lexer->data)->file);
+		token = (t_file *)lexer->data;
+		if (token->type == 0) {
+				printf("token == %s\n",(char *)token->file);
+		
+			token->file = (void *)strdup((char *)token->file);
+							printf("token == %s\n",(char *)token->file);
+
+			append(&(command->nameargs), (void *)token->file);
+		}
+		else if (token->type != 0 && (lexer->next) && ((t_file *)(lexer->next->data))->type == 0){
+			t_file *f;
+			t_file *tmp = (t_file *)(lexer->next->data);
+			f = (t_file *)malloc(sizeof(t_file));
+			f->file = ft_strdup(tmp->file, ft_strlen(token->file));
+			f->file = tmp->file;
+			f->type = tmp->type;
+			lexer = lexer->next;
+		}
+		else {
+		//	printf("else == %d --  %s \n",token->type,token->file);
+			printf("error\n");
+		}
+		if (token->type == 1 || lexer->next == NULL) {
+			append(&(head),(void*)command);
+		}
+		lexer = lexer->next;
+	}
+	return (head);
+}
+
 int    main()
 {
 	int i;                                    
@@ -219,6 +261,8 @@ int    main()
 	type = 0;
 	split = NULL;
 	t_linked_list *head =NULL;
+	t_linked_list *Parser = NULL;
+
 
 
 	
@@ -235,7 +279,7 @@ int    main()
 		n = 0;
 		while (split[n])
 		{
-			printf("%s",split[n]);
+			printf("%s\n",split[n]);
 			n++;
 		}
 		n = 0;
@@ -243,30 +287,32 @@ int    main()
 		t_file *file2 = NULL;
 		while (split[n]){
 		file2 = (t_file *)malloc(sizeof(t_file));
-
+		type = findtype(split[n]);
 		file2->file = split[n];
 		file2->type = type;
-
-			type = findtype(split[n]);
+		//printf("%d | %s \n",type,split[n]);
+			
 			append(&head, file2);
 
             n++;
 		}
 		t_linked_list *ptr;
-		ptr = head;
-		t_file *f;
+		//ptr = head;
+		//t_file *f;
 
+		//while (ptr != NULL)
+		//{
+		//	f = (t_file *)(ptr->data);
+		//	printf(" %d -- |%s| \n", f->type, f->file);
+		//	ptr = ptr->next;
+		//}
+		Parser = parser(head);
+		ptr = (Parser);
 		while (ptr != NULL)
 		{
-			f = (t_file *)(ptr->data);
-			printf(" %d -- |%s| \n", f->type, f->file);
+			printf("%s-- \n",(char*)(((t_command*)ptr->data)->nameargs->data));
 			ptr = ptr->next;
 		}
-		//ptr = head;
-		//while (ptr->next != NULL)
-		//{
-//
-		//}
 		
 	 
 	//}
@@ -274,37 +320,3 @@ int    main()
 
 }
 
-//t_linked_list *parser(t_linked_list *lexer){ 
-//	t_linked_list *head = NULL;
-//	t_command *command;
-//
-//	t_file *token;
-//
-//	//allocate command ;
-//	command = (t_command *)malloc(sizeof(t_command));
-//	command->files = NULL;
-//	command->nameargs = NULL;
-//
-//	while (lexer) {
-//		token = (t_file *)lexer->data;
-//		if (token->type == 0) {
-//			append(&(command->nameargs), (void *)ft_strdup(token->file));
-//		}
-//		else if (token->type != 0 && (lexer->next) && ((t_file *)(lexer->next->data))->type == 0){
-//			t_file *f;
-//			t_file *tmp = (t_file *)(lexer->next->data);
-//			f = (t_file *)malloc(sizeof(t_file));
-//			f->file = ft_strdup(tmp->file);
-//			f->file = tmp->type;
-//			lexer = lexer->next;
-//		}
-//		else {
-//			error;
-//		}
-//		if (token->type == PIPE) {
-//			append(&(head),)
-//		}
-//	}
-
-
-//}

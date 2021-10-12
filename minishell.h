@@ -5,6 +5,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdio.h>
+#include <string.h>
 
 //typefdef struct s_name 
  typedef struct s_file{
