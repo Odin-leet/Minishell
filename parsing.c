@@ -219,17 +219,17 @@ t_linked_list *parser(t_linked_list *lexer){
 	command->nameargs = NULL;
 
 	while (lexer) {
-		//printf("%d --  %s \n",((t_file*)lexer->data)->type,((t_file*)lexer->data)->file);
+		printf("%d --  %s \n",((t_file*)lexer->data)->type,((t_file*)lexer->data)->file);
 		token = (t_file *)lexer->data;
 		if (token->type == 0) {
-				printf("token == %s\n",(char *)token->file);
+			//	printf("token == %s\n",(char *)token->file);
 		
 			token->file = (void *)strdup((char *)token->file);
-							printf("token == %s\n",(char *)token->file);
+					//		printf("token == %s\n",(char *)token->file);
 
 			append(&(command->nameargs), (void *)token->file);
 		}
-		else if (token->type != 0 && (lexer->next) && ((t_file *)(lexer->next->data))->type == 0){
+		else if (token->type != 0  && token->type != 1 && (lexer->next) && ((t_file *)(lexer->next->data))->type == 0){
 			t_file *f;
 			t_file *tmp = (t_file *)(lexer->next->data);
 			f = (t_file *)malloc(sizeof(t_file));
@@ -238,7 +238,7 @@ t_linked_list *parser(t_linked_list *lexer){
 			f->type = tmp->type;
 			lexer = lexer->next;
 		}
-		else {
+		else if (token->type != 1) {
 		//	printf("else == %d --  %s \n",token->type,token->file);
 			printf("error\n");
 		}
@@ -308,10 +308,14 @@ int    main()
 		//}
 		Parser = parser(head);
 		ptr = (Parser);
-		while (ptr != NULL)
+		t_linked_list *Sl;
+					Sl = ((t_command*)ptr->data)->nameargs;
+
+		while (Sl != NULL)
 		{
-			printf("%s-- \n",(char*)(((t_command*)ptr->data)->nameargs->data));
-			ptr = ptr->next;
+			printf("%s-- \n",(char *)Sl->data) ;
+			//ptr = ((t_command*)ptr->data)->nameargs->next;
+			Sl = Sl->next;
 		}
 		
 	 
