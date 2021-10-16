@@ -118,8 +118,10 @@ int		splithelper(int i, const char *s, int k, char **split, char c)
 			if (s[k] == '"')
 			{
 				split[i][j] = s[k];
-				while (s[++k] != '"')
-					split[i][++j] = s[k];                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+				k++;
+				j++;
+				while (s[k] != '"')
+					split[i][j++] = s[k++];                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
 			}
 			split[i][j] = s[k];
 			j++;
@@ -215,18 +217,18 @@ int    main()
 	int n;
 	int type;
 	char **split;
-	char *string = "dsadsadasd";
+//	char *string = "dsadsadasd";
 
 	type = 0;
 	split = NULL;
 	t_linked_list *head =NULL;
 	t_linked_list *Parser = NULL;
-	t_linked_list *shite;
+//	t_linked_list *shite;
 
-	shite = malloc(sizeof(t_linked_list));
-	shite->data = (void*)string;
-	printf("%s",(char*)string);
-	t_linked_list *nameargs2;
+//	shite = malloc(sizeof(t_linked_list));
+	//shite->data = (void*)string;
+//	printf("%s",(char*)string);
+//	t_linked_list *nameargs2;
 	i = 0;
 	write(1, "Minishell:0.0> ", 15);
 	buffer = malloc(sizeof(char) * (1025));
