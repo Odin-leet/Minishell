@@ -1,5 +1,24 @@
 #include "minishell.h"
 
+char	*ft_strdup(char *s1, size_t i)
+{
+	int		n;
+	size_t	k;
+	size_t	j;
+	char	*dest;
+
+	n = 0;
+	j = i;
+	while (s1[i++] != '\0')
+		n++;
+	if (!(dest = malloc((n + 1) * sizeof(char))))
+		return (0);
+	k = 0;
+	while (s1[j] != '\0')
+		dest[k++] = s1[j++];
+	dest[k] = '\0';
+	return (dest);
+}
 int		ft_strncmp(const char *s1, const char *s2, size_t n)
 {
 	unsigned int	j;
@@ -63,21 +82,159 @@ static	int		len_word(const char *s, char c)
 	while (s[i] == c)
 		i++;
 	if (s[i] =='"')
-		len++;
-		while(s[++i] != '"')
-			len++;
-	while (s[++i] != c && s[i])
 	{
+		len++;
+		i++;
+		while(s[i] != '"')
+		{
+			len++;
+			i++;
+		}
+	}
+			i++;
+	while (s[i] != c && s[i] != '\0')
+	{
+		//len++;
 		if (s[i] == '"')
 		{
 			len++;
-			while(s[++i] != '"' )
+			i++;
+			while(s[i++] != '"' )
+			{
 				len++;
+				i++;
+			}
+				i++;
 		}
 		else if (s[i] != c && s[i])
 			len++;
-	} 
+			i++;
+	}
+	//printf("len == %zu\n",len);
 	return (len);
+}
+
+int		ft_isdigit(int c)
+{
+	unsigned char k;
+
+	k = (unsigned char)c;
+	if (c <= 57 && c >= 48)
+		return (1);
+	else
+		return (0);
+}
+
+int		ft_isalpha(int c)
+{
+	unsigned char k;
+
+	k = (unsigned char)c;
+	if (c <= 90 && c >= 65)
+		return (1);
+	else
+		return (0);
+}
+char		*replaceenv(char *string, int start, int end, char **env)
+{
+	int		i;
+	int		j;
+
+	j = 0;
+	i = 0;
+
+	if (end == 0)
+		end = ft_strlen(string);
+	string = ft_substr(string, start + 1,(end - 1 )- start);
+	//string = ft_strdup(string, 1);
+	string = ft_strjoin(string, "=");
+	while(env[i])
+	{
+		if (ft_strncmp(env[i], string, ft_strlen(string) )== 0)
+		{
+			j = 1;
+			break;
+		}	
+		else
+			i++;
+	}
+	if (j == 1)
+	{
+		return(ft_strdup(env[i], ft_strlen(string)));
+	}
+	return(NULL);
+
+
+}
+char			*handleenvir(char *string, char **env)
+{
+	int i;
+	char *tmp;
+	char *tmp2;
+	int	start;
+	int end ;
+
+	start = 0;
+	tmp = NULL;
+	tmp2= NULL;
+	end = 0;
+
+	i = 0;
+	while(string[i] != '\0')
+	{
+	if(string[i] == '$')
+	{
+		if (i != 0)
+		{
+			start = i;
+			tmp = ft_substr(string,0, i );
+		}
+		i++;
+		if (string[i] >= 48 && string[i] <= 57)
+			return (ft_substr(string,i + 1 ,ft_strlen(string) - (i + 1)));
+		else if (string[i] == '_' || (string[i] >= 65 && string[i] <= 90))
+		{
+			i++;
+			while(string[i] != '\0')
+			{
+				if(string[i] != '_' && (ft_isdigit(string[i]) == 0) && (ft_isalpha(string[i]) == 0))
+				{
+					end = i;
+					tmp2 = ft_substr(string, end, ft_strlen(string) - end);
+					break;
+					//printf("lol i m here \n");
+				}
+				else
+					i++;
+			}
+			string = replaceenv(string,start, end, env);
+			if(tmp !=NULL && string != NULL)
+				string = ft_strjoin(tmp, string);
+			if (tmp2 != NULL &&string != NULL)
+				string = ft_strjoin(string,tmp2);
+			if(string == NULL)
+			{
+				if(tmp != NULL && tmp2 != NULL)
+				string = ft_strjoin(tmp, tmp2);
+				else if(tmp != NULL && tmp2 == NULL)
+				string = ft_strdup(tmp, 0);
+				else
+				string = ft_strdup(tmp2,0);
+			}
+			return(string);
+			
+		}
+	}
+	i++;
+	}
+	//else if (string[i] == '"' && thereisdollar(string) == 1)
+	//{
+//
+	//}
+	return(string);
+
+
+
 }
 static	int		count_word(const char *s, char c)
 {
@@ -100,6 +257,7 @@ static	int		count_word(const char *s, char c)
 			i++;
 		i++;
 	}
+	//printf("count = %zu\n",count);
 	return (count);
 }
 
@@ -108,33 +266,40 @@ int		splithelper(int i, const char *s, int k, char **split, char c)
 	int j;
 
 	split[i] = (char *)malloc(sizeof(char)
-						* (len_word(&s[k], c) + 1));
-			//return ((free_pre(split, k - 1)));
-		j = 0;
-		while (s[k] == c)
-			k++;
-		while (s[k] != c && s[k])
+			* (len_word(&s[k], c) + 1 + 1));
+	//return ((free_pre(split, k - 1)));
+	j = 0;
+	while (s[k] == c)
+		k++;
+	while (s[k] != c && s[k] != '\0')
+	{
+		if (s[k] == '"')
 		{
-			if (s[k] == '"')
-			{
+			split[i][j] = s[k];
+			k++;
+			j++;
+			while (s[k] != '"' && s[k] != '\0')
+				split[i][j++] = s[k++];                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+		}
+		split[i][j] = s[k];
+		j++;
+		k++;
+		if (s[k] == '"')
+		{
+			split[i][j] = s[k];
+			k++;
+			j++;
+			while (s[k] != '"' && s[k] != '\0')
+			{	
 				split[i][j] = s[k];
 				k++;
 				j++;
-				while (s[k] != '"')
-					split[i][j++] = s[k++];                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
-			}
-			split[i][j] = s[k];
-			j++;
-			k++;
-			if (s[k] == '"')
-			{
-				split[i][j] = s[k];
-				while (s[++k] != '"')
-					split[i][++j] = s[k];
 			}
 		}
-	 	split[i][j] = '\0';
-		return(k);
+//		printf("len j = %d\n",j);
+	}
+	split[i][j] = '\0';
+	return(k);
 }
 char				**ft_split(char const *s, char c)
 {
@@ -174,7 +339,7 @@ int     findtype(char *s)
 	//Appending Redirected Output
 
 }
-t_linked_list *parser(t_linked_list *lexer){ 
+t_linked_list *parser(t_linked_list *lexer , char **env){ 
 	t_linked_list *head = NULL;
 	t_command *command;
 	t_file *token;
@@ -182,13 +347,14 @@ t_linked_list *parser(t_linked_list *lexer){
 	command = (t_command *)malloc(sizeof(t_command));
 	command->files = NULL;
 	command->nameargs = NULL;
-	
+//	env = NULL;
+
 	while (lexer) {
 		printf("%d --  %s \n",((t_file*)lexer->data)->type,((t_file*)lexer->data)->file);
 		token = (t_file *)lexer->data;
 		if (token->type == 0) 
-		{
-			token->file = (void *)strdup((char *)token->file);
+		{	token->file = (void*)handleenvir((char *)token->file, env);
+			//token->file = (void *)strdup((char *)token->file);
 			append(&(command->nameargs), (void *)token->file);
 		}
 		else if (token->type != 0  && token->type != 1 && (lexer->next) && ((t_file *)(lexer->next->data))->type == 0){
@@ -210,25 +376,27 @@ t_linked_list *parser(t_linked_list *lexer){
 	return (head);
 }
 
-int    main()
+int    main(int argc, char **argv, char **env)
 {
 	int i;                                    
 	char *buffer;
 	int n;
 	int type;
 	char **split;
-//	char *string = "dsadsadasd";
+	//	char *string = "dsadsadasd";
 
 	type = 0;
 	split = NULL;
 	t_linked_list *head =NULL;
 	t_linked_list *Parser = NULL;
-//	t_linked_list *shite;
+	//	t_linked_list *shite;
+	argc = 0;
+	argv =  NULL;
 
-//	shite = malloc(sizeof(t_linked_list));
+	//	shite = malloc(sizeof(t_linked_list));
 	//shite->data = (void*)string;
-//	printf("%s",(char*)string);
-//	t_linked_list *nameargs2;
+	//	printf("%s",(char*)string);
+	//	t_linked_list *nameargs2;
 	i = 0;
 	write(1, "Minishell:0.0> ", 15);
 	buffer = malloc(sizeof(char) * (1025));
@@ -236,7 +404,7 @@ int    main()
 	buffer[n - 1] = '\0';
 	split = ft_split(buffer, ' ');
 	n = 0;
-	while (split[n])
+	while (split[n ] != '\0')
 	{
 		printf("%s\n",split[n]);
 		n++;
@@ -253,7 +421,7 @@ int    main()
 	}
 	t_linked_list *ptr;
 
-	Parser = parser(head);
+	Parser = parser(head, env);
 	ptr = (Parser);
 	t_linked_list *Sl;
 	Sl = ((t_command*)ptr->data)->nameargs;

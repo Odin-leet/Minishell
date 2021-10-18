@@ -27,25 +27,6 @@ char	*ft_strchr(char *s, int c)
 	return (NULL);
 }
 
-char	*ft_strdup(char *s1, size_t i)
-{
-	int		n;
-	size_t	k;
-	size_t	j;
-	char	*dest;
-
-	n = 0;
-	j = i;
-	while (s1[i++] != '\0')
-		n++;
-	if (!(dest = malloc((n + 1) * sizeof(char))))
-		return (0);
-	k = 0;
-	while (s1[j] != '\0')
-		dest[k++] = s1[j++];
-	dest[k] = '\0';
-	return (dest);
-}
 
 char	*ft_strjoin(char *s1, char *s2)
 {
