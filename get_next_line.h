@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET__NEXT__LINE__H
+# define GET__NEXT__LINE__H
 
 # include <stdlib.h>
 # include <sys/types.h>
@@ -20,3 +20,7 @@
 
 
 #endif
+
+
+
+ 
