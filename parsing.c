@@ -74,15 +74,12 @@ void				*free_pre(char **split, int k)
 int		*traitmask(const char *s, int c)
 {
 	int *env = malloc(sizeof(int) * strlen(s));
-
 	int env_sq = 0;
 	int env_dq = 0;
 	unsigned int  i = 0;
 	unsigned int j = strlen(s);
 	while (i <  j)
-	{
 		env[i++] = 0;
-	}
 	i = 0;
 	while (s[i] != '\0')
 	{
@@ -118,9 +115,9 @@ static	int		len_word(const char *s, char c , int *in_sgl, int *in_db , int k )
 	}
 	while((s[i] != c && s[i] != '\0') || (s[i] == c && (in_sgl[k] == 1 || in_db[k] == 1)))
 	{
-			len++;
-			i++;
-			k++;
+		len++;
+		i++;
+		k++;
 	}
 	printf("len == %zu\n",len);
 	return (len);
@@ -158,7 +155,6 @@ char		*replaceenv(char *string, int start, int end, char **env)
 	if (end == 0)
 		end = ft_strlen(string);
 	string = ft_substr(string, start + 1,(end - 1 )- start);
-	//string = ft_strdup(string, 1);
 	string = ft_strjoin(string, "=");
 	while(env[i])
 	{
@@ -171,75 +167,80 @@ char		*replaceenv(char *string, int start, int end, char **env)
 			i++;
 	}
 	if (j == 1)
-	{
 		return(ft_strdup(env[i], ft_strlen(string)));
-	}
 	return(NULL);
 
 
 }
+
+char *handleenvir2(char *string, char *tmp, char *tmp2)
+{
+	if(tmp !=NULL && string != NULL)
+		string = ft_strjoin(tmp, string);
+	if (tmp2 != NULL &&string != NULL)
+		string = ft_strjoin(string,tmp2);
+	if(string == NULL)
+	{
+		if(tmp != NULL && tmp2 != NULL)
+			string = ft_strjoin(tmp, tmp2);
+		else if(tmp != NULL && tmp2 == NULL)
+			string = ft_strdup(tmp, 0);
+		else
+			string = ft_strdup(tmp2,0);
+	}
+	return(string);
+}	
+
+char *handleenvir1(char *string, int i, int start, char *tmp, char **env)
+{
+	char	*tmp2;
+	int		end;
+
+	tmp2 = NULL;
+	end = 0;
+	i++;
+	while(string[i] != '\0')
+	{
+		if(string[i] != '_' && (ft_isdigit(string[i]) == 0) && (ft_isalpha(string[i]) == 0))
+		{
+			end = i;
+			tmp2 = ft_substr(string, end, ft_strlen(string) - end);
+			break;				}
+		else
+			i++;
+	}
+	string = replaceenv(string,start, end, env);
+	string = handleenvir2(string, tmp, tmp2);
+	return(string);
+}	
+
 char			*handleenvir(char *string, char **env)
 {
 	int i;
 	char *tmp;
-	char *tmp2;
 	int	start;
-	int end ;
 
 	start = 0;
 	tmp = NULL;
-	tmp2= NULL;
-	end = 0;
-
 	i = 0;
 	while(string[i] != '\0')
 	{
 		if (string[i] == '\'')
-		return(string);
-	if(string[i] == '$')
-	{
-		if (i != 0)
+			return(string);
+		if(string[i] == '$')
 		{
-			start = i;
-			tmp = ft_substr(string,0, i );
+			if (i != 0)
+			{
+				start = i;
+				tmp = ft_substr(string,0, i );
+			}
+			i++;
+			if (string[i] >= 48 && string[i] <= 57)
+				return (ft_substr(string,i + 1 ,ft_strlen(string) - (i + 1)));
+			else if (string[i] == '_' || (string[i] >= 65 && string[i] <= 90))
+				string = handleenvir1(string, i, start, tmp, env);
 		}
 		i++;
-		if (string[i] >= 48 && string[i] <= 57)
-			return (ft_substr(string,i + 1 ,ft_strlen(string) - (i + 1)));
-		else if (string[i] == '_' || (string[i] >= 65 && string[i] <= 90))
-		{
-			i++;
-			while(string[i] != '\0')
-			{
-				if(string[i] != '_' && (ft_isdigit(string[i]) == 0) && (ft_isalpha(string[i]) == 0))
-				{
-					end = i;
-					tmp2 = ft_substr(string, end, ft_strlen(string) - end);
-					break;
-					//printf("lol i m here \n");
-				}
-				else
-					i++;
-			}
-			string = replaceenv(string,start, end, env);
-			if(tmp !=NULL && string != NULL)
-				string = ft_strjoin(tmp, string);
-			if (tmp2 != NULL &&string != NULL)
-				string = ft_strjoin(string,tmp2);
-			if(string == NULL)
-			{
-				if(tmp != NULL && tmp2 != NULL)
-				string = ft_strjoin(tmp, tmp2);
-				else if(tmp != NULL && tmp2 == NULL)
-				string = ft_strdup(tmp, 0);
-				else
-				string = ft_strdup(tmp2,0);
-			}
-			return(string);
-			
-		}
-	}
-	i++;
 	}
 	return(string);
 }
@@ -251,13 +252,11 @@ static	int		count_word(char *s, char c)
 	size_t	count = 0;
 	int *in_db ;
 	int *in_sgl ;
-	char *t;
-	t = s;
 
 	in_db = traitmask(s, 1);
 	in_sgl = traitmask(s, 0);
 	i = 0;
-	
+	count = 0;
 	while (s[i] != '\0')
 	{
 		if(s[i] != c )    
@@ -289,14 +288,13 @@ int		splithelper(int i, const char *s, int k, char **split, char c)
 	split[i] = (char *)malloc(sizeof(char)
 			* (len_word(&s[k], c, in_sgl, in_db, k)  + 1));
 	j = 0;
-
 	while (s[k] == c && (in_sgl[k] == 0 || in_db[k] == 0))
 		k++;
 	while((s[k] != c && s[k] != '\0') || (s[k] == c && (in_sgl[k] == 1 || in_db[k] == 1)))
 	{
-			split[i][j] = s[k];
-			k++;
-			j++;
+		split[i][j] = s[k];
+		k++;
+		j++;
 	}
 	split[i][j] = '\0';
 	return(k);
@@ -304,7 +302,6 @@ int		splithelper(int i, const char *s, int k, char **split, char c)
 char				**ft_split(char *s, char c)
 {
 	int	i;
-	//size_t	j;
 	size_t	k;
 	char	**split;
 
@@ -375,31 +372,101 @@ t_linked_list *parser(t_linked_list *lexer , char **env){
 int		checkforpipe(char *s)
 {
 	int i;
+	int *in_db ;
+	int *in_sgl ;
 
+	in_db = traitmask(s, 1);
+	in_sgl = traitmask(s, 0);
+	// check if this pipe inside double quotes or not
 	i = 0;
 	while(s[i] != '\0')
 	{
-		if(s[i] == '|')
+		if(s[i] == '|' && in_db[i] == 0 && in_sgl[i] == 0)
 			return (1);
 		i++;
 	}
 	return (0);
 }
+
+int		check_errors2(int j, int i, char *string)
+{
+	if(i == 2)
+	{
+		if (j > 1 && strlen(string) > 1)
+		{
+			printf("error here \n");
+			return (0);
+		}
+	}
+	else
+	{
+		if (j > 2 && strlen(string) > 2)
+		{
+			printf("error here \n");
+			return (0);	
+		}
+		else if (j == 1  && strlen(string) >1)
+		{
+			printf("error here \n");
+			return (0);	
+		}
+		else if(j == 2 && strlen(string) > 2)
+		{
+			printf("error here \n");
+			return (0);	
+		}
+	}
+	return (1);
+}
+
+void 	storeinfos(char *string, t_linked_list **head)
+{
+	t_file *file2;
+	int type;
+
+	type = 0;
+	file2 = (t_file *)malloc(sizeof(t_file));
+	type = findtype(string );
+	file2->file = string; 
+	file2->type = type;
+	append(head, file2);
+	
+}
+
 int		check_errors(t_linked_list *ptr)
 { 
-	//t_linked_list *ptr2;
-	//t_file *file;
 	t_file *file;
+	char *checks;
+	int i;
+	int j;
 
+	checks = malloc(sizeof(char) * 4);
+	checks[1] = '<';
+	checks[2] = '|';
+	checks[0] = '>';
+	j = 0;
 	file = (t_file*)ptr->data;
-
 	while(ptr !=NULL)
 	{
+		i = 0;
 		file = (t_file*)ptr->data;
-		printf("%s | \n",file->file);
+		while (i < 3)
+		{
+			if(checks[i] == file->file[0])
+			{
+				while(file->file[j] != '\0')
+				{
+					while((file->file[j] == checks[i]) && file->file[j] != '\0')
+						j++;
+					if (check_errors2(j , i ,file->file) == 0)
+						return(0);
+				}
+			}
+			i++;
+		}
 		ptr = ptr->next;
 	}
-	return(0);
+	return(1);
 
 }
 int		main(int argc, char **argv, char **env)
@@ -409,95 +476,75 @@ int		main(int argc, char **argv, char **env)
 	int n;
 	int type;
 	char **split;
-	//	char *string = "dsadsadasd";
 
 	type = 0;
 	split = NULL;
 	t_linked_list *head =NULL;
 	t_linked_list *Parser = NULL;
-	//	t_linked_list *shite;
 	argc = 0;
 	argv =  NULL;
-
+		n = 0;
 	i = 0;
 	while (1)
 	{
-	write(1, "Minishell:0.0> ", 15);
-	buffer = malloc(sizeof(char) * (1025));
-	n = read(STDIN_FILENO, buffer, 1024);
-	buffer[n - 1] = '\0';
-	split = ft_split(buffer, ' ');
-	n = 0;
-	while (split[n ] != '\0')
-	{
-		printf("%s\n",split[n]);
-		n++;
-	}
-	//n = 0;
-	n = 0;
-	t_file *file2 = NULL;
-	i = 0;
-	int j = 0;
-	while (split[n]){
-		if (checkforpipe(split[n]) == 1)
-		{
-			while (split[n][i] != '\0')
+
+		buffer = readline("Minishell 0.0$ ");
+		split = ft_split(buffer, ' ');
+		n = 0;
+		i = 0;
+		int j = 0;
+		while (split[n]){
+			if (checkforpipe(split[n]) == 1)
 			{
-				while(split[n][i] != '|')
-					i++;
-				file2 = (t_file *)malloc(sizeof(t_file));
-				type = findtype(ft_substr(split[n], 0, i ));
-				file2->file = ft_substr(split[n], 0, i ); 
-				file2->type = type;
-				append(&head, file2);
-				break;
-	
-			}
-				while(split[n][i] == '|')
+				int *in_db ;
+				int *in_sgl ;
+
+				in_db = traitmask(split[n], 1);
+				in_sgl = traitmask(split[n], 0);
+				i = 0;
+				while (split[n][i] != '\0')
+				{
+					while( (split[n][i] == '|' && (in_db[i] == 1 || in_sgl[i] == 1) )|| split[n][i] != '|')
+						i++;
+					storeinfos(ft_substr(split[n], 0, i ),&head);
+					break;
+				}
+				while(split[n][i] == '|' && in_sgl[i] == 0 && in_sgl[i] == 0)
 				{
 					j++;
 					i++;
 				}
-				printf(" j ===== %d\n",j);
-				file2 = (t_file *)malloc(sizeof(t_file));
-				type = findtype("|");
-				file2->file = "|"; 
-				file2->type = type;
-				append(&head, file2);
-
-				if(split[n][i] != '\0')
+				storeinfos("|", &head);
+				
+				if (j > 1)
 				{
-					file2 = (t_file *)malloc(sizeof(t_file));
-					type = findtype(ft_substr(split[n],i,strlen(split[n] )- i ));
-					file2->file = ft_substr(split[n], i,strlen(split[n]) - i ); 
-					file2->type = type;
-					append(&head, file2);
-				}	
+					printf("error here \n");
+					return (0);	
+				}
+				if(split[n][i] != '\0')
+					storeinfos(ft_substr(split[n],i,strlen(split[n] )- i ), &head);
+				free(in_db);
+				free(in_sgl);	
+			}
+			else
+				storeinfos(split[n], &head);
+			n++;
 		}
-		else
-		{
-		file2 = (t_file *)malloc(sizeof(t_file));
-		type = findtype(split[n]);
-		file2->file = split[n]; 
-		file2->type = type;
-		append(&head, file2);
-		}
-		n++;
-	}
-	check_errors(head);
-	t_linked_list *ptr;
-
-	Parser = parser(head, env);
-	ptr = (Parser);
-	t_linked_list *Sl;
-	Sl = ((t_command*)ptr->data)->nameargs;
+		if (check_errors(head) == 0)
+			return(0);
+	//	t_linked_list *ptr;
 //
-	while (Sl != NULL)
-	{
-		printf("%s-- \n",(char *)Sl->data) ;
-		Sl = Sl->next;
-	}
-	}
+	//	Parser = parser(head, env);
+	//	ptr = (Parser);
+	//	t_linked_list *Sl;
+	//	Sl = ((t_command*)ptr->data)->nameargs;
+	//	//
+	//	while (Sl != NULL)
+	//	{
+	//		printf("%s-- \n",(char *)Sl->data) ;
+	//		Sl = Sl->next;
+	//	}
+	//}
 	//t_linked_list *Zl;
 	//Zl = ((t_command*)ptr->data)->files;
 	//while (Zl != NULL)
