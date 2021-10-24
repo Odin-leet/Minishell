@@ -51,6 +51,7 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 		}
 		dest[j] = '\0';
 	}
+	//free(s);
 	return (dest);
 }
 

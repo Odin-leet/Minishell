@@ -119,6 +119,8 @@ static	int		len_word(const char *s, char c , int *in_sgl, int *in_db , int k )
 		i++;
 		k++;
 	}
+	free(in_sgl);
+	free(in_db);
 	printf("len == %zu\n",len);
 	return (len);
 }
@@ -148,14 +150,20 @@ char		*replaceenv(char *string, int start, int end, char **env)
 {
 	int		i;
 	int		j;
+	char *tmp;
 
 	j = 0;
 	i = 0;
-
+	tmp = NULL;
 	if (end == 0)
 		end = ft_strlen(string);
+	//tmp = string;
 	string = ft_substr(string, start + 1,(end - 1 )- start);
+	//free(tmp);
+	//tmp = string;
 	string = ft_strjoin(string, "=");
+	//free(tmp);
+	tmp = NULL;
 	while(env[i])
 	{
 		if (ft_strncmp(env[i], string, ft_strlen(string) )== 0)
@@ -261,19 +269,17 @@ static	int		count_word(char *s, char c)
 	{
 		if(s[i] != c )    
 			count ++;
-		while((s[i] != c && s[i] != '\0') || (s[i] == c && (*in_sgl == 1 || *in_db == 1)))
+		while((s[i] != c && s[i] != '\0') || (s[i] == c && (in_sgl[i] == 1 || in_db[i] == 1)))
 		{
 			i++;
-			in_sgl++;
-			in_db++;
 		}
 		if(s[i] != '\0')
 		{
-			i++;  
-			in_sgl++;
-			in_db++;
+			i++;   
 		}
 	}
+	free(in_db);
+	free(in_sgl);
 	return (count);
 }
 
@@ -297,6 +303,8 @@ int		splithelper(int i, const char *s, int k, char **split, char c)
 		j++;
 	}
 	split[i][j] = '\0';
+	//free(in_sgl);
+	//free(in_sgl);
 	return(k);
 }
 char				**ft_split(char *s, char c)
@@ -385,6 +393,8 @@ int		checkforpipe(char *s)
 			return (1);
 		i++;
 	}
+	free(in_db);
+	free(in_sgl);
 	return (0);
 }
 
@@ -466,93 +476,103 @@ int		check_errors(t_linked_list *ptr)
 		}
 		ptr = ptr->next;
 	}
+	free(checks);
 	return(1);
 
 }
-int		main(int argc, char **argv, char **env)
+
+
+int		mainhelper2(int j, int i,t_linked_list **head, char *string)
 {
-	int i;                                    
+	if (j > 1)
+	{
+		printf("error here \n");
+		return (0);	
+	}
+	if(string[i] != '\0')
+		storeinfos(ft_substr(string,i,strlen(string )- i ), head);
+	return(1);
+}
+
+
+int	mainhelper(char *string, int j,t_linked_list **head)
+{
+	int *in_db ;
+	int *in_sgl ;
+	int i;
+
+	i = 0;
+	in_db = traitmask(string, 1);
+	in_sgl = traitmask(string, 0);
+	while (string[i] != '\0')
+	{
+		while( (string[i] == '|' && (in_db[i] == 1 || in_sgl[i] == 1) )|| string[i] != '|')
+			i++;
+		storeinfos(ft_substr(string, 0, i ),head);
+		break;
+	}
+	while(string[i] == '|' && in_sgl[i] == 0 && in_sgl[i] == 0)
+	{
+		j++;
+		i++;
+	}
+	if (mainhelper2(j,i, head, string) == 0)
+		return(0);
+	free(in_db);
+	free(in_sgl);	
+	return(1);
+}
+
+int		main(int argc, char **argv, char **env)
+{                                    
 	char *buffer;
 	int n;
-	int type;
 	char **split;
+//	t_file *file;
 
-	type = 0;
 	split = NULL;
 	t_linked_list *head =NULL;
 	t_linked_list *Parser = NULL;
+	t_linked_list *more = NULL;
 	argc = 0;
 	argv =  NULL;
-		n = 0;
-	i = 0;
+	n = 0;
 	while (1)
 	{
-
 		buffer = readline("Minishell 0.0$ ");
 		split = ft_split(buffer, ' ');
 		n = 0;
-		i = 0;
 		int j = 0;
 		while (split[n]){
 			if (checkforpipe(split[n]) == 1)
-			{
-				int *in_db ;
-				int *in_sgl ;
-
-				in_db = traitmask(split[n], 1);
-				in_sgl = traitmask(split[n], 0);
-				i = 0;
-				while (split[n][i] != '\0')
-				{
-					while( (split[n][i] == '|' && (in_db[i] == 1 || in_sgl[i] == 1) )|| split[n][i] != '|')
-						i++;
-					storeinfos(ft_substr(split[n], 0, i ),&head);
-					break;
-				}
-				while(split[n][i] == '|' && in_sgl[i] == 0 && in_sgl[i] == 0)
-				{
-					j++;
-					i++;
-				}
-				storeinfos("|", &head);
-				
-				if (j > 1)
-				{
-					printf("error here \n");
-					return (0);	
-				}
-				if(split[n][i] != '\0')
-					storeinfos(ft_substr(split[n],i,strlen(split[n] )- i ), &head);
-				free(in_db);
-				free(in_sgl);	
-			}
+				mainhelper(split[n], j,&head);
 			else
 				storeinfos(split[n], &head);
 			n++;
 		}
 		if (check_errors(head) == 0)
 			return(0);
-	//	t_linked_list *ptr;
-//
-	//	Parser = parser(head, env);
-	//	ptr = (Parser);
-	//	t_linked_list *Sl;
-	//	Sl = ((t_command*)ptr->data)->nameargs;
-	//	//
-	//	while (Sl != NULL)
-	//	{
-	//		printf("%s-- \n",(char *)Sl->data) ;
-	//		Sl = Sl->next;
-	//	}
-	//}
-	//t_linked_list *Zl;
-	//Zl = ((t_command*)ptr->data)->files;
-	//while (Zl != NULL)
-	//{	
-	//	printf("%s--|\n",((t_file*)Zl->data)->file) ;
-	//	Zl = Zl->next;
-	//}
-	return(0);
+	//	more = head;
+		Parser = parser(more, env);
+		n = 0;
+		while(split[n] != NULL)
+		{
+			free(split[n]);
+			n++;
+		}
+		free(split);
 
+		
+	
+		if (head != NULL)
+		{
+			while (head != NULL)
+			{
+				free(head);
+				head = head->next;
+			}
+		}
+	}
+	return(0);
 }
 

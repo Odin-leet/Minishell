@@ -50,6 +50,7 @@ char	*ft_strjoin(char *s1, char *s2)
 		dest[i++] = s2[j++];
 	dest[i] = '\0';
 	free(s1);
+	//free(s2);
 	return (dest);
 }
 
