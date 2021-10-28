@@ -19,6 +19,7 @@ char	*ft_strdup(char *s1, size_t i)
 	dest[k] = '\0';
 	return (dest);
 }
+
 int		ft_strncmp(const char *s1, const char *s2, size_t n)
 {
 	unsigned int	j;
@@ -60,6 +61,7 @@ void append(t_linked_list **head_ref, void *data)
 	last->next = new_node;
 	return;   
 }
+
 void				*free_pre(char **split, int k)
 {
 	while (k >= 0)
@@ -71,6 +73,7 @@ void				*free_pre(char **split, int k)
 	split = NULL;
 	return (NULL);
 }
+
 int		*traitmask(const char *s, int c)
 {
 	int *env = malloc(sizeof(int) * strlen(s));
@@ -99,7 +102,6 @@ int		*traitmask(const char *s, int c)
 	}
 	return(env);
 }
-
 
 static	int		len_word(const char *s, char c , int *in_sgl, int *in_db , int k )
 {
@@ -146,6 +148,7 @@ int		ft_isalpha(int c)
 	else
 		return (0);
 }
+
 char		*replaceenv(char *string, int start, int end, char **env)
 {
 	int		i;
@@ -253,7 +256,6 @@ char			*handleenvir(char *string, char **env)
 	return(string);
 }
 
-
 static	int		count_word(char *s, char c)
 {
 	size_t	i;
@@ -307,6 +309,7 @@ int		splithelper(int i, const char *s, int k, char **split, char c)
 	//free(in_sgl);
 	return(k);
 }
+
 char				**ft_split(char *s, char c)
 {
 	int	i;
@@ -325,6 +328,7 @@ char				**ft_split(char *s, char c)
 	split[i] = NULL;
 	return (split);
 }
+
 int     findtype(char *s)
 {
 	if (ft_strncmp(s, "|",ft_strlen(s) ) == 0)
@@ -343,6 +347,7 @@ int     findtype(char *s)
 	return(0);
 
 }
+
 t_linked_list *parser(t_linked_list *lexer , char **env){ 
 	t_linked_list *head = NULL;
 	t_command *command;
@@ -361,17 +366,26 @@ t_linked_list *parser(t_linked_list *lexer , char **env){
 		else if (token->type != 0  && token->type != 1 && (lexer->next) && ((t_file *)(lexer->next->data))->type == 0){
 			t_file *f;
 			t_file *tmp = (t_file *)(lexer->next->data);
+
 			f = (t_file *)malloc(sizeof(t_file));
 			f->file = strdup(tmp->file);
 			f->file = tmp->file;
-			f->type = tmp->type;
+			f->type = token->type;
 			append(&(command->files), (void*)f);
 			lexer = lexer->next;
 		}
 		else if (token->type != 1)
 			printf("error\n");
 		if (token->type == 1 || lexer->next == NULL)
+		{
 			append(&(head),(void*)command);
+			command = (t_command *)malloc(sizeof(t_command));
+			command->files = NULL;
+			command->nameargs = NULL;
+			
+			printf("lool im here \n");
+		}
+			
 		lexer = lexer->next;
 	}
 	return (head);
@@ -440,7 +454,6 @@ void 	storeinfos(char *string, t_linked_list **head)
 	file2->file = string; 
 	file2->type = type;
 	append(head, file2);
-	
 }
 
 int		check_errors(t_linked_list *ptr)
@@ -478,9 +491,7 @@ int		check_errors(t_linked_list *ptr)
 	}
 	free(checks);
 	return(1);
-
 }
-
 
 int		mainhelper2(int j, int i,t_linked_list **head, char *string)
 {
@@ -493,7 +504,6 @@ int		mainhelper2(int j, int i,t_linked_list **head, char *string)
 		storeinfos(ft_substr(string,i,strlen(string )- i ), head);
 	return(1);
 }
-
 
 int	mainhelper(char *string, int j,t_linked_list **head)
 {
@@ -523,19 +533,49 @@ int	mainhelper(char *string, int j,t_linked_list **head)
 	return(1);
 }
 
+void exec(t_linked_list *head)
+{
+	int i;
+
+	i = 0;
+	t_linked_list *lcmd;
+	t_linked_list *lfile;
+	
+	while (head != NULL)
+	{
+		lcmd = ((t_command*)head->data)->nameargs;
+		lfile = ((t_command*)head->data)->files;
+		while (lcmd != NULL || lfile != NULL)
+		{
+			if (lcmd != NULL)
+			{
+				printf("-%d\ncmd : %s\n",i,(char *)lcmd->data);
+				lcmd = lcmd->next;
+			}	
+			if (lfile != NULL)
+			{
+				printf("- %d \nfile : %s\ntype : %d\n",i,((t_file*)lfile->data)->file,((t_file*)lfile->data)->type);
+				lfile = lfile->next;
+			}
+			i++;
+		}
+		printf("there is pipe here  \n");
+		head = head->next;
+	}
+}
+
 int		main(int argc, char **argv, char **env)
-{                                    
+{
 	char *buffer;
 	int n;
 	char **split;
 //	t_file *file;
-
 	split = NULL;
-	t_linked_list *head =NULL;
+	t_linked_list *head = NULL;
 	t_linked_list *Parser = NULL;
 	t_linked_list *more = NULL;
 	argc = 0;
-	argv =  NULL;
+	argv = NULL;
 	n = 0;
 	while (1)
 	{
@@ -543,7 +583,8 @@ int		main(int argc, char **argv, char **env)
 		split = ft_split(buffer, ' ');
 		n = 0;
 		int j = 0;
-		while (split[n]){
+		while (split[n])
+		{
 			if (checkforpipe(split[n]) == 1)
 				mainhelper(split[n], j,&head);
 			else
@@ -552,8 +593,9 @@ int		main(int argc, char **argv, char **env)
 		}
 		if (check_errors(head) == 0)
 			return(0);
-	//	more = head;
+		more = head;
 		Parser = parser(more, env);
+		exec(Parser);
 		n = 0;
 		while(split[n] != NULL)
 		{
@@ -561,9 +603,6 @@ int		main(int argc, char **argv, char **env)
 			n++;
 		}
 		free(split);
-
-		
-	
 		if (head != NULL)
 		{
 			while (head != NULL)
@@ -575,4 +614,3 @@ int		main(int argc, char **argv, char **env)
 	}
 	return(0);
 }
-
