@@ -19,6 +19,7 @@ char	*ft_strdup(char *s1, size_t i)
 	dest[k] = '\0';
 	return (dest);
 }
+
 int		ft_strncmp(const char *s1, const char *s2, size_t n)
 {
 	unsigned int	j;
@@ -60,6 +61,7 @@ void append(t_linked_list **head_ref, void *data)
 	last->next = new_node;
 	return;   
 }
+
 void				*free_pre(char **split, int k)
 {
 	while (k >= 0)
@@ -71,6 +73,7 @@ void				*free_pre(char **split, int k)
 	split = NULL;
 	return (NULL);
 }
+
 int		*traitmask(const char *s, int c)
 {
 	int *env = (int *)malloc(sizeof(int) * (strlen(s)));
@@ -102,7 +105,6 @@ int		*traitmask(const char *s, int c)
 	}
 	return(env);
 }
-
 
 static	int		len_word(const char *s, char c , int *in_sgl, int *in_db , int k )
 {
@@ -149,6 +151,7 @@ int		ft_isalpha(int c)
 	else
 		return (0);
 }
+
 char		*replaceenv(char *string, int start, int end, char **env)
 {
 	int		i;
@@ -259,7 +262,6 @@ char			*handleenvir(char *string, char **env)
 	return(string);
 }
 
-
 static	int		count_word(char *s, char c)
 {
 	size_t	i;
@@ -314,6 +316,7 @@ int		splithelper(int i, const char *s, int k, char **split, char c)
 	//free(in_sgl);
 	return(k);
 }
+
 char				**ft_split(char *s, char c)
 {
 	int	i;
@@ -332,6 +335,7 @@ char				**ft_split(char *s, char c)
 	split[i] = NULL;
 	return (split);
 }
+
 int     findtype(char *s)
 {
 	if (ft_strncmp(s, "|",ft_strlen(s) ) == 0)
@@ -350,6 +354,7 @@ int     findtype(char *s)
 	return(0);
 
 }
+
 t_linked_list *parser(t_linked_list *lexer , char **env){ 
 	t_linked_list *head = NULL;
 	t_command *command;
@@ -461,7 +466,6 @@ void 	storeinfos(char *string, t_linked_list **head)
 	file2->file = string; 
 	file2->type = type;
 	append(head, file2);
-	
 }
 
 int		check_errors(t_linked_list *ptr)
@@ -499,9 +503,7 @@ int		check_errors(t_linked_list *ptr)
 	}
 	free(checks);
 	return(1);
-
 }
-
 
 int		mainhelper2(int j, int i,t_linked_list **head, char *string)
 {
@@ -514,7 +516,6 @@ int		mainhelper2(int j, int i,t_linked_list **head, char *string)
 		storeinfos(ft_substr(string,i,strlen(string )- i ), head);
 	return(1);
 }
-
 
 int	mainhelper(char *string, int j,t_linked_list **head)
 {
@@ -602,24 +603,22 @@ void exec(t_linked_list *head)
 	}
 }
 
-
 int		main(int argc, char **argv, char **env)
-{                                    
+{
 	char *buffer;
 	int n;
 	char **split;
 //	t_file *file;
-
 	split = NULL;
 	
 	argc = 0;
-	argv =  NULL;
+	argv = NULL;
 	n = 0;
 	while (1)
 	{t_linked_list *head =NULL;
 	t_linked_list *Parser = NULL;
 	//t_linked_list *more = NULL;
-	//env = NULL;
+	env = NULL;
 
 		buffer = readline("Minishell 0.0$ ");
 		split = ft_split(buffer, ' ');
@@ -638,7 +637,7 @@ int		main(int argc, char **argv, char **env)
 			n++;
 		}
 		if (check_errors(head) == 0)
-			return(0);	
+			return(0);
 	//	more = head;
 		Parser = parser(head, env);
 		exec(Parser);
@@ -660,4 +659,3 @@ int		main(int argc, char **argv, char **env)
 	}
 	return(0);
 }
-
