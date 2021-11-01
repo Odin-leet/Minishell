@@ -1,24 +1,72 @@
 #include "minishell.h"
-
-char	*ft_strdup(char *s1, size_t i)
+ 
+char	*ft_calloc(size_t count, size_t size)
 {
-	int		n;
-	size_t	k;
-	size_t	j;
 	char	*dest;
+	size_t	i;
 
-	n = 0;
-	j = i;
-	while (s1[i++] != '\0')
-		n++;
-	if (!(dest = malloc((n + 1) * sizeof(char))))
+	if (!(dest = (char*)malloc(count * size)))
 		return (0);
-	k = 0;
-	while (s1[j] != '\0')
-		dest[k++] = s1[j++];
-	dest[k] = '\0';
+	i = 0;
+	while (i < (count * size))
+		dest[i++] = 0;
 	return (dest);
 }
+
+ char	*ft_strjoin(char *s1, char *s2)
+{
+	char			*dest;
+	unsigned long	i;
+	unsigned long	j;
+	size_t			res_len;
+
+	if (!(res_len = 0) && s1)
+		res_len = ft_strlen(s1);
+	j = 0;
+	if (!(dest = (char*)malloc(res_len + ft_strlen(s2) + 1)))
+		return (0);
+	i = -1;
+	if (s1 == 0 && s2 == 0)
+		return (0);
+	while (++i < res_len)
+		dest[i] = s1[i];
+	res_len = ft_strlen(s2);
+	while (j < res_len)
+		dest[i++] = s2[j++];
+	dest[i] = '\0';
+	free(s1);
+	//free(s2);
+	return (dest);
+}
+char *ft_strdup(char *s, size_t i)
+{
+   // int     i;
+    int     n;
+    int     k;
+    int j;
+    char *dest;
+    k = 0;
+
+    j = i;
+    while (s[j] != '\0')
+    {
+        j++;
+    }
+    k = j;
+    n = 0;
+    dest = malloc(sizeof(char) * (k + 1));
+    while (s[i] != '\0')
+    {
+        dest[n] = s[i];
+        n++;
+        i++;
+    }
+    dest[n] = '\0';
+    return(dest);
+
+}
+
+
 
 int		ft_strncmp(const char *s1, const char *s2, size_t n)
 {
@@ -128,6 +176,43 @@ static	int		len_word(const char *s, char c , int *in_sgl, int *in_db , int k )
 	free(in_sgl);
 	printf("len == %zu\n",len);
 	return (len);
+}
+char	*ft_substr(char *s, unsigned int start, size_t len)
+{
+	char			*dest;
+	char			*src;
+	unsigned long	j;
+
+	if (s == 0)
+		return (0);
+	if (start > ft_strlen(s))
+		return (dest = ft_calloc(1, 1));
+	else
+	{
+		j = 0;
+		src = (char*)s;
+		if (!(dest = (char*)malloc(len + 1)))
+			return (0);
+		while (*src && j < len)
+		{
+			dest[j] = src[start];
+			j++;
+			start++;
+		}
+		dest[j] = '\0';
+	}
+	//free(s);
+	return (dest);
+}
+
+size_t	ft_strlen(char *s)
+{
+	int i;
+
+	i = 0;
+	while (s[i] != '\0')
+		i++;
+	return (i);
 }
 
 int		ft_isdigit(int c)
