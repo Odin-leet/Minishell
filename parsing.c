@@ -710,7 +710,7 @@ int		main(int argc, char **argv, char **env)
 	{t_linked_list *head =NULL;
 	t_linked_list *Parser = NULL;
 	//t_linked_list *more = NULL;
-	env = NULL;
+//	env = NULL;
 
 		buffer = readline("Minishell 0.0$ ");
 		split = ft_split(buffer, ' ');
