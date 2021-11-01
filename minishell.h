@@ -37,4 +37,5 @@ char	*ft_strjoin(char *s1, char *s2);
 size_t	ft_strlen(char *s);
 char	*ft_substr(char *s, unsigned int start, size_t len);
 char	*ft_calloc(size_t count, size_t size);
+int     exec(t_linked_list *head);
 #endif

@@ -1,6 +1,7 @@
 NAME =	Minishell
 
 SRC =	parsing.c\
+		exec.c
 
 		
 
