@@ -572,6 +572,12 @@ void free_lin_command (t_linked_list *command) {
 	free(command->data);
 	free(command);
 }
+
+void whoexec()
+{
+
+}
+
 void exec(t_linked_list *head)
 {
 	int i;
@@ -589,6 +595,7 @@ void exec(t_linked_list *head)
 			if (lcmd != NULL)
 			{
 				printf("-%d\ncmd : %s\n",i,(char *)lcmd->data);
+				whoexec();
 				lcmd = lcmd->next;
 			}	
 			if (lfile != NULL)
