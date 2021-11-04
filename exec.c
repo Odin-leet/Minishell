@@ -4,17 +4,19 @@ void whoexec(t_linked_list cmd)
 {
     
 }
-
+int intializer()
 int exec(t_linked_list *head)
 {
 	int i;
 	int fd[2];
+	int in;
+	int out;
+	int pvin;
 
-	i = 0;
 	t_linked_list *lcmd;
 	t_linked_list *lfile;
 	pipe(fd);
-	
+	i = 0;
 	while (head != NULL)
 	{
 		lcmd = ((t_command*)head->data)->nameargs;

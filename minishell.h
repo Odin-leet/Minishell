@@ -5,11 +5,11 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdio.h>
-#include <string.h>
-#include <readline/readline.h>
-#include <readline/history.h>
+# include <string.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
-//typefdef struct s_name 
+//parsing structures
  typedef struct s_file{
      char *file;
      int    type;
@@ -24,11 +24,7 @@ typedef struct command {
     t_linked_list *nameargs;
     t_linked_list *files;
 }           t_command;
-
-
-
-
-
+//end of 
 t_file fil;
 int		get_next_line(int fd, char **line, int BUFFER_SIZE);
 char	*ft_strchr(char *s, int c);
