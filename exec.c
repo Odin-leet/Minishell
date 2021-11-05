@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ashite <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/05 11:25:30 by ashite            #+#    #+#             */
+/*   Updated: 2021/11/05 11:25:35 by ashite           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-void whoexec(t_linked_list cmd)
+void whoexec(t_linked_list *cmd)
 {
     
 }
-int intializer()
+int intializer();
 int exec(t_linked_list *head)
 {
 	int i;
@@ -39,13 +51,9 @@ int exec(t_linked_list *head)
 		}
 		head = head->next;
 		printf("there is pipe here  \n");
-
 	}
     return 0;
 }
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 
 int main(int argc, char **argv)
 {

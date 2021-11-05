@@ -675,42 +675,42 @@ int		main(int argc, char **argv, char **env)
 	//t_linked_list *more = NULL;
 //	env = NULL;
 
-		buffer = readline("Minishell 0.0$ ");
-		split = ft_split(buffer, ' ');
-		n = 0;
-		int j = 0;
-		while (split[n] != NULL){
-			if (checkforpipe(split[n]) == 1)
-			{
-				mainhelper(split[n], j,&head);
-				free(split[n]);
-			}
-				
-			else
-				storeinfos(split[n], &head);
-		//	free(split[n]);
-			n++;
-		}
-		if (check_errors(head) == 0)
-			return(0);
-	//	more = head;
-		Parser = parser(head, env);
-		exec(Parser);
-		n = 0;
-		free_files_linked(head);
-		
-		free_lin_command(Parser);
-		free(split);
-		//while(split[n] != NULL)
-		//{
-		//	free(split[n]);
-		//	n++;
-		//}
-		//free(split);
-
-		
+	buffer = readline("Minishell 0.0$ ");
+	split = ft_split(buffer, ' ');
+	n = 0;
+	int j = 0;
+	while (split[n] != NULL)
+	{
+		if (checkforpipe(split[n]) == 1)
+		{
+			mainhelper(split[n], j,&head);
+			free(split[n]);
+		}		
+		else
+			storeinfos(split[n], &head);
+	//	free(split[n]);
+		n++;
+	}
+	if (check_errors(head) == 0)
+		return(0);
+//	more = head;
+	Parser = parser(head, env);
+	exec(Parser);
+	n = 0;
+	free_files_linked(head);
 	
-		
+	free_lin_command(Parser);
+	free(split);
+	//while(split[n] != NULL)
+	//{
+	//	free(split[n]);
+	//	n++;
+	//}
+	//free(split);
+
+	
+
+	
 	}
 	return(0);
 }
