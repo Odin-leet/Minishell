@@ -1,5 +1,5 @@
 #include "minishell.h"
- 
+
 char	*ft_calloc(size_t count, size_t size)
 {
 	char	*dest;
@@ -13,7 +13,7 @@ char	*ft_calloc(size_t count, size_t size)
 	return (dest);
 }
 
- char	*ft_strjoin(char *s1, char *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	char			*dest;
 	unsigned long	i;
@@ -40,29 +40,29 @@ char	*ft_calloc(size_t count, size_t size)
 }
 char *ft_strdup(char *s, size_t i)
 {
-   // int     i;
-    int     n;
-    int     k;
-    int j;
-    char *dest;
-    k = 0;
+	// int     i;
+	int     n;
+	int     k;
+	int j;
+	char *dest;
+	k = 0;
 
-    j = i;
-    while (s[j] != '\0')
-    {
-        j++;
-    }
-    k = j;
-    n = 0;
-    dest = malloc(sizeof(char) * (k + 1));
-    while (s[i] != '\0')
-    {
-        dest[n] = s[i];
-        n++;
-        i++;
-    }
-    dest[n] = '\0';
-    return(dest);
+	j = i;
+	while (s[j] != '\0')
+	{
+		j++;
+	}
+	k = j;
+	n = 0;
+	dest = malloc(sizeof(char) * (k + 1));
+	while (s[i] != '\0')
+	{
+		dest[n] = s[i];
+		n++;
+		i++;
+	}
+	dest[n] = '\0';
+	return(dest);
 
 }
 
@@ -474,10 +474,10 @@ t_linked_list *parser(t_linked_list *lexer , char **env){
 			command = (t_command *)malloc(sizeof(t_command));
 			command->files = NULL;
 			command->nameargs = NULL; 
-			
+
 			printf("lool im here \n");
 		}
-			
+
 		lexer = lexer->next;
 	}
 	return (head);
@@ -632,10 +632,10 @@ int	mainhelper(char *string, int j,t_linked_list **head)
 
 
 void free_head(t_linked_list *head) {
-    if (head == NULL) return;
-    free_head(head->next);
- //   free(head->data);
-    free(head);
+	if (head == NULL) return;
+	free_head(head->next);
+	//   free(head->data);
+	free(head);
 }
 
 void free_files_linked(t_linked_list *files) {
@@ -648,7 +648,7 @@ void free_files_linked(t_linked_list *files) {
 
 void free_lin_command (t_linked_list *command) {
 	t_command *cmd;
-	
+
 	if (command == NULL) return ;
 	free_lin_command (command->next);
 	cmd = (t_command *)(command->data);
@@ -658,27 +658,15 @@ void free_lin_command (t_linked_list *command) {
 	free(command);
 }
 
-int		main(int argc, char **argv, char **env)
+t_linked_list *mainhelper3(char **split )
 {
-	char *buffer;
-	int n;
-	char **split;
-//	t_file *file;
-	split = NULL;
-	
-	argc = 0;
-	argv = NULL;
-	n = 0;
-	while (1)
-	{t_linked_list *head =NULL;
-	t_linked_list *Parser = NULL;
-	//t_linked_list *more = NULL;
-//	env = NULL;
+	int		n;
+	int		j;
+	t_linked_list *head;
 
-	buffer = readline("Minishell 0.0$ ");
-	split = ft_split(buffer, ' ');
 	n = 0;
-	int j = 0;
+	head = NULL;
+	j = 0;
 	while (split[n] != NULL)
 	{
 		if (checkforpipe(split[n]) == 1)
@@ -688,25 +676,36 @@ int		main(int argc, char **argv, char **env)
 		}		
 		else
 			storeinfos(split[n], &head);
-	//	free(split[n]);
 		n++;
 	}
-	if (check_errors(head) == 0)
-		return(0);
-//	more = head;
-	Parser = parser(head, env);
-	exec(Parser);
-	n = 0;
-	free_files_linked(head);
 	
-	free_lin_command(Parser);
-	free(split);
-	//while(split[n] != NULL)
-	//{
-	//	free(split[n]);
-	//	n++;
-	//}
-	//free(split);
+	return (head);
+}
+
+int		main(int argc, char **argv, char **env)
+{
+	char *buffer;
+	char **split;
+	t_linked_list *head;
+	t_linked_list *Parser;
+
+	split = NULL;
+	argc = 0;
+	argv = NULL;
+	while (1)
+	{
+		head = NULL;
+		Parser = NULL;
+		buffer = readline("Minishell 0.0$ ");
+		split = ft_split(buffer, ' ');
+		head = mainhelper3(split);
+		if (check_errors(head) == 0)
+			return(0);
+		Parser = parser(head, env);
+		//exec(Parser);
+		free_files_linked(head);
+		free_lin_command(Parser);
+		free(split);
 	}
 	return(0);
 }
