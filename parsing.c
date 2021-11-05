@@ -707,10 +707,6 @@ int		main(int argc, char **argv, char **env)
 	//	n++;
 	//}
 	//free(split);
-
-	
-
-	
 	}
 	return(0);
 }

@@ -11,10 +11,22 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-
+/*char	*ft_strchr(const char *s, int c)
+{
+	while (*s != '\0')
+	{
+		if (*s == c)
+			return ((char *)s);
+		s++;
+	}
+	if (c == '\0')
+		return ((char *)s);
+	return (0);
+}*/
 void whoexec(t_linked_list *cmd)
 {
-    
+	if (()
+	execsys();
 }
 int intializer();
 int exec(t_linked_list *head)

@@ -19,14 +19,13 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-typedef struct s_vars
+/*typedef struct s_vars
 {
-	int		fd[2];
 	int		in;
 	int		out;
 	int		pvin;
 	pid_t	pid;
-}				t_vars;
+}				t_vars;*/
 
 typedef struct s_file{
 	char	*file;
