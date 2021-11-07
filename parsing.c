@@ -678,7 +678,6 @@ t_linked_list *mainhelper3(char **split )
 			storeinfos(split[n], &head);
 		n++;
 	}
-	
 	return (head);
 }
 
