@@ -25,6 +25,8 @@ typedef struct s_vars
 	int		out;
 	int		pvin;
 	pid_t	pid;
+	char	**collected;
+	t_linked_list *newhead;
 	t_linked_list *lcmd;
 	t_linked_list *lfile;
 }				t_vars;

@@ -25,7 +25,7 @@
 	}
 	char **collector(t_linked_list *rass)
 	{
-		
+
 	}
 	/*void whoexec(t_linked_list *cmd)
 	{
@@ -43,18 +43,22 @@
 		i = 0;
 		while (head != NULL)
 		{
-			lcmd = ((t_command*)head->data)->nameargs;
-			lfile = ((t_command*)head->data)->files;
-			while (lcmd != NULL || lfile != NULL)
+			vars.lcmd = ((t_command*)head->data)->nameargs;
+			if (issyscall((char *)vars.lcmd->data) == 1)
+				vars.collected = collector(vars.newhead);
+				//call collector use it then free collected
+				// I should use cmd head instead of the principal head !!
+			vars.lfile = ((t_command*)head->data)->files;
+			while (vars.lcmd != NULL || vars.lfile != NULL)
 			{
-				if (lcmd != NULL)
+				if (vars.lcmd != NULL)
 				{
-					printf("-%d\ncmd : %s\n",i,(char *)lcmd->data);
-					lcmd = lcmd->next;
+					printf("-%d\ncmd : %s\n",i,(char *)vars.lcmd->data);
+					vars.lcmd = vars.lcmd->next;
 				}	
-				if (lfile != NULL)
+				if (vars.lfile != NULL)
 				{
-					printf("- %d \nfile : %s\ntype : %d\n",i,((t_file*)lfile->data)->file,((t_file*)lfile->data)->type);
+					printf("- %d \nfile : %s\ntype : %d\n",i,((t_file*)vars.lfile->data)->file,((t_file*)lfile->data)->type);
 					whoexec(head);
 					lfile = lfile->next;
 				}
