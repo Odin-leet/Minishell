@@ -5,9 +5,9 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-int main(int argc, char **argv)
+int main(int argc, char **argv,char **env)
 {
-    char *args[3] = {"/bin/ls", "/usr/bin/wc"};
+    char *args[3] = {"/bin/ls", "-la"};
     pid_t pid;
     int fd[2];
     int in = 0;
@@ -34,8 +34,13 @@ int main(int argc, char **argv)
                 close(in);
             if (out != 1)
                 close(out);
-            printf("l %s l nothing here\n", argv[i]);
-            execve(args[i], &argv[i], 0);
+            printf("%s nothing here\n", argv[i]);
+            execve(args[0], args, env);
+            // if (execve(args[i], &argv[i], 0) != 1)
+            // {
+            //     printf("wrong shit happend\n");
+            //     return 0;
+            // }
         }
         else
         {
