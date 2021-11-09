@@ -25,13 +25,17 @@
 	}
 	char **collector(t_linked_list *rass)
 	{
-
+		//
 	}
 	/*void whoexec(t_linked_list *cmd)
 	{
 		if (()
 		execsys();
 	}*/
+	void xv_it(t_vars *vars)
+	{
+		//execve traitement
+	}
 	int intializer();
 	int exec(t_linked_list *head)
 	{
@@ -44,10 +48,13 @@
 		while (head != NULL)
 		{
 			vars.lcmd = ((t_command*)head->data)->nameargs;
+			vars.collected = collector(vars.lcmd); // don't forget to free that shit after xv_it;
 			if (issyscall((char *)vars.lcmd->data) == 1)
-				vars.collected = collector(vars.newhead);
+			{
+				xv_it(&vars);
+			}	
 				//call collector use it then free collected
-				// I should use cmd head instead of the principal head !!
+				// I should use cmd head instead of the principal head !![done]
 			vars.lfile = ((t_command*)head->data)->files;
 			while (vars.lcmd != NULL || vars.lfile != NULL)
 			{
@@ -58,9 +65,9 @@
 				}	
 				if (vars.lfile != NULL)
 				{
-					printf("- %d \nfile : %s\ntype : %d\n",i,((t_file*)vars.lfile->data)->file,((t_file*)lfile->data)->type);
+					printf("- %d \nfile : %s\ntype : %d\n",i,((t_file*)vars.lfile->data)->file,((t_file*)vars.lfile->data)->type);
 					whoexec(head);
-					lfile = lfile->next;
+					vars.lfile = vars.lfile->next;
 				}
 				i++;
 			}
