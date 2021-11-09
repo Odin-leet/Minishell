@@ -23,6 +23,10 @@
 			return ((char *)s);
 		return (0);
 	}
+	char **collector(t_linked_list *rass)
+	{
+		
+	}
 	/*void whoexec(t_linked_list *cmd)
 	{
 		if (()
@@ -33,12 +37,8 @@
 	{
 		int i;
 		int fd[2];
-		int in;
-		int out;
-		int pvin;
+		t_vars vars;
 
-		t_linked_list *lcmd;
-		t_linked_list *lfile;
 		pipe(fd);
 		i = 0;
 		while (head != NULL)
