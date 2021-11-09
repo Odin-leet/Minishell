@@ -23,11 +23,11 @@
 		return ((char *)s);
 	return (0);
 }*/
-void whoexec(t_linked_list *cmd)
+/*void whoexec(t_linked_list *cmd)
 {
 	if (()
 	execsys();
-}
+}*/
 int intializer();
 int exec(t_linked_list *head)
 {
@@ -50,7 +50,6 @@ int exec(t_linked_list *head)
 			if (lcmd != NULL)
 			{
 				printf("-%d\ncmd : %s\n",i,(char *)lcmd->data);
-				
 				lcmd = lcmd->next;
 			}	
 			if (lfile != NULL)
@@ -81,6 +80,8 @@ int main(int argc, char **argv)
 	out = fd[1];
 	for(int i = 0; i < 2; i++)
 	{
+		/*last cmd out should be [1]
+		*/
 		if (i == 1)
 			out = 1;
 		pid = fork();
