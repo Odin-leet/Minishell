@@ -23,12 +23,12 @@
 		return ((char *)s);
 	return (0);
 }*/
-void whoexec(t_linked_list *cmd)
-{
-	if (()
-	execsys();
-}
-int intializer();
+//void whoexec(t_linked_list *cmd)
+//{
+////	if ()//
+//	execsys();
+//}
+//int intializer();
 int exec(t_linked_list *head)
 {
 	int i;
@@ -56,7 +56,7 @@ int exec(t_linked_list *head)
 			if (lfile != NULL)
 			{
 				printf("- %d \nfile : %s\ntype : %d\n",i,((t_file*)lfile->data)->file,((t_file*)lfile->data)->type);
-				whoexec(head);
+			//	whoexec(head);
 				lfile = lfile->next;
 			}
 			i++;
@@ -69,7 +69,7 @@ int exec(t_linked_list *head)
 
 int main(int argc, char **argv)
 {
-	char *args[3] = {"/bin/ls", "/usr/bin/wc"};
+	char *args[3] = {"/bin/cat", "/usr/bin/wc"};
 	pid_t pid;
 	int fd[2];
 	int in = 0;

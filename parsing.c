@@ -1,5 +1,5 @@
 #include "minishell.h"
-
+#include <dirent.h>
 char	*ft_calloc(size_t count, size_t size)
 {
 	char	*dest;
@@ -440,18 +440,157 @@ int     findtype(char *s)
 
 }
 
+
+int		builtins(char *string)
+{
+	if (ft_strncmp(string, "echo", ft_strlen(string)) == 0)
+		return(1);
+	if (ft_strncmp(string, "cd", ft_strlen(string)) == 0)
+		return(1);
+	if (ft_strncmp(string, "pwd", ft_strlen(string)) == 0)
+		return(1);
+	if (ft_strncmp(string, "unset", ft_strlen(string)) == 0)
+		return(1);
+	if (ft_strncmp(string, "env", ft_strlen(string)) == 0)
+		return(1);
+	if (ft_strncmp(string, "exit", ft_strlen(string)) == 0)
+		return(1);
+	if (ft_strncmp(string, "export", ft_strlen(string)) == 0)
+		return(1);
+	return(0);
+
+}
+
+char *		checkforpath(char *string , char *str)
+{
+	DIR *dir;
+    struct dirent *sd;
+    dir = opendir(string);
+	printf("%s, %s ||\n",string, str);
+    if (dir == NULL)
+    {
+        printf("there is no file\n");
+        return(0);
+    }
+    while ((sd = readdir(dir)) !=  NULL)
+    {
+		printf("sdname == %s\n",sd->d_name);
+        if (strncmp(sd->d_name , str, ft_strlen(sd->d_name)) == 0)
+			return(string);
+		//printf(">> %s\n",sd->d_name);
+    }
+	
+	return(NULL);
+}
+
+int		thereisslach(char *string)
+{
+	int i;
+	i = 0;
+	while (string[i] != '\0')
+	{
+		if (string[i] == '/')
+			return(1);
+			i++;
+	}	
+	return(0);
+}
+char *elsefunction(char *string, char **env)
+{
+	int i;
+	char *tmp;
+	char **tab;
+	char *tmp2;
+
+	tmp = NULL;
+	tmp2 = NULL;
+	i = 0;
+	 while (env[i])
+	 {
+		 if (ft_strncmp(env[i] ,"PATH=", 5) == 0)
+			break;
+		i++;
+	 }
+	 tmp = ft_strdup(env[i] , 5);
+	 tab = ft_split1(tmp , ':');
+	 tmp = NULL;
+	 i = 0;
+	 while (tab[i] != NULL)
+	 {
+		printf("string == |%s|\n",string);
+		 if ((tmp2 = checkforpath(tab[i], string)) != NULL)
+		 {
+			 		 	tab[i] =ft_strjoin(tab[i], "/");
+						  return(ft_strjoin(tab[i] , string));
+
+
+		 }
+		i++;
+	 }
+	
+	 printf("tmp == %s\n", tmp);
+	 return(NULL);
+
+}
+char *handleargs(char *string, char **env)
+{
+	char *ptr;
+	char *ptr2;
+	int i;
+	int j;
+
+	j = 0;
+	i = 0;
+	ptr = NULL;
+	ptr2= NULL;
+	if (builtins(string) == 1)
+		return (string);
+	else if (thereisslach(string) == 1)
+	{	
+		while (string[i] != '\0')
+		{
+			if (string[i] == '/')
+				j = i;
+			i++;	
+		}
+		ptr = ft_substr(string, 0, j);
+		printf(" -- %s\n", ptr);
+
+		ptr2 = ft_strdup(string, j + 1);
+		printf(" -- %s\n", ptr2);
+		
+		if (checkforpath(ptr, ptr2) == NULL)
+			return(NULL);
+		return(string);	
+	}
+	else{
+		//	printf("string == |%s|\n",string);
+		  	string = elsefunction(string , env);   
+			 // printf("string == %s\n", string);                                    	               
+	}
+	return(string);
+}
+
 t_linked_list *parser(t_linked_list *lexer , char **env){ 
 	t_linked_list *head = NULL;
 	t_command *command;
 	t_file *token;
+	int i;
 
+	i = 0;
 	command = (t_command *)malloc(sizeof(t_command));
 	command->files   = NULL;
 	command->nameargs = NULL;
 
 	while (lexer) {
 		token = (t_file *)lexer->data;
-		if (token->type == 0) 
+		if (token->type == 0 && i == 0)
+		{
+			if ((token->file =  (void *)handleargs((char *)token->file, env)) == NULL)
+				return(NULL);
+			i++;
+		}
+		else if (token->type == 0) 
 		{	token->file = (void*)handleenvir((char *)token->file, env);
 			append(&(command->nameargs), (void *)token->file);
 		}
@@ -703,8 +842,12 @@ int		main(int argc, char **argv, char **env)
 			return(0);
 		Parser = parser(head, env);
 		//exec(Parser);
-		free_files_linked(head);
+		if ( Parser != NULL)
+		{
+			free_files_linked(head);
 		free_lin_command(Parser);
+		}
+		
 		free(split);
 	}
 	return(0);
