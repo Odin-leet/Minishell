@@ -50,9 +50,8 @@
 			vars.lcmd = ((t_command*)head->data)->nameargs;
 			vars.collected = collector(vars.lcmd); // don't forget to free that shit after xv_it;
 			if (issyscall((char *)vars.lcmd->data) == 1)
-			{
 				xv_it(&vars);
-			}	
+			else if (handle_it(head)) ;
 				//call collector use it then free collected
 				// I should use cmd head instead of the principal head !![done]
 			vars.lfile = ((t_command*)head->data)->files;
