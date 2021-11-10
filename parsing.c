@@ -466,7 +466,7 @@ char *		checkforpath(char *string , char *str)
 	DIR *dir;
     struct dirent *sd;
     dir = opendir(string);
-	printf("%s, %s ||\n",string, str);
+//	printf("%s, %s ||\n",string, str);
     if (dir == NULL)
     {
         printf("there is no file\n");
@@ -474,7 +474,7 @@ char *		checkforpath(char *string , char *str)
     }
     while ((sd = readdir(dir)) !=  NULL)
     {
-		printf("sdname == %s\n",sd->d_name);
+		//printf("sdname == %s\n",sd->d_name);
         if (strncmp(sd->d_name , str, ft_strlen(sd->d_name)) == 0)
 			return(string);
 		//printf(">> %s\n",sd->d_name);
@@ -588,6 +588,9 @@ t_linked_list *parser(t_linked_list *lexer , char **env){
 		{
 			if ((token->file =  (void *)handleargs((char *)token->file, env)) == NULL)
 				return(NULL);
+			append(&(command->nameargs), (void *)token->file);
+				//printf("tokenfile === %s \n", (char *)token->file);
+
 			i++;
 		}
 		else if (token->type == 0) 
@@ -614,7 +617,7 @@ t_linked_list *parser(t_linked_list *lexer , char **env){
 			command->files = NULL;
 			command->nameargs = NULL; 
 
-			printf("lool im here \n");
+		//	printf("lool im here \n");
 		}
 
 		lexer = lexer->next;
@@ -841,13 +844,14 @@ int		main(int argc, char **argv, char **env)
 			return(0);
 		Parser = parser(head, env);
 		//exec(Parser);
-		if ( Parser != NULL)
-		{
-			free_files_linked(head);
-		free_lin_command(Parser);
-		}
-		
-		free(split);
+	
+	//if ( Parser != NULL)
+	//{
+	//	free_files_linked(Parser);
+	//free_lin_command(Parser);
+	//}
+	//
+	//free(split);
 	}
 	return(0);
 }

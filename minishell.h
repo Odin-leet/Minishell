@@ -19,17 +19,6 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 
-typedef struct s_vars
-{
-	int		in;
-	int		out;
-	int		pvin;
-	pid_t	pid;
-	char	**collected;
-	t_linked_list *newhead;
-	t_linked_list *lcmd;
-	t_linked_list *lfile;
-}				t_vars;
 
 typedef struct s_file{
 	char	*file;
@@ -46,6 +35,17 @@ typedef struct command{
 	t_linked_list	*files;
 }				t_command;
 
+typedef struct s_vars
+{
+	int		in;
+	int		out;
+	int		pvin;
+	pid_t	pid;
+	char	**collected;
+	t_linked_list *newhead;
+	t_linked_list *lcmd;
+	t_linked_list *lfile;
+}				t_vars;
 int		get_next_line(int fd, char **line, int BUFFER_SIZE);
 char	*ft_strchr(char *s, int c);
 char	*ft_strdup(char *s1, size_t i);
