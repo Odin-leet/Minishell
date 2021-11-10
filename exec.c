@@ -28,6 +28,7 @@
 		//
 	}
 	/*void whoexec(t_linked_list *cmd)
+
 	{
 		if (()
 		execsys();
@@ -75,6 +76,7 @@
 		}
 		return 0;
 	}
+
 
 	int main(int argc, char **argv)
 	{

@@ -1,6 +1,7 @@
 NAME =	Minishell
 
 SRC =	parsing.c\
+		ft_split1.c
 
 		
 
