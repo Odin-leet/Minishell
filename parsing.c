@@ -827,8 +827,10 @@ int		main(int argc, char **argv, char **env)
 {
 	char *buffer;
 	char **split;
+	char **s;
 	t_linked_list *head;
 	t_linked_list *Parser;
+	t_linked_list *cmd;
 
 	split = NULL;
 	argc = 0;
@@ -843,6 +845,10 @@ int		main(int argc, char **argv, char **env)
 		if (check_errors(head) == 0)
 			return(0);
 		Parser = parser(head, env);
+
+		cmd = ((t_command*)Parser->data)->nameargs;
+		s = collector(cmd);
+		printf("%s\n%s\n%s\n", s[0], s[1], s[2]);
 		//exec(Parser);
 	
 	//if ( Parser != NULL)
