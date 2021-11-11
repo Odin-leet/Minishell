@@ -48,7 +48,7 @@ char **collector(t_linked_list *cmd)
 	return (sequance);
 }
 void whoexec(t_linked_list *cmd)
-	if (()	execsys();
+	//if (()	execsys();
 
 void xv_it(t_vars *vars)
 {
@@ -71,18 +71,19 @@ int issyscall(char *string)
  		vars.lfile = ((t_command*)head->data)->files;
  		vars.lcmd = ((t_command*)head->data)->nameargs;
  		vars.collected = collector(vars.lcmd); // only free the collector after setting his values to NULL after they stop pointing to our cmd struct
- 		if (issyscall((char *)vars.lcmd->data) == 1)
- 			xv_it(&vars);
- 		else if (handle_it(head)) ;
- 			//call collector use it then free collected
- 			// I should use cmd head instead of the principal head !![done]
  		while (vars.lcmd != NULL || vars.lfile != NULL)
  		{
  			if (vars.lcmd != NULL)
- 			{
- 				printf("-%d\ncmd : %s\n",i,(char *)vars.lcmd->data);
+			{
+				if (issyscall((char *)vars.lcmd->data) == 1)
+					xv_it(&vars);
+				else
+				{	handle_it(head) ;
+					return(0);
+				}
+				 printf("-%d\ncmd : %s\n",i,(char *)vars.lcmd->data);
  				vars.lcmd = vars.lcmd->next;
- 			}	
+ 			}
  			if (vars.lfile != NULL)
  			{
  				printf("- %d \nfile : %s\ntype : %d\n",i,((t_file*)vars.lfile->data)->file,((t_file*)vars.lfile->data)->type);
@@ -109,7 +110,7 @@ int issyscall(char *string)
  	out = fd[1];
  	for(int i = 0; i < 2; i++)
  	{
- 		/*last cmd out should be [1]
+ 		/*last cmd out-fd should be [1]
  		*/
  		if (i == 1)
  			out = 1;
