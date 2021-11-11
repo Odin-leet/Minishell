@@ -828,6 +828,7 @@ int		main(int argc, char **argv, char **env)
 	char *buffer;
 	char **split;
 	char **s;
+	pid_t pid;
 	t_linked_list *head;
 	t_linked_list *Parser;
 	t_linked_list *cmd;
@@ -848,7 +849,12 @@ int		main(int argc, char **argv, char **env)
 
 		cmd = ((t_command*)Parser->data)->nameargs;
 		s = collector(cmd);
-		printf("%s\n%s\n%s\n", s[0], s[1], s[2]);
+		//printf("%s\n%s\n%s\n", s[0], s[1], s[2]);
+		pid =fork();
+		if (pid == 0)
+			execve(s[0], s, env);
+		else
+			waitpid(pid, NULL, 0);
 		//exec(Parser);
 	
 	//if ( Parser != NULL)
