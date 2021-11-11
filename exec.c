@@ -25,7 +25,7 @@
 	}
 	char **collector(t_linked_list *rass)
 	{
-		//
+		
 	}
 	/*void whoexec(t_linked_list *cmd)
 

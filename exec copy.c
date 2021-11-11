@@ -25,8 +25,8 @@
 }*/
 void whoexec(t_linked_list *cmd)
 {
-	if (()
-	execsys();
+	//if (()
+	//execsys();
 }
 int intializer();
 int exec(t_linked_list *head)
