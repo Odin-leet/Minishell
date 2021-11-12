@@ -854,7 +854,8 @@ int		main(int argc, char **argv, char **env)
 		if (pid == 0)
 			execve(s[0], s, env);
 		else
-			waitpid(pid, NULL, 0);
+			wait();
+			//waitpid(pid, NULL, 0);
 		//exec(Parser);
 	
 	//if ( Parser != NULL)
