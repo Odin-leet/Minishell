@@ -501,6 +501,7 @@ char *elsefunction(char *string, char **env)
 	char *tmp;
 	char **tab;
 	char *tmp2;
+	//char *tmp3 = NULL;
 
 	tmp = NULL;
 	tmp2 = NULL;
@@ -513,7 +514,7 @@ char *elsefunction(char *string, char **env)
 	 }
 	 tmp = ft_strdup(env[i] , 5);
 	 tab = ft_split1(tmp , ':');
-	 tmp = NULL;
+	// tmp = NULL;
 	 i = 0;
 	 while (tab[i] != NULL)
 	 {
@@ -527,6 +528,15 @@ char *elsefunction(char *string, char **env)
 		 }
 		i++;
 	 }
+	 i = 0;
+	 while (tab[i] != NULL)
+	 {
+		 free(tab[i]);
+		 i++;
+	 }
+	 free(tmp);
+	 //free(tmp3);
+	 free(tab);
 	
 	 printf("tmp == %s\n", tmp);
 	 return(NULL);
@@ -841,20 +851,24 @@ int		main(int argc, char **argv, char **env)
 		head = NULL;
 		Parser = NULL;
 		buffer = readline("Minishell 0.0$ ");
-		split = ft_split(buffer, ' ');
-		head = mainhelper3(split);
-		if (check_errors(head) == 0)
-			return(0);
-		Parser = parser(head, env);
+		if (buffer[0] != '\0')
+		{
+			split = ft_split(buffer, ' ');
+			head = mainhelper3(split);
+			if (check_errors(head) == 0)
+				return(0);
+			Parser = parser(head, env);
 
-		cmd = ((t_command*)Parser->data)->nameargs;
-		s = collector(cmd);
+			cmd = ((t_command*)Parser->data)->nameargs;
+			s = collector(cmd);
 		//printf("%s\n%s\n%s\n", s[0], s[1], s[2]);
-		pid =fork();
-		if (pid == 0)
-			execve(s[0], s, env);
-		else
-			waitpid(pid, NULL, 0);
+			pid =fork();
+			if (pid == 0)
+				execve(s[0], s, env);
+			else
+				waitpid(pid, NULL, 0);
+		}
+		
 		//exec(Parser);
 	
 	//if ( Parser != NULL)
