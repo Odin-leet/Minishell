@@ -48,7 +48,7 @@ typedef struct s_vars
 	t_linked_list *lfile;
 }				t_vars;
 int		get_next_line(int fd, char **line, int BUFFER_SIZE);
-char **collector(t_linked_list *cmd);
+char 	**collector(t_linked_list *cmd);
 char	*ft_strchr(char *s, int c);
 char	*ft_strdup(char *s1, size_t i);
 char	*ft_strjoin(char *s1, char *s2);
@@ -56,5 +56,5 @@ size_t	ft_strlen(char *s);
 char	*ft_substr(char *s, unsigned int start, size_t len);
 char	*ft_calloc(size_t count, size_t size);
 int		exec(t_linked_list *head);
-char		**ft_split1(char const *s, char c);
+char	**ft_split1(char const *s, char c);
 #endif
