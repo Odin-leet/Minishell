@@ -18,6 +18,7 @@
 # include <string.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+#include <sys/_types.h>
 
 
 typedef struct s_file{

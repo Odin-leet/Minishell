@@ -862,6 +862,7 @@ int		main(int argc, char **argv, char **env)
 			cmd = ((t_command*)Parser->data)->nameargs;
 			s = collector(cmd);
 		//printf("%s\n%s\n%s\n", s[0], s[1], s[2]);
+<<<<<<< HEAD
 			pid =fork();
 			if (pid == 0)
 				execve(s[0], s, env);
@@ -869,6 +870,14 @@ int		main(int argc, char **argv, char **env)
 				waitpid(pid, NULL, 0);
 		}
 		
+=======
+		pid =fork();
+		if (pid == 0)
+			execve(s[0], s, env);
+		else
+			wait();
+			//waitpid(pid, NULL, 0);
+>>>>>>> 78bbca457bb66036c648599ee01ff06b600c3a42
 		//exec(Parser);
 	
 	//if ( Parser != NULL)
