@@ -1,6 +1,7 @@
 #include "minishell.h"
 #include <string.h>
 
+
 size_t	ft_strlen(char *s)
 {
 	int i;
@@ -145,10 +146,9 @@ int     checkifthereisenv(char **env, char *string)
     tmp = NULL;
     i = 0;
     tmp = ft_strjoin("declare -x ", string);
-    j= 0;
     if (strchr(string, '=') != NULL)
     {
-        while (tmp[j])
+        while (string[j])
         {
             if(tmp[j] == '=')
             {
@@ -180,19 +180,10 @@ void    replaceenv(char **env, char **envprinc, char *string)
     j = 0;
 
      c = thereisequ(string);
-     if(strncmp(string, "declare -x", 6) != 0)
-     {
-        tmp= traitement1(string, c);
-             j = thereisequ(tmp);
-
-     }
-    else
-        {
-            tmp = string;
-            j = c;
-        }
+    tmp= traitement1(string, c);
+    j = thereisequ(tmp);
     i = 0;
-    while(env[i])
+    while(env[i] != NULL)
     {
           //  printf("looooool im here \n");
             //printf("tmp == |%c|\n",tmp[j]);
@@ -200,102 +191,37 @@ void    replaceenv(char **env, char **envprinc, char *string)
         if (strncmp(tmp, env[i],  j) == 0)
         {   
             (free(env[i]));
-            env[i] = NULL;
+            //env[i] = NULL;
             env[i] = tmp;
           //  printf("waaaaa%s++\n",env[i]);
         }
         i++;
     }
     i=0;
- while(envprinc[i])
+ while(envprinc[i] != NULL)
  {
  if (strncmp(string, envprinc[i], c) == 0)
  {
        //   printf("%s -- %s -- %d\n", string, envprinc[i], c);
 
-    // (free(envprinc[i]));
-     envprinc[i] = NULL;
-     envprinc[i] = string;
+    (free(envprinc[i]));
+     //envprinc[i] =;
+     envprinc[i] = tmp;
  }
      i++;
  }
- i = 0;
-  // while(envprinc[i])
-  //{
-  //    printf("%s\n",envprinc[i]);
-  //    i++;
-  //}
+    while(envprinc[i] != NULL)
+   {
+       printf("%s\n",envprinc[i]);
+       i++;
+   }
 
 }
-int     counttab(char **tab)
-{
-    int i;
-    
-    i = 0;
-    while(tab[i])
-     i++;
-    
-    return(i);
-}
+
 char **addenv2(char *string, char **envpric , char **env)
 {
-    int c;
-    char *tmp;
-    char **tmp1;
-    char **tmp3;
-
-    tmp3 =NULL;
-    int j;
-    j = 0;
-    c = 0;
-                printf("%s \n",string);
-                printf("%d\n",thereisequ(string));
-
-    if ((c = thereisequ(string)) != -1)
-    {
-        tmp = traitement1(string, c);
-        tmp1 = malloc(sizeof(char *) * (counttab(env) + 2));
-        c = 0;
-        while(env[c] != NULL)
-        {
-            tmp1[c] = malloc(sizeof(char) * (ft_strlen(env[c]) + 1));
-            c++;
-        }
-        c = 0;
-        while(env[c])
-        {
-            j = 0;
-            while(env[c][j])
-            {
-                tmp1[c][j] = env[c][j];
-                j++;
-            }
-            tmp1[c][j] = '\0';
-            c++;
-        }
-        tmp1[c] = malloc(sizeof(char ) * (ft_strlen(tmp)+ 1));
-        j = 0;
-        while(j < ft_strlen(tmp))
-        {
-            tmp1[c][j] = tmp[j];
-            j++;
-        }
-        tmp1[c][j] = '\0';
-        tmp1[++c] = NULL;
-
-    }
-    int i;
-    i = 0;
-    while(tmp1[i])
-    {
-        printf("%s \n",tmp1[i]);
-        i++;
-    }
-   // printf("saddd poooooooooooooooooop \n");
-    env= tmp1;
-    return(NULL);
+    
 }
-
 char **addenv(char **env,char **envprinc, char *string)
 {
     int i;
@@ -303,8 +229,6 @@ char **addenv(char **env,char **envprinc, char *string)
     i = 0;
     if (checkifthereisenv(env, string) == 1)
     {
-               // printf("asdasdasdasdasdasdasdasdas\n");
-
         while(string[i] )
         {
             if (string[i] == '=')
@@ -314,15 +238,7 @@ char **addenv(char **env,char **envprinc, char *string)
         }
     }
     else{
-        i = 0;
-       
-       while(string[i] )
-        {
-            if (string[i] == '=')
-                addenv2(string, envprinc, env);
-            
-            i++;
-        }
+       addeven2(string, envprinc, env);
     }
     return(NULL);
 
@@ -334,14 +250,13 @@ void    export(char **env, char *string)
     int i = 0;
     char **env2;
 
-  //  if (strncmp(env[0], "declare -x", 6) != 0)
-        env1 =  transferenv(env);
+    env1 =  transferenv(env);
     env2 = addenv(env1, env, string);
-  // while(env1[i])
-  // {
-  //     printf("%s \n",env1[i]);
-  //     i++;
-  // }
+ while(env1[i])
+ {
+     printf("%s \n",env1[i]);
+     i++;
+ }
 }
 
 int main(int argc , char **argv, char **env)
@@ -379,16 +294,29 @@ int main(int argc , char **argv, char **env)
     }
     envprinc[i] = NULL;
      i = 0; 
-    while(1)
+  // while (envprinc[i] != NULL)
+  // {
+  //printf("%s\n",envprinc[i]);
+  //i++;
+  //  }
+   i = 0;
+    while(i  < 5)
     {
-            //tmp = env;
-            buffer = readline("$");
-            export(env, buffer);
+           // if (i == 1)
+           // {
+           //     printf("asdasd");
+           //     i++;
+           //    // continue;
+           // }
+                
+           // buffer = readline("$");
+            export(env, "a=make");
+            i++;
     } 
      //export(env,"a");
 
-    // int i = 0;
-    // int j = 0;
+   // int i = 0;
+   // int j = 0;
      //while (tmp[i] != NULL)
      //{
      //    printf("%s\n",tmp[i]);
