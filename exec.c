@@ -23,30 +23,30 @@
 // 		return (1);
 // 	return (0);
 // }
-// char **collector(t_linked_list *cmd)
-// {
-// 	char **sequance;
-// 	t_linked_list *tempo;
-// 	int size;
+char **collector(t_linked_list *cmd)
+{
+	char **sequance;
+	t_linked_list *tempo;
+	int size;
 
-// 	size = 0;
-// 	tempo = cmd;
-// 	while (tempo != NULL)
-// 	{
-// 		tempo = tempo->next;
-// 		size++;
-// 	}
-// 	sequance = malloc(sizeof(char*) * size + 1);
-// 	sequance[size] = NULL;
-// 	size = 0;
-// 	while(cmd != NULL)
-// 	{
-// 		sequance[size] = (char *)cmd->data;
-// 		cmd = cmd->next;
-// 		size++;
-// 	}
-// 	return (sequance);
-// }
+	size = 0;
+	tempo = cmd;
+	while (tempo != NULL)
+	{
+		tempo = tempo->next;
+		size++;
+	}
+	sequance = malloc(sizeof(char*) * size + 1);
+	sequance[size] = NULL;
+	size = 0;
+	while(cmd != NULL)
+	{
+		sequance[size] = (char *)cmd->data;
+		cmd = cmd->next;
+		size++;
+	}
+	return (sequance);
+}
 // void whoexec(t_linked_list *cmd)
 // {}	//if (()	execsys();
 
@@ -97,42 +97,43 @@
 //  		printf("there is pipe here  \n");
 //  	}
 //  	return 0;
-//  }						
- int main(int argc, char **argv, char **env)
- {
- 	char *args[3] = {"/bin/ls", "/usr/bin/wc"};
- 	pid_t pid;
- 	int fd[2];
- 	int in = 0;
- 	int pin = 0;
- 	int out = 1;
- 	pipe(fd);
- 	for(int i = 0; i < 2; i++)
- 	{
- 		//last cmd out-fd should be [1]
- 		if (i == 1)
- 			fd[out] = 1;
- 		pid = fork();
- 		if (pid == 0)
- 		{
- 			dup2(fd[in], 0);
- 			dup2(fd[out], 1);
- 			if (pin != 0)
- 				close(pin);
- 			if (fd[in] != 0)
- 				close(in);
- 			if (fd[out] != 1)
- 				close(fd[out]);
- 			execve(args[i], &args[i], env);
- 		}
- 		else
- 		{
- 			if (fd[out] != 1)
- 				close(fd[out]);
- 			if (fd[in] != 0)
- 				close(fd[in]);
- 			fd[in] = pin;
- 		}
- 	}
- 	return (0);
- }
+//  }			
+
+//  int main(int argc, char **argv, char **env)
+//  {
+//  	char *args[3] = {"/bin/ls", "/usr/bin/wc"};
+//  	pid_t pid;
+//  	int fd[2];
+//  	int in = 0;
+//  	int pin = 0;
+//  	int out = 1;
+//  	pipe(fd);
+//  	for(int i = 0; i < 2; i++)
+//  	{
+//  		//last cmd out-fd should be [1]
+//  		if (i == 1)
+//  			fd[out] = 1;
+//  		pid = fork();
+//  		if (pid == 0)
+//  		{
+//  			dup2(fd[in], 0);
+//  			dup2(fd[out], 1);
+//  			if (pin != 0)
+//  				close(pin);
+//  			if (fd[in] != 0)
+//  				close(in);
+//  			if (fd[out] != 1)
+//  				close(fd[out]);
+//  			execve(args[i], &args[i], env);
+//  		}
+//  		else
+//  		{
+//  			if (fd[out] != 1)
+//  				close(fd[out]);
+//  			if (fd[in] != 0)
+//  				close(fd[in]);
+//  			fd[in] = pin;
+//  		}
+//  	}
+//  	return (0);
+//  }

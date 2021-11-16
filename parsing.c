@@ -843,6 +843,7 @@ int		main(int argc, char **argv, char **env)
 	t_linked_list *Parser;
 	t_linked_list *cmd;
 
+	argc =2;
 	split = NULL;
 	argc = 0;
 	argv = NULL;
@@ -861,6 +862,8 @@ int		main(int argc, char **argv, char **env)
 
 			cmd = ((t_command*)Parser->data)->nameargs;
 			s = collector(cmd);
+			printf("\n\n%s\n\n",s[0]);
+			printf("\n\n%s\n\n",s[1]);
 		//printf("%s\n%s\n%s\n", s[0], s[1], s[2]);
 
 			pid =fork();
