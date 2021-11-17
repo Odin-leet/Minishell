@@ -865,12 +865,56 @@ int main(int argc, char **argv, char **env)
 			if (check_errors(head) == 0)
 				return (0);
 			Parser = parser(head, env);
+			in = 0;
+			pin = 0;
+			out = 1;
+			while (Parser)
+			{
+				cmd = ((t_command *)Parser->data)->nameargs;
+				s = collector(cmd);
+				//dprintf(2, "%s\n", s[0]);
+				
+				pipe(fd);
+				pin = fd[0];
+				out = fd[1];
+				if (!(Parser->next))
+					out = 1;
+				
+				pid = fork();
+				if (pid == 0)
+				{
+					dup2(in, 0);
+					dup2(out, 1);
+					if (in != 0)
+						close(in);
+					if (out != 1)
+						close(out);
+					// if (pin != 0)
+					// 	close (pin);
+					dprintf(2, "%s : wrong\n",s[0]);
+					execve(s[0], s, env);
 
-			
+					//dprintf(2, "%s : wrong\n",s[0]);
+					exit(0);
+				}
+				else
+				{
+					wait(0);
+					if (in != 0)
+						close(in);
+					if (out != 1)
+						close(out);
+					in = pin;
+				//dprintf(2, "hang here!\n");
+				}
+				//free(s);
+				Parser = Parser->next;
+				s = NULL;
+			}
+
 			// printf("\n\n%s\n\n", s[0]);
 			// printf("\n\n%s\n\n", s[1]);
 			//printf("%s\n%s\n%s\n", s[0], s[1], s[2]);
-
 			//printf("%s\n%s\n%s\n", s[0], s[1], s[2]);
 			// int i;
 			// i = 0;
@@ -878,10 +922,8 @@ int main(int argc, char **argv, char **env)
 			//		{
 			//			printf("|||||%s\n",s[i++]);
 			//		}
-
 			//	t_linked_list *Parser2;
 			//	t_linked_list *Parser3;
-
 			//	Parser3 = Parser;
 			//	while(Parser3 != NULL)
 			//	{
@@ -898,52 +940,8 @@ int main(int argc, char **argv, char **env)
 			
 			//int i = 0;
 			//cmd = ((t_command *)Parser->data)->nameargs;
-			in = 0;
-			pin = 0;
-			out = 1;
-			while (Parser)
-			{
-				cmd = ((t_command *)Parser->data)->nameargs;
-				s = collector(cmd);
-				dprintf(2, "%s\n", s[0]);
-				
-				pipe(fd);
-				pin = fd[0];
-				out = fd[1];
-				if (!Parser->next)
-					out = 1;
-				
-				pid = fork();
-				if (pid == 0)
-				{
-					dup2(in, 0);
-					dup2(out, 1);
-					if (in != 0)
-						close(in);
-					if (out != 1)
-						close(out);
-					if (pin != 0)
-						close (pin);
-					execve(s[0], s, env);
-
-					// dprintf(2, "wrong n");
-					// exit(0);
-				}
-				else
-				{
-					if (in != 0)
-						close(in);
-					if (out != 1)
-						close(out);
-					in = pin;
-				}
-				//free(s);
-				Parser = Parser->next;
-			}
 		}
-
 		//exec(Parser);
-
 		//if ( Parser != NULL)
 		//{
 		//	free_files_linked(Parser);
