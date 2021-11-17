@@ -129,10 +129,23 @@ int main(int argc, char **argv)
 	
 	while(i < 3)
 	{
+        
 		pid = fork();
 		if (pid == 0)
 		{
-			if (i == 0) 
+			// if first command in pipeline has input redirection
+            if (hasInputFile && is1stCommand) { 
+            int fdin = open(inputFile, O_RDONLY, 0644);
+            dup2(fdin, STDIN_FILENO);
+            close(fdin);
+            }
+
+            // if last command in pipeline has output redirection
+            if (hasOutputFile && isLastCommand) { 
+            int fdout = open(outputFile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+            dup2(fdout, STDOUT_FILENO);
+            close(fdout);
+            }
 			dup2(fd, 0) ; // duplicate stdin into in = 0
 			dup2(fd[out], 1); // duplicate stdout into out = 4
 			if (fd[pin] != 0) // pin = 3 -> close(3);
