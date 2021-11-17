@@ -79,7 +79,7 @@ char *traitement1(char *str, int j)
 	str2 = malloc(sizeof(char) * 2);
 	str2[0] = '\"';
 	str2[1] = '\0';
-	tmp1 = ft_substr(str, 0, j + 1);
+	tmp1 = ft_substr(str, 0, j +1);
 	tmp2 = ft_substr(str, j + 1, ft_strlen(str) - (j + 1) );
 	//free(str); decommenter quand str ca sera un string deja allouer 
 	tmp3 = tmp2;
@@ -224,7 +224,7 @@ void    replaceenv(t_struct *pl, char *string)
 	c = 0;
 	j = 0;
 	char *string1 = strdup(string);
-//	c = thereisequ(string);
+	c = thereisequ(string);
 	//if(strncmp(string, "declare -x", 6) != 0)
 	//{
 		tmp= traitement1(string1, c);
