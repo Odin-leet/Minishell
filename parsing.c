@@ -849,6 +849,10 @@ int main(int argc, char **argv, char **env)
 	split = NULL;
 	argc = 0;
 	argv = NULL;
+	int fd[2];
+			int in = 0;
+			int pin = 0;
+			int out = 1;
 	while (1)
 	{
 		head = NULL;
@@ -891,12 +895,12 @@ int main(int argc, char **argv, char **env)
 			//	Parser3 = Parser3->next;
 			//	}
 			//pid_t pid;
-			int fd[2];
-			int in = 0;
-			int pin = 0;
-			int out = 1;
+			
 			//int i = 0;
 			//cmd = ((t_command *)Parser->data)->nameargs;
+			in = 0;
+			pin = 0;
+			out = 1;
 			while (Parser)
 			{
 				cmd = ((t_command *)Parser->data)->nameargs;
@@ -918,12 +922,12 @@ int main(int argc, char **argv, char **env)
 						close(in);
 					if (out != 1)
 						close(out);
-					// if (pin != 0)
-					// 	close (pin);
-					execve(s[0], argv, env);
+					if (pin != 0)
+						close (pin);
+					execve(s[0], s, env);
 
-					dprintf(2, "wrong n");
-					exit(0);
+					// dprintf(2, "wrong n");
+					// exit(0);
 				}
 				else
 				{
