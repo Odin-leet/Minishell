@@ -3,6 +3,8 @@
 typedef struct s_struct{
 	char **env1;
 	char **envprinc;
+	int value;
+	int key;
 }               t_struct;
 t_struct pl;
 size_t	ft_strlen(char *s)
@@ -172,15 +174,44 @@ int     checkifthereisenv(char **env, char *string)
 	else 
 		count = ft_strlen(tmp);
 	while (env[i] != NULL)
-	{
-		if (strncmp(tmp, env[i], count) == 0)
-			return(1);
+	{   
 
+		j = 0;
+        while (env[i][j] !='\0')
+        {
+            if(env[i][j] == '=')
+            {
+                count = j;
+                break;
+            }
+            j++;
+            if(env[i][j] == '\0')
+                count = j;
+
+        }
+		if (strncmp(tmp, env[i], count ) == 0)
+		{
+		//	 int c = 0;
+		//while(env[c])
+	 	//
+		//	// printf("im here ||||||||||||%s\n",env[c]);
+		//	 c++;
+		//}
+			free(tmp);
+			return(1);
+		}
 		i++;
+		 
         //******************** here i need to check with the len of the envi not the string cause when i add a string like "a"
         //******************** and there is before a string like "aaa" he traiting it like it s a old var
  	}
-    free(tmp);
+	 int c = 0;
+	// while(env[c])
+	// {
+	//	 printf("||||||||||||%s\n",env[c]);
+	//	 c++;
+	// }
+	 free(tmp);
 	return(0);
 }
 
@@ -192,23 +223,31 @@ void    replaceenv(t_struct *pl, char *string)
 	int c;
 	c = 0;
 	j = 0;
+	char *string1 = strdup(string);
+//	c = thereisequ(string);
+	//if(strncmp(string, "declare -x", 6) != 0)
+	//{
+		tmp= traitement1(string1, c);
+	//	j = thereisequ(tmp);
 
-	c = thereisequ(string);
-	if(strncmp(string, "declare -x", 6) != 0)
-	{
-		tmp= traitement1(string, c);
-		j = thereisequ(tmp);
-
-	}
-	else
-	{
-		tmp = string;
-		j = c;
-	}
+	//}
+	//else
+	//{
+	//	tmp = string;
+	//	j = c;
+	//}
 	i = 0;
 	while(pl->env1[i])
 	{
 
+		j =  ft_strlen(pl->env1[i]);
+		c = 0;
+		while(pl->env1[i][c])
+		{
+			if (pl->env1[i][c] == '=')
+				j = c;
+			c++;
+		}
 		if (strncmp(tmp, pl->env1[i],  j) == 0)
 		{   
 			(free(pl->env1[i]));
@@ -221,16 +260,26 @@ void    replaceenv(t_struct *pl, char *string)
 	i=0;
 	while(pl->envprinc[i])
 	{
-		if (strncmp(string, pl->envprinc[i], c) == 0)
+		j =  ft_strlen(pl->envprinc[i]);
+		c = 0;
+		while(pl->envprinc[i][c] != '\0')
 		{
-           // (free(pl->envprinc[i]));
+			if (pl->envprinc[i][c] == '=')
+				j =c;
+			c++;
+		}
+		if (strncmp(string, pl->envprinc[i], j) == 0)
+		{
+			printf("akkiiiiadasdsa \n");
+            (free(pl->envprinc[i]));
 			pl->envprinc[i] = NULL;
-			pl->envprinc[i] = string;
+			pl->envprinc[i] = string1;
 		}
 		i++;
 	}
 	i = 0;
-
+	//free(tmp);
+	//free(string1);
 
 }
 int     counttab(char **tab)
@@ -249,6 +298,7 @@ char **addenv2(char *string, t_struct *pl)
 	char *tmp;
 	char **tmp1;
 	char **tmp3;
+	char *string1 = strdup(string);
 
 	tmp3 =NULL;
 	int j;
@@ -257,9 +307,9 @@ char **addenv2(char *string, t_struct *pl)
 //	printf("%s \n",string);
 //	printf("%d\n",thereisequ(string));
 
-	if ((c = thereisequ(string)) != -1)
+	if ((c = thereisequ(string1)) != -1)
 	{
-	    tmp = traitement1(string, c);
+	    tmp = traitement1(string1, c);
 		tmp1 = malloc(sizeof(char *) * (counttab(pl->env1) + 2));
 		tmp3 = malloc(sizeof(char *) * (counttab(pl->envprinc) + 2));
 		c = 0;
@@ -317,11 +367,12 @@ char **addenv2(char *string, t_struct *pl)
 		tmp3[c][j] = '\0';
 		tmp3[++c] = NULL;
         free(tmp);
+		free(string1);
 
 	}
     else{
-        c = ft_strlen(string);
-         tmp = traitement2(string);
+        c = ft_strlen(string1);
+         tmp = traitement2(string1);
 		tmp1 = malloc(sizeof(char *) * (counttab(pl->env1) + 2));
 		tmp3 = malloc(sizeof(char *) * (counttab(pl->envprinc) + 2));
 		c = 0;
@@ -374,17 +425,19 @@ char **addenv2(char *string, t_struct *pl)
 		j = 0;
 		while(j < ft_strlen(string))
 		{
-			tmp3[c][j] = string[j];
+			tmp3[c][j] = string1[j];
 			j++;
 		}
 		tmp3[c][j] = '\0';
 		tmp3[++c] = NULL;
         free(tmp);
+		free(string1);
 
     }
 	int i = 0;
 	while (pl->env1[i] != NULL)
 	{
+			printf("|%s |\n",pl->env1[i]);
 
 		free(pl->env1[i]);
 		i++;
@@ -519,8 +572,9 @@ int main(int argc , char **argv, char **env)
 	{
 		buffer = readline("$");
 		export(&pl, buffer);
+		i++;
         
-    }
+    }   
     //i = 0;
      while(pl.env1[i])
 		{

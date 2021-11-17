@@ -759,6 +759,8 @@ int	mainhelper(char *string, int j,t_linked_list **head)
 	int *in_db ;
 	int *in_sgl ;
 	int i;
+	int c;
+	c = 0;
 
 	i = 0;
 	in_db = traitmask(string, 1);
@@ -770,10 +772,14 @@ int	mainhelper(char *string, int j,t_linked_list **head)
 		storeinfos(ft_substr(string, 0, i ),head);
 		break;
 	}
+	c = i;
 	while(string[i] == '|' && in_sgl[i] == 0 && in_sgl[i] == 0)
 	{
-		j++;
+		//c = i;
+		j++; 
 		i++;
+		if(string[i] != '|')
+			storeinfos(ft_substr(string, c, j), head);
 	}
 	if (mainhelper2(j,i, head, string) == 0)
 		return(0);
@@ -861,13 +867,37 @@ int		main(int argc, char **argv, char **env)
 
 			cmd = ((t_command*)Parser->data)->nameargs;
 			s = collector(cmd);
+
 		//printf("%s\n%s\n%s\n", s[0], s[1], s[2]);
-		pid =fork();
-		if (pid == 0)
-			execve(s[0], s, env);
-		else
-			wait();
-			//waitpid(pid, NULL, 0);
+			int i;
+			i = 0;
+	//		while (s[i] != NULL)
+	//		{
+	//			printf("|||||%s\n",s[i++]);
+	//		}
+
+	//	t_linked_list *Parser2;
+	//	t_linked_list *Parser3;
+
+		//	Parser3 = Parser;
+		//	while(Parser3 != NULL)
+		//	{
+		//	Parser2 =((t_command*)Parser3->data)->nameargs;
+		//	while (Parser2)
+		//	{
+		//		printf("|| %s || \n",(char *)Parser2->data );
+		//		Parser2 = Parser2->next;
+		//	}
+		//	printf("command n \n");
+		//	Parser3 = Parser3->next;
+		//	}
+			pid =fork();
+			if (pid == 0)
+				execve(s[0], s, env);
+			else
+				waitpid(pid, NULL, 0);
+		}
+	
 		//exec(Parser);
 	
 	//if ( Parser != NULL)
