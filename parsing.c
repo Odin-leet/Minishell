@@ -1,11 +1,11 @@
 #include "minishell.h"
 #include <dirent.h>
-char	*ft_calloc(size_t count, size_t size)
+char *ft_calloc(size_t count, size_t size)
 {
-	char	*dest;
-	size_t	i;
+	char *dest;
+	size_t i;
 
-	if (!(dest = (char*)malloc(count * size)))
+	if (!(dest = (char *)malloc(count * size)))
 		return (0);
 	i = 0;
 	while (i < (count * size))
@@ -13,17 +13,17 @@ char	*ft_calloc(size_t count, size_t size)
 	return (dest);
 }
 
-char	*ft_strjoin(char *s1, char *s2)
+char *ft_strjoin(char *s1, char *s2)
 {
-	char			*dest;
-	unsigned long	i;
-	unsigned long	j;
-	size_t			res_len;
+	char *dest;
+	unsigned long i;
+	unsigned long j;
+	size_t res_len;
 
 	if (!(res_len = 0) && s1)
 		res_len = ft_strlen(s1);
 	j = 0;
-	if (!(dest = (char*)malloc(res_len + ft_strlen(s2) + 1)))
+	if (!(dest = (char *)malloc(res_len + ft_strlen(s2) + 1)))
 		return (0);
 	i = -1;
 	if (s1 == 0 && s2 == 0)
@@ -41,8 +41,8 @@ char	*ft_strjoin(char *s1, char *s2)
 char *ft_strdup(char *s, size_t i)
 {
 	// int     i;
-	int     n;
-	int     k;
+	int n;
+	int k;
 	int j;
 	char *dest;
 	k = 0;
@@ -62,16 +62,13 @@ char *ft_strdup(char *s, size_t i)
 		i++;
 	}
 	dest[n] = '\0';
-	return(dest);
-
+	return (dest);
 }
 
-
-
-int		ft_strncmp(const char *s1, const char *s2, size_t n)
+int ft_strncmp(const char *s1, const char *s2, size_t n)
 {
-	unsigned int	j;
-	unsigned long	k;
+	unsigned int j;
+	unsigned long k;
 
 	k = 1;
 	j = 0;
@@ -91,8 +88,8 @@ int		ft_strncmp(const char *s1, const char *s2, size_t n)
 void append(t_linked_list **head_ref, void *data)
 {
 	/* 1. allocate node */
-	t_linked_list * new_node = (t_linked_list *) malloc(sizeof(t_linked_list));
-	t_linked_list *last = *head_ref;  /* used in step 5*/
+	t_linked_list *new_node = (t_linked_list *)malloc(sizeof(t_linked_list));
+	t_linked_list *last = *head_ref; /* used in step 5*/
 	/* 2. put in the data  */
 	new_node->data = (void *)data;
 	new_node->next = NULL;
@@ -101,16 +98,16 @@ void append(t_linked_list **head_ref, void *data)
 	{
 		*head_ref = new_node;
 		return;
-	} 
+	}
 	/* 5. Else traverse till the last node */
 	while (last->next != NULL)
 		last = last->next;
 	/* 6. Change the next of last node */
 	last->next = new_node;
-	return;   
+	return;
 }
 
-void				*free_pre(char **split, int k)
+void *free_pre(char **split, int k)
 {
 	while (k >= 0)
 	{
@@ -122,14 +119,14 @@ void				*free_pre(char **split, int k)
 	return (NULL);
 }
 
-int		*traitmask(const char *s, int c)
+int *traitmask(const char *s, int c)
 {
 	int *env = (int *)malloc(sizeof(int) * (strlen(s)));
 	int env_sq = 0;
 	int env_dq = 0;
-	unsigned int  i = 0;
+	unsigned int i = 0;
 	unsigned int j = strlen(s);
-	while (i <  j)
+	while (i < j)
 	{
 		env[i] = 0;
 		i++;
@@ -137,11 +134,11 @@ int		*traitmask(const char *s, int c)
 	i = 0;
 	while (s[i] != '\0')
 	{
-		if(s[i] == '\'' && env_sq == 0)
+		if (s[i] == '\'' && env_sq == 0)
 			env_sq = 1;
-		else if(s[i] == '\'' && env_sq == 1)
+		else if (s[i] == '\'' && env_sq == 1)
 			env_sq = 0;
-		else if(s[i] == '\"' && env_dq == 0)
+		else if (s[i] == '\"' && env_dq == 0)
 			env_dq = 1;
 		else if (s[i] == '\"' && env_dq == 1)
 			env_dq = 0;
@@ -151,13 +148,13 @@ int		*traitmask(const char *s, int c)
 			env[i] = env_sq;
 		i++;
 	}
-	return(env);
+	return (env);
 }
 
-static	int		len_word(const char *s, char c , int *in_sgl, int *in_db , int k )
+static int len_word(const char *s, char c, int *in_sgl, int *in_db, int k)
 {
-	int	i;
-	size_t	len;
+	int i;
+	size_t len;
 
 	len = 0;
 	i = 0;
@@ -166,7 +163,7 @@ static	int		len_word(const char *s, char c , int *in_sgl, int *in_db , int k )
 		i++;
 		k++;
 	}
-	while((s[i] != c && s[i] != '\0') || (s[i] == c && (in_sgl[k] == 1 || in_db[k] == 1)))
+	while ((s[i] != c && s[i] != '\0') || (s[i] == c && (in_sgl[k] == 1 || in_db[k] == 1)))
 	{
 		len++;
 		i++;
@@ -174,14 +171,14 @@ static	int		len_word(const char *s, char c , int *in_sgl, int *in_db , int k )
 	}
 	free(in_db);
 	free(in_sgl);
-	printf("len == %zu\n",len);
+	printf("len == %zu\n", len);
 	return (len);
 }
-char	*ft_substr(char *s, unsigned int start, size_t len)
+char *ft_substr(char *s, unsigned int start, size_t len)
 {
-	char			*dest;
-	char			*src;
-	unsigned long	j;
+	char *dest;
+	char *src;
+	unsigned long j;
 
 	if (s == 0)
 		return (0);
@@ -190,8 +187,8 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 	else
 	{
 		j = 0;
-		src = (char*)s;
-		if (!(dest = (char*)malloc(len + 1)))
+		src = (char *)s;
+		if (!(dest = (char *)malloc(len + 1)))
 			return (0);
 		while (*src && j < len)
 		{
@@ -205,7 +202,7 @@ char	*ft_substr(char *s, unsigned int start, size_t len)
 	return (dest);
 }
 
-size_t	ft_strlen(char *s)
+size_t ft_strlen(char *s)
 {
 	int i;
 
@@ -215,7 +212,7 @@ size_t	ft_strlen(char *s)
 	return (i);
 }
 
-int		ft_isdigit(int c)
+int ft_isdigit(int c)
 {
 	unsigned char k;
 
@@ -226,7 +223,7 @@ int		ft_isdigit(int c)
 		return (0);
 }
 
-int		ft_isalpha(int c)
+int ft_isalpha(int c)
 {
 	unsigned char k;
 
@@ -237,10 +234,10 @@ int		ft_isalpha(int c)
 		return (0);
 }
 
-char		*replaceenv(char *string, int start, int end, char **env)
+char *replaceenv(char *string, int start, int end, char **env)
 {
-	int		i;
-	int		j;
+	int i;
+	int j;
 	char *tmp;
 
 	j = 0;
@@ -249,110 +246,109 @@ char		*replaceenv(char *string, int start, int end, char **env)
 	if (end == 0)
 		end = ft_strlen(string);
 	//tmp = string;
-	string = ft_substr(string, start + 1,(end - 1 )- start);
+	string = ft_substr(string, start + 1, (end - 1) - start);
 	//free(tmp);
 	//tmp = string;
 	string = ft_strjoin(string, "=");
 	//free(tmp);
 	tmp = NULL;
-	while(env[i])
+	while (env[i])
 	{
-		if (ft_strncmp(env[i], string, ft_strlen(string) )== 0)
+		if (ft_strncmp(env[i], string, ft_strlen(string)) == 0)
 		{
 			j = 1;
 			break;
-		}	
+		}
 		else
 			i++;
 	}
 	if (j == 1)
-		return(ft_strdup(env[i], ft_strlen(string)));
-	return(NULL);
-
-
+		return (ft_strdup(env[i], ft_strlen(string)));
+	return (NULL);
 }
 
 char *handleenvir2(char *string, char *tmp, char *tmp2)
 {
-	if(tmp !=NULL && string != NULL)
+	if (tmp != NULL && string != NULL)
 		string = ft_strjoin(tmp, string);
-	if (tmp2 != NULL &&string != NULL)
-		string = ft_strjoin(string,tmp2);
-	if(string == NULL)
+	if (tmp2 != NULL && string != NULL)
+		string = ft_strjoin(string, tmp2);
+	if (string == NULL)
 	{
-		if(tmp != NULL && tmp2 != NULL)
+		if (tmp != NULL && tmp2 != NULL)
 			string = ft_strjoin(tmp, tmp2);
-		else if(tmp != NULL && tmp2 == NULL)
+		else if (tmp != NULL && tmp2 == NULL)
 			string = ft_strdup(tmp, 0);
 		else
-			string = ft_strdup(tmp2,0);
+			string = ft_strdup(tmp2, 0);
 	}
 	if (tmp2 != NULL)
 		free(tmp2);
-	return(string);
-}	
+	return (string);
+}
 
 char *handleenvir1(char *string, int i, int start, char *tmp, char **env)
 {
-	char	*tmp2;
-	int		end;
+	char *tmp2;
+	int end;
 
 	tmp2 = NULL;
 	end = 0;
 	i++;
-	while(string[i] != '\0')
+	while (string[i] != '\0')
 	{
-		if(string[i] != '_' && (ft_isdigit(string[i]) == 0) && (ft_isalpha(string[i]) == 0))
+		if (string[i] != '_' && (ft_isdigit(string[i]) == 0) && (ft_isalpha(string[i]) == 0))
 		{
 			end = i;
 			tmp2 = ft_substr(string, end, ft_strlen(string) - end);
-			break;				}
+			break;
+		}
 		else
 			i++;
 	}
-	string = replaceenv(string,start, end, env);
+	string = replaceenv(string, start, end, env);
 	string = handleenvir2(string, tmp, tmp2);
-	return(string);
-}	
+	return (string);
+}
 
-char			*handleenvir(char *string, char **env)
+char *handleenvir(char *string, char **env)
 {
 	int i;
 	char *tmp;
-	int	start;
+	int start;
 
 	start = 0;
 	tmp = NULL;
 	i = 0;
-	while(string[i] != '\0')
+	while (string[i] != '\0')
 	{
 		if (string[i] == '\'')
-			return(string);
-		if(string[i] == '$')
+			return (string);
+		if (string[i] == '$')
 		{
 			if (i != 0)
 			{
 				start = i;
-				tmp = ft_substr(string,0, i );
+				tmp = ft_substr(string, 0, i);
 			}
 			i++;
 			if (string[i] >= 48 && string[i] <= 57)
-				return (ft_substr(string,i + 1 ,ft_strlen(string) - (i + 1)));
+				return (ft_substr(string, i + 1, ft_strlen(string) - (i + 1)));
 			else if (string[i] == '_' || (string[i] >= 65 && string[i] <= 90))
 				string = handleenvir1(string, i, start, tmp, env);
 		}
 		free(tmp);
-		i++;   
+		i++;
 	}
-	return(string);
+	return (string);
 }
 
-static	int		count_word(char *s, char c)
+static int count_word(char *s, char c)
 {
-	size_t	i;
-	size_t	count = 0;
-	int *in_db ;
-	int *in_sgl ;
+	size_t i;
+	size_t count = 0;
+	int *in_db;
+	int *in_sgl;
 
 	in_db = traitmask(s, 1);
 	in_sgl = traitmask(s, 0);
@@ -360,15 +356,15 @@ static	int		count_word(char *s, char c)
 	count = 0;
 	while (s[i] != '\0')
 	{
-		if(s[i] != c )    
-			count ++;
-		while((s[i] != c && s[i] != '\0') || (s[i] == c && (in_sgl[i] == 1 || in_db[i] == 1)))
+		if (s[i] != c)
+			count++;
+		while ((s[i] != c && s[i] != '\0') || (s[i] == c && (in_sgl[i] == 1 || in_db[i] == 1)))
 		{
 			i++;
 		}
-		if(s[i] != '\0')
+		if (s[i] != '\0')
 		{
-			i++;   
+			i++;
 		}
 	}
 	free(in_db);
@@ -376,21 +372,19 @@ static	int		count_word(char *s, char c)
 	return (count);
 }
 
-int		splithelper(int i, const char *s, int k, char **split, char c)
+int splithelper(int i, const char *s, int k, char **split, char c)
 {
 	unsigned long j;
-	int *in_db ;
-	int *in_sgl ;
-
+	int *in_db;
+	int *in_sgl;
 
 	in_db = traitmask(s, 1);
 	in_sgl = traitmask(s, 0);
-	split[i] = (char *)malloc(sizeof(char)
-			* (len_word(&s[k], c, in_sgl, in_db, k)  + 1));
+	split[i] = (char *)malloc(sizeof(char) * (len_word(&s[k], c, in_sgl, in_db, k) + 1));
 	j = 0;
 	while (s[k] == c && (in_sgl[k] == 0 || in_db[k] == 0))
 		k++;
-	while((s[k] != c && s[k] != '\0') || (s[k] == c && (in_sgl[k] == 1 || in_db[k] == 1)))
+	while ((s[k] != c && s[k] != '\0') || (s[k] == c && (in_sgl[k] == 1 || in_db[k] == 1)))
 	{
 		split[i][j] = s[k];
 		k++;
@@ -399,101 +393,97 @@ int		splithelper(int i, const char *s, int k, char **split, char c)
 	split[i][j] = '\0';
 	//free(in_sgl);
 	//free(in_sgl);
-	return(k);
+	return (k);
 }
 
-char				**ft_split(char *s, char c)
+char **ft_split(char *s, char c)
 {
-	int	i;
-	size_t	k;
-	char	**split;
+	int i;
+	size_t k;
+	char **split;
 
 	i = -1;
 	k = 0;
-	if (!s || !(split = (char **)malloc(sizeof(char *)
-					* (count_word(s, c) + 1))))
+	if (!s || !(split = (char **)malloc(sizeof(char *) * (count_word(s, c) + 1))))
 		return (NULL);
 	while (++i < count_word(s, c))
 	{
-		k = splithelper(i , s, k , split, c);
-	}	
+		k = splithelper(i, s, k, split, c);
+	}
 	split[i] = NULL;
 	return (split);
 }
 
-int     findtype(char *s)
+int findtype(char *s)
 {
-	if (ft_strncmp(s, "|",ft_strlen(s) ) == 0)
-		return(1);
+	if (ft_strncmp(s, "|", ft_strlen(s)) == 0)
+		return (1);
 	//pipe == 1
-	if (ft_strncmp(s, "<",ft_strlen(s)) == 0)
-		return(2);
+	if (ft_strncmp(s, "<", ft_strlen(s)) == 0)
+		return (2);
 	//redirection input
-	if (ft_strncmp(s, ">",ft_strlen(s) ) == 0)
-		return(3);
+	if (ft_strncmp(s, ">", ft_strlen(s)) == 0)
+		return (3);
 	//redirection output
-	if (ft_strncmp(s, ">>",  ft_strlen(s) + 1) == 0)
-		return(4);
-	if (ft_strncmp(s, "<<",  ft_strlen(s) + 1) == 0)
-		return(5);
-	return(0);
-
+	if (ft_strncmp(s, ">>", ft_strlen(s) + 1) == 0)
+		return (4);
+	if (ft_strncmp(s, "<<", ft_strlen(s) + 1) == 0)
+		return (5);
+	return (0);
 }
 
-
-int		builtins(char *string)
+int builtins(char *string)
 {
 	if (ft_strncmp(string, "echo", ft_strlen(string)) == 0)
-		return(1);
+		return (1);
 	if (ft_strncmp(string, "cd", ft_strlen(string)) == 0)
-		return(1);
+		return (1);
 	if (ft_strncmp(string, "pwd", ft_strlen(string)) == 0)
-		return(1);
+		return (1);
 	if (ft_strncmp(string, "unset", ft_strlen(string)) == 0)
-		return(1);
+		return (1);
 	if (ft_strncmp(string, "env", ft_strlen(string)) == 0)
-		return(1);
+		return (1);
 	if (ft_strncmp(string, "exit", ft_strlen(string)) == 0)
-		return(1);
+		return (1);
 	if (ft_strncmp(string, "export", ft_strlen(string)) == 0)
-		return(1);
-	return(0);
-
+		return (1);
+	return (0);
 }
 
-char *		checkforpath(char *string , char *str)
+char *checkforpath(char *string, char *str)
 {
 	DIR *dir;
-    struct dirent *sd;
-    dir = opendir(string);
-//	printf("%s, %s ||\n",string, str);
-    if (dir == NULL)
-    {
-        printf("there is no file\n");
-        return(0);
-    }
-    while ((sd = readdir(dir)) !=  NULL)
-    {
+	struct dirent *sd;
+	dir = opendir(string);
+	//	printf("%s, %s ||\n",string, str);
+	if (dir == NULL)
+	{
+		printf("there is no file\n");
+		return (0);
+	}
+	while ((sd = readdir(dir)) != NULL)
+	{
 		//printf("sdname == %s\n",sd->d_name);
-        if (strncmp(sd->d_name , str, ft_strlen(sd->d_name)) == 0)
-			return(string);
+		if (strncmp(sd->d_name, str, ft_strlen(sd->d_name)) == 0)
+			return (string);
 		//printf(">> %s\n",sd->d_name);
-    }
-	
-	return(NULL);
+	}
+
+	return (NULL);
 }
 
-int		thereisslach(char *string)
+int thereisslach(char *string)
 {
 	int i;
 	i = 0;
 	while (string[i] != '\0')
 	{
 		if (string[i] == '/')
-			return(1);
-			i++;
-	}	
-	return(0);
+			return (1);
+		i++;
+	}
+	return (0);
 }
 char *elsefunction(char *string, char **env)
 {
@@ -506,41 +496,38 @@ char *elsefunction(char *string, char **env)
 	tmp = NULL;
 	tmp2 = NULL;
 	i = 0;
-	 while (env[i])
-	 {
-		 if (ft_strncmp(env[i] ,"PATH=", 5) == 0)
+	while (env[i])
+	{
+		if (ft_strncmp(env[i], "PATH=", 5) == 0)
 			break;
 		i++;
-	 }
-	 tmp = ft_strdup(env[i] , 5);
-	 tab = ft_split1(tmp , ':');
+	}
+	tmp = ft_strdup(env[i], 5);
+	tab = ft_split1(tmp, ':');
 	// tmp = NULL;
-	 i = 0;
-	 while (tab[i] != NULL)
-	 {
-		printf("string == |%s|\n",string);
-		 if ((tmp2 = checkforpath(tab[i], string)) != NULL)
-		 {
-			 		 	tab[i] =ft_strjoin(tab[i], "/");
-						  return(ft_strjoin(tab[i] , string));
-
-
-		 }
+	i = 0;
+	while (tab[i] != NULL)
+	{
+		printf("string == |%s|\n", string);
+		if ((tmp2 = checkforpath(tab[i], string)) != NULL)
+		{
+			tab[i] = ft_strjoin(tab[i], "/");
+			return (ft_strjoin(tab[i], string));
+		}
 		i++;
-	 }
-	 i = 0;
-	 while (tab[i] != NULL)
-	 {
-		 free(tab[i]);
-		 i++;
-	 }
-	 free(tmp);
-	 //free(tmp3);
-	 free(tab);
-	
-	 printf("tmp == %s\n", tmp);
-	 return(NULL);
+	}
+	i = 0;
+	while (tab[i] != NULL)
+	{
+		free(tab[i]);
+		i++;
+	}
+	free(tmp);
+	//free(tmp3);
+	free(tab);
 
+	printf("tmp == %s\n", tmp);
+	return (NULL);
 }
 char *handleargs(char *string, char **env)
 {
@@ -552,36 +539,38 @@ char *handleargs(char *string, char **env)
 	j = 0;
 	i = 0;
 	ptr = NULL;
-	ptr2= NULL;
+	ptr2 = NULL;
 	if (builtins(string) == 1)
 		return (string);
 	else if (thereisslach(string) == 1)
-	{	
+	{
 		while (string[i] != '\0')
 		{
 			if (string[i] == '/')
 				j = i;
-			i++;	
+			i++;
 		}
 		ptr = ft_substr(string, 0, j);
 		printf(" -- %s\n", ptr);
 
 		ptr2 = ft_strdup(string, j + 1);
 		printf(" -- %s\n", ptr2);
-		
+
 		if (checkforpath(ptr, ptr2) == NULL)
-			return(NULL);
-		return(string);	
+			return (NULL);
+		return (string);
 	}
-	else{
+	else
+	{
 		//	printf("string == |%s|\n",string);
-		  	string = elsefunction(string , env);   
-			 // printf("string == %s\n", string);                                    	               
+		string = elsefunction(string, env);
+		// printf("string == %s\n", string);
 	}
-	return(string);
+	return (string);
 }
 
-t_linked_list *parser(t_linked_list *lexer , char **env){ 
+t_linked_list *parser(t_linked_list *lexer, char **env)
+{
 	t_linked_list *head = NULL;
 	t_command *command;
 	t_file *token;
@@ -589,25 +578,28 @@ t_linked_list *parser(t_linked_list *lexer , char **env){
 
 	i = 0;
 	command = (t_command *)malloc(sizeof(t_command));
-	command->files   = NULL;
+	command->files = NULL;
 	command->nameargs = NULL;
 
-	while (lexer) {
+	while (lexer)
+	{
 		token = (t_file *)lexer->data;
 		if (token->type == 0 && i == 0)
 		{
-			if ((token->file =  (void *)handleargs((char *)token->file, env)) == NULL)
-				return(NULL);
+			if ((token->file = (void *)handleargs((char *)token->file, env)) == NULL)
+				return (NULL);
 			append(&(command->nameargs), (void *)token->file);
-				//printf("tokenfile === %s \n", (char *)token->file);
+			//printf("tokenfile === %s \n", (char *)token->file);
 
 			i++;
 		}
-		else if (token->type == 0) 
-		{	token->file = (void*)handleenvir((char *)token->file, env);
+		else if (token->type == 0)
+		{
+			token->file = (void *)handleenvir((char *)token->file, env);
 			append(&(command->nameargs), (void *)token->file);
 		}
-		else if (token->type != 0  && token->type != 1 && (lexer->next) && ((t_file *)(lexer->next->data))->type == 0){
+		else if (token->type != 0 && token->type != 1 && (lexer->next) && ((t_file *)(lexer->next->data))->type == 0)
+		{
 			t_file *f;
 			t_file *tmp = (t_file *)(lexer->next->data);
 
@@ -615,19 +607,20 @@ t_linked_list *parser(t_linked_list *lexer , char **env){
 			f->file = strdup(tmp->file);
 			f->file = tmp->file;
 			f->type = token->type;
-			append(&(command->files), (void*)f);
+			append(&(command->files), (void *)f);
 			lexer = lexer->next;
 		}
 		else if (token->type != 1)
 			printf("error\n");
 		if (token->type == 1 || lexer->next == NULL)
 		{
-			append(&(head),(void*)command);
+			append(&(head), (void *)command);
 			command = (t_command *)malloc(sizeof(t_command));
 			command->files = NULL;
-			command->nameargs = NULL; 
+			command->nameargs = NULL;
+			i = 0;
 
-		//	printf("lool im here \n");
+			//	printf("lool im here \n");
 		}
 
 		lexer = lexer->next;
@@ -635,24 +628,23 @@ t_linked_list *parser(t_linked_list *lexer , char **env){
 	return (head);
 }
 
-int		checkforpipe(char *s)
+int checkforpipe(char *s)
 {
 	int i;
-	int *in_db ;
-	int *in_sgl ;
+	int *in_db;
+	int *in_sgl;
 
 	in_db = traitmask(s, 1);
 	in_sgl = traitmask(s, 0);
 	// check if this pipe inside double quotes or not
 	i = 0;
-	while(s[i] != '\0')
+	while (s[i] != '\0')
 	{
-		if(s[i] == '|' && in_db[i] == 0 && in_sgl[i] == 0)
+		if (s[i] == '|' && in_db[i] == 0 && in_sgl[i] == 0)
 		{
 			free(in_db);
 			free(in_sgl);
 			return (1);
-
 		}
 		i++;
 	}
@@ -661,9 +653,9 @@ int		checkforpipe(char *s)
 	return (0);
 }
 
-int		check_errors2(int j, int i, char *string)
+int check_errors2(int j, int i, char *string)
 {
-	if(i == 2)
+	if (i == 2)
 	{
 		if (j > 1 && strlen(string) > 1)
 		{
@@ -676,37 +668,37 @@ int		check_errors2(int j, int i, char *string)
 		if (j > 2 && strlen(string) > 2)
 		{
 			printf("error here \n");
-			return (0);	
+			return (0);
 		}
-		else if (j == 1  && strlen(string) >1)
+		else if (j == 1 && strlen(string) > 1)
 		{
 			printf("error here \n");
-			return (0);	
+			return (0);
 		}
-		else if(j == 2 && strlen(string) > 2)
+		else if (j == 2 && strlen(string) > 2)
 		{
 			printf("error here \n");
-			return (0);	
+			return (0);
 		}
 	}
 	return (1);
 }
 
-void 	storeinfos(char *string, t_linked_list **head)
+void storeinfos(char *string, t_linked_list **head)
 {
 	t_file *file2;
 	int type;
 
 	type = 0;
 	file2 = (t_file *)malloc(sizeof(t_file));
-	type = findtype(string );
-	file2->file = string; 
+	type = findtype(string);
+	file2->file = string;
 	file2->type = type;
 	append(head, file2);
 }
 
-int		check_errors(t_linked_list *ptr)
-{ 
+int check_errors(t_linked_list *ptr)
+{
 	t_file *file;
 	char *checks;
 	int i;
@@ -717,21 +709,21 @@ int		check_errors(t_linked_list *ptr)
 	checks[2] = '|';
 	checks[0] = '>';
 	j = 0;
-	file = (t_file*)ptr->data;
-	while(ptr !=NULL)
+	file = (t_file *)ptr->data;
+	while (ptr != NULL)
 	{
 		i = 0;
-		file = (t_file*)ptr->data;
+		file = (t_file *)ptr->data;
 		while (i < 3)
 		{
-			if(checks[i] == file->file[0])
+			if (checks[i] == file->file[0])
 			{
-				while(file->file[j] != '\0')
+				while (file->file[j] != '\0')
 				{
-					while((file->file[j] == checks[i]) && file->file[j] != '\0')
+					while ((file->file[j] == checks[i]) && file->file[j] != '\0')
 						j++;
-					if (check_errors2(j , i ,file->file) == 0)
-						return(0);
+					if (check_errors2(j, i, file->file) == 0)
+						return (0);
 				}
 			}
 			i++;
@@ -739,25 +731,25 @@ int		check_errors(t_linked_list *ptr)
 		ptr = ptr->next;
 	}
 	free(checks);
-	return(1);
+	return (1);
 }
 
-int		mainhelper2(int j, int i,t_linked_list **head, char *string)
+int mainhelper2(int j, int i, t_linked_list **head, char *string)
 {
 	if (j > 1)
 	{
 		printf("error here \n");
-		return (0);	
+		return (0);
 	}
-	if(string[i] != '\0')
-		storeinfos(ft_substr(string,i,strlen(string )- i ), head);
-	return(1);
+	if (string[i] != '\0')
+		storeinfos(ft_substr(string, i, strlen(string) - i), head);
+	return (1);
 }
 
-int	mainhelper(char *string, int j,t_linked_list **head)
+int mainhelper(char *string, int j, t_linked_list **head)
 {
-	int *in_db ;
-	int *in_sgl ;
+	int *in_db;
+	int *in_sgl;
 	int i;
 	int c;
 	c = 0;
@@ -767,59 +759,64 @@ int	mainhelper(char *string, int j,t_linked_list **head)
 	in_sgl = traitmask(string, 0);
 	while (string[i] != '\0')
 	{
-		while( (string[i] == '|' && (in_db[i] == 1 || in_sgl[i] == 1) )|| string[i] != '|')
+		while ((string[i] == '|' && (in_db[i] == 1 || in_sgl[i] == 1)) || string[i] != '|')
 			i++;
-		storeinfos(ft_substr(string, 0, i ),head);
+		storeinfos(ft_substr(string, 0, i), head);
 		break;
 	}
 	c = i;
-	while(string[i] == '|' && in_sgl[i] == 0 && in_sgl[i] == 0)
+	while (string[i] == '|' && in_sgl[i] == 0 && in_sgl[i] == 0)
 	{
 		//c = i;
-		j++; 
+		j++;
 		i++;
-		if(string[i] != '|')
+		if (string[i] != '|')
 			storeinfos(ft_substr(string, c, j), head);
 	}
-	if (mainhelper2(j,i, head, string) == 0)
-		return(0);
+	if (mainhelper2(j, i, head, string) == 0)
+		return (0);
 	free(in_db);
-	free(in_sgl);	
-	return(1);
+	free(in_sgl);
+	return (1);
 }
 
-
-void free_head(t_linked_list *head) {
-	if (head == NULL) return;
+void free_head(t_linked_list *head)
+{
+	if (head == NULL)
+		return;
 	free_head(head->next);
 	//   free(head->data);
 	free(head);
 }
 
-void free_files_linked(t_linked_list *files) {
-	if (!files) return;
-	free_files_linked( files->next);
+void free_files_linked(t_linked_list *files)
+{
+	if (!files)
+		return;
+	free_files_linked(files->next);
 	free(((t_file *)(files->data))->file);
 	free(files->data);
 	free(files);
 }
 
-void free_lin_command (t_linked_list *command) {
+void free_lin_command(t_linked_list *command)
+{
 	t_command *cmd;
 
-	if (command == NULL) return ;
-	free_lin_command (command->next);
+	if (command == NULL)
+		return;
+	free_lin_command(command->next);
 	cmd = (t_command *)(command->data);
 	free_head(cmd->nameargs);
-	free_files_linked (cmd->files);
+	free_files_linked(cmd->files);
 	free(command->data);
 	free(command);
 }
 
-t_linked_list *mainhelper3(char **split )
+t_linked_list *mainhelper3(char **split)
 {
-	int		n;
-	int		j;
+	int n;
+	int j;
 	t_linked_list *head;
 
 	n = 0;
@@ -829,9 +826,9 @@ t_linked_list *mainhelper3(char **split )
 	{
 		if (checkforpipe(split[n]) == 1)
 		{
-			mainhelper(split[n], j,&head);
+			mainhelper(split[n], j, &head);
 			free(split[n]);
-		}		
+		}
 		else
 			storeinfos(split[n], &head);
 		n++;
@@ -839,7 +836,7 @@ t_linked_list *mainhelper3(char **split )
 	return (head);
 }
 
-int		main(int argc, char **argv, char **env)
+int main(int argc, char **argv, char **env)
 {
 	char *buffer;
 	char **split;
@@ -849,10 +846,14 @@ int		main(int argc, char **argv, char **env)
 	t_linked_list *Parser;
 	t_linked_list *cmd;
 
-	argc =2;
+	argc = 2;
 	split = NULL;
 	argc = 0;
 	argv = NULL;
+	int fd[2];
+			int in = 0;
+			int pin = 0;
+			int out = 1;
 	while (1)
 	{
 		head = NULL;
@@ -863,54 +864,98 @@ int		main(int argc, char **argv, char **env)
 			split = ft_split(buffer, ' ');
 			head = mainhelper3(split);
 			if (check_errors(head) == 0)
-				return(0);
+				return (0);
 			Parser = parser(head, env);
+			in = 0;
+			pin = 0;
+			out = 1;
+			int t = 0;
+			while (Parser)
+			{
+				cmd = ((t_command *)Parser->data)->nameargs;
+				s = collector(cmd);
+				//dprintf(2, "%s\n", s[0]);
+				int  c = 0;
+				while (s[c])
+				printf("|%s| -- |%d| \n",s[c++], t);
+				printf("DONE \n");
+				pipe(fd);
+				pin = fd[0];
+				out = fd[1];
+				if (!(Parser->next))
+					out = 1;
+				
+				pid = fork();
+				if (pid == 0)
+				{
+					dup2(in, 0);
+					dup2(out, 1);
+					if (in != 0)
+						close(in);
+					if (out != 1)
+						close(out);
+					// if (pin != 0)
+					// 	close (pin);
+					dprintf(2, "%s : wrong\n",s[0]);
+					execve(s[0], s, env);
 
-			cmd = ((t_command*)Parser->data)->nameargs;
-			s = collector(cmd);
-			printf("\n\n%s\n\n",s[0]);
-			printf("\n\n%s\n\n",s[1]);
-		//printf("%s\n%s\n%s\n", s[0], s[1], s[2]);
+					//dprintf(2, "%s : wrong\n",s[0]);
+					exit(0);
+				}
+				else
+				{
+					wait(0);
+					if (in != 0)
+						close(in);
+					if (out != 1)
+						close(out);
+					in = pin;
+				//dprintf(2, "hang here!\n");
+				}
+				//free(s);
+				Parser = Parser->next;
+				s = NULL;
+				t++;
+			}
 
-		//printf("%s\n%s\n%s\n", s[0], s[1], s[2]);
-			int i;
-			i = 0;
-	//		while (s[i] != NULL)
-	//		{
-	//			printf("|||||%s\n",s[i++]);
-	//		}
-
-	//	t_linked_list *Parser2;
-	//	t_linked_list *Parser3;
-
-		//	Parser3 = Parser;
-		//	while(Parser3 != NULL)
-		//	{
-		//	Parser2 =((t_command*)Parser3->data)->nameargs;
-		//	while (Parser2)
-		//	{
-		//		printf("|| %s || \n",(char *)Parser2->data );
-		//		Parser2 = Parser2->next;
-		//	}
-		//	printf("command n \n");
-		//	Parser3 = Parser3->next;
-		//	}
-			pid =fork();
-			if (pid == 0)
-				execve(s[0], s, env);
-			else
-				waitpid(pid, NULL, 0);
+			// printf("\n\n%s\n\n", s[0]);
+			// printf("\n\n%s\n\n", s[1]);
+			//printf("%s\n%s\n%s\n", s[0], s[1], s[2]);
+			//printf("%s\n%s\n%s\n", s[0], s[1], s[2]);
+			// int i;
+			// i = 0;
+			//		while (s[i] != NULL)
+			//		{
+			//			printf("|||||%s\n",s[i++]);
+			//		}
+			//	t_linked_list *Parser2;
+			//	t_linked_list *Parser3;
+			//	Parser3 = Parser;
+			//	while(Parser3 != NULL)
+			//	{
+			//	Parser2 =((t_command*)Parser3->data)->nameargs;
+			//	while (Parser2)
+			//	{
+			//		printf("|| %s || \n",(char *)Parser2->data );
+			//		Parser2 = Parser2->next;
+			//	}
+			//	printf("command n \n");
+			//	Parser3 = Parser3->next;
+			//	}
+			//pid_t pid;
+			
+			//int i = 0;
+			//cmd = ((t_command *)Parser->data)->nameargs;
 		}
-	
 		//exec(Parser);
-	
-	//if ( Parser != NULL)
-	//{
-	//	free_files_linked(Parser);
-	//free_lin_command(Parser);
-	//}
-	//
-	//free(split);
+		//if ( Parser != NULL)
+		//{
+		//	free_files_linked(Parser);
+		//free_lin_command(Parser);
+		//}
+		//
+		//free(split);
 	}
-	return(0);
+
+	return (0);
 }

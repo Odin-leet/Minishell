@@ -43,6 +43,7 @@ char **collector(t_linked_list *cmd)
 	{
 		sequance[size] = (char *)cmd->data;
 		cmd = cmd->next;
+		printf("sequence == |%s|\n",sequance[size]);
 		size++;
 	}
 	return (sequance);
@@ -98,42 +99,70 @@ char **collector(t_linked_list *cmd)
 //  	}
 //  	return 0;
 //  }			
+// int has_infile(t_linked_list file);
 
-//  int main(int argc, char **argv, char **env)
-//  {
-//  	char *args[3] = {"/bin/ls", "/usr/bin/wc"};
-//  	pid_t pid;
-//  	int fd[2];
-//  	int in = 0;
-//  	int pin = 0;
-//  	int out = 1;
-//  	pipe(fd);
-//  	for(int i = 0; i < 2; i++)
-//  	{
-//  		//last cmd out-fd should be [1]
-//  		if (i == 1)
-//  			fd[out] = 1;
-//  		pid = fork();
-//  		if (pid == 0)
-//  		{
-//  			dup2(fd[in], 0);
-//  			dup2(fd[out], 1);
-//  			if (pin != 0)
-//  				close(pin);
-//  			if (fd[in] != 0)
-//  				close(in);
-//  			if (fd[out] != 1)
-//  				close(fd[out]);
-//  			execve(args[i], &args[i], env);
-//  		}
-//  		else
-//  		{
-//  			if (fd[out] != 1)
-//  				close(fd[out]);
-//  			if (fd[in] != 0)
-//  				close(fd[in]);
-//  			fd[in] = pin;
-//  		}
-//  	}
-//  	return (0);
-//  }
+// int has_outfile(t_linked_list file);
+// int main(int argc, char **argv, char **env)
+// {
+// 	char *args[3] = {"/bin/ls", "/bin/ls","/usr/bin/wc"};
+// 	pid_t pid;
+// 	int fd[2];
+// 	int in = 0;
+// 	int pin = 0;
+// 	int out = 1;
+// 	int i = 0;
+	
+// 	while (i<3)
+// 	{
+// 		perror(args[i]);
+// 		pipe(fd);
+// 		pin = fd[0];
+// 		out = fd[1];
+// 		if (i == 2)
+// 			out = 1;
+// 		dprintf(2, "%d| %d\n",in ,out );
+// 		pid = fork();
+// 		if(pid == 0)
+// 		{
+// 			dup2(in, 0);
+// 			dup2(out, 1);
+// 			if(in != 0)
+// 				close(in);
+// 			if (out != 1)
+// 				close(out);
+// 			// if (pin != 0)
+// 			// 	close (pin);
+// 			execve(args[i], argv, env);
+// 			dprintf(2, "%s\n", args[i]);
+// 			exit(0);
+// 		}else
+// 		{
+// 			if (in != 0)
+// 				close(in);
+// 			if (out != 1)
+// 				close(out);
+// 			in = pin;
+// 			i++;
+// 		}
+		
+// 	}
+// 	return (0);
+// }
+
+		// Last element condition 
+		// mid condition 
+		// has file por not
+		// link the pipes
+		/*if (i == 1)
+			fd[out] = 1;
+		pid = fork();
+		if (pid == 0)
+		{
+			dup2(fd[in], 0);
+			dup2(fd[out], 1);
+			if (pin != 0)
+				close(pin);
+			if (fd[in] != 0)
+				close(in);
+			if (fd[out] != 1)
+				close(fd[out]);*/
