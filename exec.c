@@ -23,6 +23,8 @@
 // 		return (1);
 // 	return (0);
 // }
+//dprintf(2, "%s : wrong\n",s[0]);
+
 char **collector(t_linked_list *cmd)
 {
 	char **sequance;
@@ -48,6 +50,7 @@ char **collector(t_linked_list *cmd)
 	}
 	return (sequance);
 }
+
 void exec(t_linked_list *head, char **env)
 {
 	t_linked_list *cmd;
@@ -80,23 +83,23 @@ void exec(t_linked_list *head, char **env)
 				close(in);
 			if (out != 1)
 				close(out);
-			// if (pin != 0)
-			// 	close (pin);
+			if (pin != 0)
+				close (pin);
 			execve(s[0], s, env);
 			dprintf(2, "%s : wrong\n",s[0]);
-			//dprintf(2, "%s : wrong\n",s[0]);
 			exit(0);
 		}
 		else
 		{
 			wait(0);
+			// I need to save PIDs inside my struct
 			if (in != 0)
 				close(in);
 			if (out != 1)
 				close(out);
 			in = pin;
 		}
-		//free(s);
+		free(s);
 		head = head->next;
 		s = NULL;
 		t++;
