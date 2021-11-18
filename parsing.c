@@ -618,7 +618,6 @@ t_linked_list *parser(t_linked_list *lexer, char **env)
 			command = (t_command *)malloc(sizeof(t_command));
 			command->files = NULL;
 			command->nameargs = NULL;
-			i = 0;
 
 			//	printf("lool im here \n");
 		}
@@ -869,16 +868,13 @@ int main(int argc, char **argv, char **env)
 			in = 0;
 			pin = 0;
 			out = 1;
-			int t = 0;
 			while (Parser)
 			{
 				cmd = ((t_command *)Parser->data)->nameargs;
-				s = collector(cmd);
+				if (cmd != NULL)
+				{s = collector(cmd);
 				//dprintf(2, "%s\n", s[0]);
-				int  c = 0;
-				while (s[c])
-				printf("|%s| -- |%d| \n",s[c++], t);
-				printf("DONE \n");
+				
 				pipe(fd);
 				pin = fd[0];
 				out = fd[1];
@@ -896,7 +892,7 @@ int main(int argc, char **argv, char **env)
 						close(out);
 					// if (pin != 0)
 					// 	close (pin);
-					dprintf(2, "%s : wrong\n",s[0]);
+					//dprintf(2, "%s : wrong\n",s[0]);
 					execve(s[0], s, env);
 
 					//dprintf(2, "%s : wrong\n",s[0]);
@@ -911,11 +907,10 @@ int main(int argc, char **argv, char **env)
 						close(out);
 					in = pin;
 				//dprintf(2, "hang here!\n");
-				}
+				}}
 				//free(s);
 				Parser = Parser->next;
 				s = NULL;
-				t++;
 			}
 
 			// printf("\n\n%s\n\n", s[0]);
