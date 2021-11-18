@@ -34,7 +34,7 @@ char *ft_strjoin(char *s1, char *s2)
 	while (j < res_len)
 		dest[i++] = s2[j++];
 	dest[i] = '\0';
-	free(s1);
+	//free(s1);
 	//free(s2);
 	return (dest);
 }
@@ -109,10 +109,11 @@ void append(t_linked_list **head_ref, void *data)
 
 void *free_pre(char **split, int k)
 {
-	while (k >= 0)
+	//int i = 0;
+	while (split[k])
 	{
 		free(split[k]);
-		k--;
+		k++;
 	}
 	free(split);
 	split = NULL;
@@ -171,7 +172,7 @@ static int len_word(const char *s, char c, int *in_sgl, int *in_db, int k)
 	}
 	free(in_db);
 	free(in_sgl);
-	//printf("len == %zu\n", len);
+	//	printf("len == %zu\n", len);
 	return (len);
 }
 char *ft_substr(char *s, unsigned int start, size_t len)
@@ -466,10 +467,15 @@ char *checkforpath(char *string, char *str)
 	{
 		//printf("sdname == %s\n",sd->d_name);
 		if (strncmp(sd->d_name, str, ft_strlen(sd->d_name)) == 0)
+		{
+
+			(void)closedir(dir);
+
 			return (string);
+		}
 		//printf(">> %s\n",sd->d_name);
 	}
-
+	(void)closedir(dir);
 	return (NULL);
 }
 
@@ -491,6 +497,8 @@ char *elsefunction(char *string, char **env)
 	char *tmp;
 	char **tab;
 	char *tmp2;
+	char *tmp3;
+
 	//char *tmp3 = NULL;
 
 	tmp = NULL;
@@ -508,26 +516,26 @@ char *elsefunction(char *string, char **env)
 	i = 0;
 	while (tab[i] != NULL)
 	{
-		//printf("string == |%s|\n", string);
+		//	printf("string == |%s|\n", string);
 		if ((tmp2 = checkforpath(tab[i], string)) != NULL)
 		{
+			tmp3 = tab[i];
 			tab[i] = ft_strjoin(tab[i], "/");
-			return (ft_strjoin(tab[i], string));
+			free(tmp3);
+			tmp3 = ft_strjoin(tab[i], string);
+			free_pre(tab, 0);
+			free(tmp);
+			return (tmp3);
 		}
+		if (!(tmp2))
+			free(tmp2);
 		i++;
 	}
 	i = 0;
-	while (tab[i] != NULL)
-	{
-		free(tab[i]);
-		i++;
-	}
+	free_pre(tab, 0);
 	free(tmp);
-	//free(tmp3);
-	free(tab);
-
-	printf("tmp == %s\n", tmp);
-	return (NULL);
+	//printf("tmp == %s\n", tmp);
+	return (string);
 }
 char *handleargs(char *string, char **env)
 {
@@ -551,18 +559,24 @@ char *handleargs(char *string, char **env)
 			i++;
 		}
 		ptr = ft_substr(string, 0, j);
-		printf(" -- %s\n", ptr);
+		//	printf(" -- %s\n", ptr);
 
 		ptr2 = ft_strdup(string, j + 1);
-		printf(" -- %s\n", ptr2);
+		//	printf(" -- %s\n", ptr2);
 
 		if (checkforpath(ptr, ptr2) == NULL)
-			return (NULL);
+		{
+			free(ptr);
+			free(ptr2);
+			return (string);
+		}
 		return (string);
+		free(ptr);
+		free(ptr2);
 	}
 	else
 	{
-		//	printf("string == |%s|\n",string);
+		printf("zaaaab im hereee \n");
 		string = elsefunction(string, env);
 		// printf("string == %s\n", string);
 	}
@@ -749,6 +763,7 @@ int mainhelper(char *string, int j, t_linked_list **head)
 {
 	int *in_db;
 	int *in_sgl;
+	char *pip = strdup("|");
 	int i;
 	int c;
 	c = 0;
@@ -760,7 +775,9 @@ int mainhelper(char *string, int j, t_linked_list **head)
 	{
 		while ((string[i] == '|' && (in_db[i] == 1 || in_sgl[i] == 1)) || string[i] != '|')
 			i++;
-		storeinfos(ft_substr(string, 0, i), head);
+		if (i != 0)
+			storeinfos(ft_substr(string, 0, i), head);
+		//storeinfos(pip,head);
 		break;
 	}
 	c = i;
@@ -770,8 +787,13 @@ int mainhelper(char *string, int j, t_linked_list **head)
 		j++;
 		i++;
 		if (string[i] != '|')
+		{ //c = -1;
 			storeinfos(ft_substr(string, c, j), head);
+		}
+		//printf("ft_substr == |%s|\n",)
 	}
+	if (c == -1)
+		storeinfos(pip, head);
 	if (mainhelper2(j, i, head, string) == 0)
 		return (0);
 	free(in_db);
@@ -836,33 +858,38 @@ t_linked_list *mainhelper3(char **split)
 }
 int echo(char *s, int n)
 {
-    if (!s)
-        return (0);
-    //if s = empty return new line with the return signal (but I'm the sys now)
-    if (n)
-        printf("%s",s);
-    else
-        printf("%s\n",s);
-    return (1);
+	if (!s)
+		return (0);
+	//if s = empty return new line with the return signal (but I'm the sys now)
+	if (n)
+		printf("%s", s);
+	else
+		printf("%s\n", s);
+	return (1);
 }
 int main(int argc, char **argv, char **env)
 {
 	char *buffer;
 	char **split;
+
 	char **s;
+
 	pid_t pid;
 	t_linked_list *head;
 	t_linked_list *Parser;
+
 	t_linked_list *cmd;
 
+	g_count = 0;
 	argc = 2;
 	split = NULL;
 	argc = 0;
 	argv = NULL;
+	//env = NULL;
 	int fd[2];
-			int in = 0;
-			int pin = 0;
-			int out = 1;
+	int in = 0;
+	int pin = 0;
+	int out = 1;
 	while (1)
 	{
 		head = NULL;
@@ -874,6 +901,16 @@ int main(int argc, char **argv, char **env)
 			head = mainhelper3(split);
 			if (check_errors(head) == 0)
 				return (0);
+			//t_linked_list *temp;
+			//tmp = head;
+			//	t_file *file;
+			//	while(head!= NULL)
+			//	{
+			//					file = (t_file *)head->data;
+			//
+			//		printf("%s\n",(char *)file->file);
+			//		head = head->next;
+			//	}
 			Parser = parser(head, env);
 			in = 0;
 			pin = 0;
@@ -882,59 +919,54 @@ int main(int argc, char **argv, char **env)
 			{
 				cmd = ((t_command *)Parser->data)->nameargs;
 				if (cmd != NULL)
-				{s = collector(cmd);
-				//dprintf(2, "%s\n", s[0]);
-				
-				pipe(fd);
-				pin = fd[0];
-				out = fd[1];
-				if (!(Parser->next))
-					out = 1;
-				
-				pid = fork();
-				if (pid == 0)
 				{
-					dup2(in, 0);
-					dup2(out, 1);
-					if (in != 0)
-						close(in);
-					if (out != 1)
-						close(out);
-					// if (pin != 0)
-					// 	close (pin);
-					//dprintf(2, "%s : wrong\n",s[0]);
-					if (s[0][0] == 'e')
-						echo(s[1],0);
+					s = collector(cmd);
+					pipe(fd);
+					pin = fd[0];
+					out = fd[1];
+					if (!(Parser->next))
+						out = 1;
+					pid = fork();
+					if (pid == 0)
+					{
+						dup2(in, 0);
+						dup2(out, 1);
+						if (in != 0)
+							close(in);
+						if (out != 1)
+							close(out);
+						// if (pin != 0)
+						// 	close (pin);
+						if (s[0][0] == 'e')
+							echo(s[1], 0);
+						else
+							execve(s[0], s, env)
+								//dprintf(2, "%s : wrong\n",s[0]);
+								exit(0);
+					}
 					else
-						execve(s[0], s, env);
-
-					//dprintf(2, "%s : wrong\n",s[0]);
-					exit(0);
+					{
+						wait(0);
+						if (in != 0)
+							close(in);
+						if (out != 1)
+							close(out);
+						in = pin;
+					}
 				}
-				else
-				{
-					wait(0);
-					if (in != 0)
-						close(in);
-					if (out != 1)
-						close(out);
-					in = pin;
-				//dprintf(2, "hang here!\n");
-				}}
 				//free(s);
 				Parser = Parser->next;
 				s = NULL;
 			}
-
-			// printf("\n\n%s\n\n", s[0]);
-			// printf("\n\n%s\n\n", s[1]);
-			//printf("%s\n%s\n%s\n", s[0], s[1], s[2]);
-			//printf("%s\n%s\n%s\n", s[0], s[1], s[2]);
-			// int i;
-			// i = 0;
-			//		while (s[i] != NULL)
-			//		{
-			//			printf("|||||%s\n",s[i++]);
+			//	// printf("\n\n%s\n\n", s[0]);
+			//	// printf("\n\n%s\n\n", s[1]);
+			//	//printf("%s\n%s\n%s\n", s[0], s[1], s[2]);
+			//	//printf("%s\n%s\n%s\n", s[0], s[1], s[2]);
+			//	// int i;
+			//	// i = 0;
+			//	//		while (s[i] != NULL)
+			//	//		{
+			//	//			printf("|||||%s\n",s[i++]);
 			//		}
 			//	t_linked_list *Parser2;
 			//	t_linked_list *Parser3;
@@ -951,7 +983,7 @@ int main(int argc, char **argv, char **env)
 			//	Parser3 = Parser3->next;
 			//	}
 			//pid_t pid;
-			
+
 			//int i = 0;
 			//cmd = ((t_command *)Parser->data)->nameargs;
 		}
@@ -964,6 +996,5 @@ int main(int argc, char **argv, char **env)
 		//
 		//free(split);
 	}
-
 	return (0);
 }

@@ -21,6 +21,8 @@
 #include <sys/_types.h>
 
 
+int g_count ;
+
 typedef struct s_file{
 	char	*file;
 	int		type;

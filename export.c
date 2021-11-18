@@ -268,6 +268,7 @@ void    replaceenv(t_struct *pl, char *string)
 				j =c;
 			c++;
 		}
+		if (strncmp(string , "-n", len(string)));
 		if (strncmp(string, pl->envprinc[i], j) == 0)
 		{
 			printf("akkiiiiadasdsa \n");
