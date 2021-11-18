@@ -42,9 +42,10 @@ typedef struct s_vars
 {
 	int		in;
 	int		out;
-	int		pvin;
+	int		pin;
 	pid_t	pid;
-	char	**collected;
+	char	**collected_cmd;
+	char	**collected_files;
 	t_linked_list *newhead;
 	t_linked_list *lcmd;
 	t_linked_list *lfile;
