@@ -36,14 +36,14 @@ char **collector(t_linked_list *cmd)
 		tempo = tempo->next;
 		size++;
 	}
-	sequance = malloc(sizeof(char*) * size + 1);
+	sequance = malloc(sizeof(char*) * (size  + 1));
 	sequance[size] = NULL;
+	//printf("%d === size \n",size);
 	size = 0;
-	while(cmd != NULL)
+	while(cmd!= NULL)
 	{
 		sequance[size] = (char *)cmd->data;
 		cmd = cmd->next;
-		printf("sequence == |%s|\n",sequance[size]);
 		size++;
 	}
 	return (sequance);
