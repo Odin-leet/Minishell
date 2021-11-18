@@ -44,7 +44,7 @@ char **collector(t_linked_list *cmd)
 	{
 		sequance[size] = (char *)cmd->data;
 		cmd = cmd->next;
-		printf("sequence == |%s|\n",sequance[size]);
+		//printf("sequence == |%s|\n",sequance[size]);
 		size++;
 	}
 	return (sequance);

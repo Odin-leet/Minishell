@@ -171,7 +171,7 @@ static int len_word(const char *s, char c, int *in_sgl, int *in_db, int k)
 	}
 	free(in_db);
 	free(in_sgl);
-	printf("len == %zu\n", len);
+	//printf("len == %zu\n", len);
 	return (len);
 }
 char *ft_substr(char *s, unsigned int start, size_t len)
@@ -508,7 +508,7 @@ char *elsefunction(char *string, char **env)
 	i = 0;
 	while (tab[i] != NULL)
 	{
-		printf("string == |%s|\n", string);
+		//printf("string == |%s|\n", string);
 		if ((tmp2 = checkforpath(tab[i], string)) != NULL)
 		{
 			tab[i] = ft_strjoin(tab[i], "/");
@@ -834,7 +834,17 @@ t_linked_list *mainhelper3(char **split)
 	}
 	return (head);
 }
-
+int echo(char *s, int n)
+{
+    if (!s)
+        return (0);
+    //if s = empty return new line with the return signal (but I'm the sys now)
+    if (n)
+        printf("%s",s);
+    else
+        printf("%s\n",s);
+    return (1);
+}
 int main(int argc, char **argv, char **env)
 {
 	char *buffer;
@@ -893,7 +903,10 @@ int main(int argc, char **argv, char **env)
 					// if (pin != 0)
 					// 	close (pin);
 					//dprintf(2, "%s : wrong\n",s[0]);
-					execve(s[0], s, env);
+					if (s[0][0] == 'e')
+						echo(s[1],0);
+					else
+						execve(s[0], s, env);
 
 					//dprintf(2, "%s : wrong\n",s[0]);
 					exit(0);
