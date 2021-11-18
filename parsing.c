@@ -1,5 +1,5 @@
 #include "minishell.h"
-#include <dirent.h>
+
 char *ft_calloc(size_t count, size_t size)
 {
 	char *dest;
@@ -576,8 +576,8 @@ char *handleargs(char *string, char **env)
 	}
 	else
 	{
-			printf("zaaaab im hereee \n");
 		string = elsefunction(string, env);
+		//printf("zaaaab im hereee \n");
 		// printf("string == %s\n", string);
 	}
 	return (string);
@@ -866,13 +866,8 @@ int main(int argc, char **argv, char **env)
 	char *buffer;
 	char **split;
 
-	char **s;
-
-	pid_t pid;
-		t_linked_list *head;
-		t_linked_list *Parser;
-
-	t_linked_list *cmd;
+	t_linked_list *head;
+	t_linked_list *Parser;
 
 	g_count = 0;
 	argc = 2;
@@ -880,12 +875,9 @@ int main(int argc, char **argv, char **env)
 	argc = 0;
 	argv = NULL;
 	//env = NULL;
-	int fd[2];
-			int in = 0;
-			int pin = 0;
-			int out = 1;
 	while (1)
 	{
+		
 		head = NULL;
 		Parser = NULL;
 		buffer = readline("Minishell 0.0$ ");
@@ -906,56 +898,12 @@ int main(int argc, char **argv, char **env)
 		//		head = head->next;
 		//	}
 			Parser = parser(head, env);
-			in = 0;
-			pin = 0;
-			out = 1;
-			int t = 0;
-			while (Parser)
-			{
-				cmd = ((t_command *)Parser->data)->nameargs;
-				s = collector(cmd);
-				//dprintf(2, "%s\n", s[0]);
-				//int  c = 0;
-				//while (s[c])
-				//printf("|%s| -- |%d| \n",s[c++], t);
-				//printf("DONE \n");
-				pipe(fd);
-				pin = fd[0];
-				out = fd[1];
-				if (!(Parser->next))
-					out = 1;
-				
-				pid = fork();
-				if (pid == 0)
-				{
-					dup2(in, 0);
-					dup2(out, 1);
-					if (in != 0)
-						close(in);
-					if (out != 1)
-						close(out);
-					// if (pin != 0)
-					// 	close (pin);
-					execve(s[0], s, env);
-					dprintf(2, "%s : wrong\n",s[0]);
-//
-					//dprintf(2, "%s : wrong\n",s[0]);
-					exit(0);
-				}
-				else
-				{
-					wait(0);
-					if (in != 0)
-						close(in);
-					if (out != 1)
-						close(out);
-					in = pin;
-				//dprintf(2, "hang here!\n");
-				}
-				//free(s);
-				Parser = Parser->next;
-				s = NULL;
-				t++;
+			//dprintf(2, "%s\n", s[0]);
+		//int  c = 0;
+		//while (s[c])
+		//printf("|%s| -- |%d| \n",s[c++], t);
+		//printf("DONE \n");
+			exec(Parser,env);
 			}
 		//	// printf("\n\n%s\n\n", s[0]);
 		//	// printf("\n\n%s\n\n", s[1]);
@@ -994,7 +942,5 @@ int main(int argc, char **argv, char **env)
 		//}
 		//
 		//free(split);
-	}
-
 	return (0);
 }

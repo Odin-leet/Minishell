@@ -19,7 +19,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 #include <sys/_types.h>
-
+#include <dirent.h>
 
 int g_count ;
 
@@ -57,6 +57,6 @@ char	*ft_strjoin(char *s1, char *s2);
 size_t	ft_strlen(char *s);
 char	*ft_substr(char *s, unsigned int start, size_t len);
 char	*ft_calloc(size_t count, size_t size);
-int		exec(t_linked_list *head);
+void	exec(t_linked_list *head, char **env);
 char	**ft_split1(char const *s, char c);
 #endif
