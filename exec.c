@@ -31,7 +31,6 @@ char **collector(t_linked_list *cmd)
 
 	size = 0;
 	tempo = cmd;
-	if (cmd == NULL)
 	while (tempo != NULL)
 	{
 		tempo = tempo->next;
