@@ -75,6 +75,31 @@ char **files_collector(t_linked_list *lfile)
 	}
 	return (sequance);
 }
+int *type_collector(t_linked_list *lfile)
+{
+	int *tab;
+	t_linked_list *tempo;
+	int size;
+	size = 0;
+	tempo = lfile;
+	while(tempo!=  NULL)
+	{
+		tempo = tempo->next;
+		size++;
+	}
+	tab = malloc(sizeof(int*) * (size));
+
+	size= 0;
+	while(lfile!= NULL)
+	{
+		tab[size] = ((t_file *)lfile->data)->type;
+		printf("tab[size] == %d\n",tab[size]);
+		lfile = lfile->next;
+		size++;
+	}
+	return (tab);
+}
+
 // int file_manager(char *out_or_in)
 // {
 
@@ -94,13 +119,15 @@ void exec(t_linked_list *head, char **env)
 	i = 0;
 	while (head)
 	{
-		//v.lcmd = ((t_command *)head->data)->nameargs;
+		v.lcmd = ((t_command *)head->data)->nameargs;
 		v.lfile = ((t_command *)head->data)->files;
-
-		//v.collected_cmd = cmd_collector(v.lcmd);
-		//v.collected_files = files_collector(v.lfile);
-		if(v.lfile != NULL)
-		printf("file name: %s\n type : %d\n", ((t_file *)v.lfile)->file, ((t_file *)v.lfile)->type);
+		v.collected_cmd = cmd_collector(v.lcmd);
+		int c = 0;
+		v.collected_files = files_collector(v.lfile);
+		v.collected_type = type_collector(v.lfile);
+		while (v.collected_files[c] != NULL)
+		{printf("command  %s\n file name: %s\n type : %d\n",v.collected_cmd[0], v.collected_files[c], v.collected_type[c]);
+		c++;}
 		// pipe(fd);
 		// v.pin = fd[0];
 		// v.out = fd[1];
@@ -147,9 +174,9 @@ void exec(t_linked_list *head, char **env)
 		// 	v.in = v.pin;
 		// }
 
-		free(v.collected_cmd);
+		//free(v.collected_cmd);
 		head = head->next;
 		v.collected_cmd = NULL;
-		i++;
+		//i++;
 	}
 }

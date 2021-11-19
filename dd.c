@@ -1,5 +1,5 @@
 #include "minishell.h"
-#include <dirent.h>
+
 char *ft_calloc(size_t count, size_t size)
 {
 	char *dest;
@@ -570,14 +570,14 @@ char *handleargs(char *string, char **env)
 			free(ptr2);
 			return (string);
 		}
-		free(ptr2);
-		free(ptr);
 		return (string);
+		free(ptr);
+		free(ptr2);
 	}
 	else
 	{
-			printf("zaaaab im hereee \n");
 		string = elsefunction(string, env);
+		//printf("zaaaab im hereee \n");
 		// printf("string == %s\n", string);
 	}
 	return (string);
@@ -629,16 +629,14 @@ t_linked_list *parser(t_linked_list *lexer, char **env)
 		if (token->type == 1 || lexer->next == NULL)
 		{
 			append(&(head), (void *)command);
-			if (token->type == 1)
-			{
 			command = (t_command *)malloc(sizeof(t_command));
 			command->files = NULL;
 			command->nameargs = NULL;
 			i = 0;
-			}
 
 			//	printf("lool im here \n");
 		}
+
 		lexer = lexer->next;
 	}
 	return (head);
@@ -801,31 +799,19 @@ int mainhelper(char *string, int j, t_linked_list **head)
 	if (c == -1)
 	storeinfos(pip,head);
 	if (mainhelper2(j, i, head, string) == 0)
-	{
-		free(pip);
 		return (0);
-	}
 	free(in_db);
 	free(in_sgl);
-	free(pip);
 	return (1);
 }
 
-void free_head2(t_linked_list *head)
-{
-	if (head == NULL)
-		return;
-	free_head2(head->next);
-	   free(head->data);
-	free(head);
-}
 void free_head(t_linked_list *head)
 {
 	if (head == NULL)
 		return;
 	free_head(head->next);
-	   free(head->data);
-	//free(head);
+	//   free(head->data);
+	free(head);
 }
 
 void free_files_linked(t_linked_list *files)
@@ -880,13 +866,8 @@ int main(int argc, char **argv, char **env)
 	char *buffer;
 	char **split;
 
-//	char **s;
-
-	//pid_t pid;
-		t_linked_list *head;
-		t_linked_list *Parser;
-
-//	t_linked_list *cmd;
+	t_linked_list *head;
+	t_linked_list *Parser;
 
 	g_count = 0;
 	argc = 2;
@@ -894,12 +875,9 @@ int main(int argc, char **argv, char **env)
 	argc = 0;
 	argv = NULL;
 	//env = NULL;
-//	int fd[2];
-//			int in = 0;
-//			int pin = 0;
-//			int out = 1;
 	while (1)
 	{
+		
 		head = NULL;
 		Parser = NULL;
 		buffer = readline("Minishell 0.0$ ");
@@ -909,14 +887,60 @@ int main(int argc, char **argv, char **env)
 			head = mainhelper3(split);
 			if (check_errors(head) == 0)
 				return (0);
+			//t_linked_list *temp;
+			//tmp = head;
+		//	t_file *file;
+		//	while(head!= NULL)
+		//	{	
+		//					file = (t_file *)head->data;
+//
+		//		printf("%s\n",(char *)file->file);
+		//		head = head->next;
+		//	}
 			Parser = parser(head, env);
-			free_head2(head);
-            exec(Parser, env);
-
+			//dprintf(2, "%s\n", s[0]);
+		//int  c = 0;
+		//while (s[c])
+		//printf("|%s| -- |%d| \n",s[c++], t);
+		//printf("DONE \n");
+			exec(Parser,env);
+			}
+		//	// printf("\n\n%s\n\n", s[0]);
+		//	// printf("\n\n%s\n\n", s[1]);
+		//	//printf("%s\n%s\n%s\n", s[0], s[1], s[2]);
+		//	//printf("%s\n%s\n%s\n", s[0], s[1], s[2]);
+		//	// int i;
+		//	// i = 0;
+		//	//		while (s[i] != NULL)
+		//	//		{
+		//	//			printf("|||||%s\n",s[i++]);
+			//		}
+			//	t_linked_list *Parser2;
+			//	t_linked_list *Parser3;
+			//	Parser3 = Parser;
+			//	while(Parser3 != NULL)
+			//	{
+			//	Parser2 =((t_command*)Parser3->data)->nameargs;
+			//	while (Parser2)
+			//	{
+			//		printf("|| %s || \n",(char *)Parser2->data );
+			//		Parser2 = Parser2->next;
+			//	}
+			//	printf("command n \n");
+			//	Parser3 = Parser3->next;
+			//	}
+			//pid_t pid;
 			
-			free_lin_command(Parser);
+			//int i = 0;
+			//cmd = ((t_command *)Parser->data)->nameargs;
 		}
-	}
-
+		//exec(Parser);
+		//if ( Parser != NULL)
+		//{
+		//	free_files_linked(Parser);
+		//free_lin_command(Parser);
+		//}
+		//
+		//free(split);
 	return (0);
 }

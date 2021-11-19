@@ -46,6 +46,7 @@ typedef struct s_vars
 	pid_t	pid;
 	char	**collected_cmd;
 	char	**collected_files;
+	int 	*collected_type;
 	t_linked_list *newhead;
 	t_linked_list *lcmd;
 	t_linked_list *lfile;
