@@ -1,0 +1,26 @@
+workspace.code-workspace
+unset.c
+plc.c
+pipe.c
+parsing.o
+parsing.c
+minishell.h
+main3.c
+main2.c
+main.c
+haha15
+gnl.c
+ft_split1.o
+ft_split1.c
+ff.c
+export1.c
+export.c
+exec.o
+exec.c
+exec copy.c
+dd.c
+cat
+a.out.dSYM
+Minishell.dSYM
+Minishell
+Makefile

@@ -1,0 +1,26 @@
+Makefile
+Minishell
+Minishell.dSYM
+a.out.dSYM
+dd.c
+exec copy.c
+exec.c
+exec.o
+export.c
+export1.c
+ff.c
+ft_split1.c
+ft_split1.o
+gnl.c
+haha15
+main.c
+main2.c
+main3.c
+minishell.h
+parsing.c
+parsing.o
+pipe.c
+plc.c
+unset.c
+workspace.code-workspace
+cat

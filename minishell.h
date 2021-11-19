@@ -44,7 +44,8 @@ typedef struct s_vars
 	int		in;
 	int		out;
 	int		pin;
-	pid_t	pid;
+	pid_t	*pid;
+	int		cmd_size;
 	char	**collected_cmd;
 	char	**collected_files;
 	int 	*collected_type;
