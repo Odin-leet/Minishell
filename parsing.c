@@ -417,17 +417,19 @@ char **ft_split(char *s, char c)
 
 int findtype(char *s)
 {
+	//pipe == 1
 	if (ft_strncmp(s, "|", ft_strlen(s)) == 0)
 		return (1);
-	//pipe == 1
+	//redirection input
 	if (ft_strncmp(s, "<", ft_strlen(s)) == 0)
 		return (2);
-	//redirection input
+	//redirection output
 	if (ft_strncmp(s, ">", ft_strlen(s)) == 0)
 		return (3);
-	//redirection output
+	//here-doc output
 	if (ft_strncmp(s, ">>", ft_strlen(s) + 1) == 0)
 		return (4);
+	//here-doc input
 	if (ft_strncmp(s, "<<", ft_strlen(s) + 1) == 0)
 		return (5);
 	return (0);
