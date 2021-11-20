@@ -626,6 +626,7 @@ t_linked_list *parser(t_linked_list *lexer, char **env)
 		}
 		else if (token->type != 1)
 			printf("error\n");
+		printf("%s -- %d \n",(char *)token->file , (int) token->type);
 		if (token->type == 1 || lexer->next == NULL)
 		{
 			append(&(head), (void *)command);
@@ -657,7 +658,7 @@ int checkforpipe(char *s)
 	i = 0;
 	while (s[i] != '\0')
 	{
-		if (s[i] == '|' && in_db[i] == 0 && in_sgl[i] == 0)
+		if ((s[i] == '|' || s[i] == '<' || s[i] == '>') && in_db[i] == 0 && in_sgl[i] == 0)
 		{
 			free(in_db);
 			free(in_sgl);
@@ -676,7 +677,7 @@ int check_errors2(int j, int i, char *string)
 	{
 		if (j > 1 && strlen(string) > 1)
 		{
-			printf("error here \n");
+			printf("error here %s \n" , string);
 			return (0);
 		}
 	}
@@ -684,17 +685,17 @@ int check_errors2(int j, int i, char *string)
 	{
 		if (j > 2 && strlen(string) > 2)
 		{
-			printf("error here \n");
+			printf("error here %s \n" , string);
 			return (0);
 		}
 		else if (j == 1 && strlen(string) > 1)
 		{
-			printf("error here \n");
+			printf("error here %s \n" , string);
 			return (0);
 		}
 		else if (j == 2 && strlen(string) > 2)
 		{
-			printf("error here \n");
+			printf("error here %s \n" , string);
 			return (0);
 		}
 	}
@@ -767,44 +768,61 @@ int mainhelper(char *string, int j, t_linked_list **head)
 {
 	int *in_db;
 	int *in_sgl;
-	char *pip= strdup("|");
 	int i;
+	char *pip= strdup("|");
+	//int thereisred = 0;
 	int c;
 	c = 0;
 
 	i = 0;
 	in_db = traitmask(string, 1);
 	in_sgl = traitmask(string, 0);
-	while (string[i] != '\0')
-	{
-		while ((string[i] == '|' && (in_db[i] == 1 || in_sgl[i] == 1)) || string[i] != '|')
-			i++;
-		if (i != 0)	
-			storeinfos(ft_substr(string, 0, i), head);
-		//storeinfos(pip,head);
-		break;
-	}
-	c = i;
-	while (string[i] == '|' && in_sgl[i] == 0 && in_sgl[i] == 0)
-	{
-		//c = i;
-		j++;
-		i++;
-		if (string[i] != '|')
-		{	//c = -1;
-			storeinfos(ft_substr(string, c, j), head);
-			
+	//while (string[i] != '\0')
+	//{
+	//	while ((string[i] == '|' && string[i] == '<' && string[i] == '>' && (in_db[i] == 1 || in_sgl[i] == 1)) || (string[i] != '|' && string[i] != '<' && string[i] != '>') )
+	//		i++;
+	//		printf("im hereeeeeee \n");
+	//	if (i != 0)	
+	//		storeinfos(ft_substr(string, 0, i), head);
+	//	//storeinfos(pip,head);
+	//	break;
+	//}
+	//c = i;
+	//while(string[i])
+	//{c=i;
+	//while ((string[i] == '|' || string[i] == '<' ||  string[i] == '>' ) && in_sgl[i] == 0 && in_sgl[i] == 0)
+	//{
+	//	//c = i;
+	//	j++;
+	//	i++;
+	//	if (string[i] != '|'  || string[i] != '<' ||  string[i] != '>')
+	//	{	//c = -1;
+	//	 printf("%d , %d \n",c , j);
+	//		storeinfos(ft_substr(string, c, j), head);
+	//		if (string[i - 1] == '|')
+	//		{
+	//			//if (c == -1)
+	//				storeinfos(pip,head);
+	//			if (mainhelper2(j, i, head, string) == 0)
+	//			{
+	//				free(pip);
+	//				return (0);
+	//			}
+	//		}
+	//		c = i;
+	//		j = -1;
+	//		//while()
+	//	}
+	//	while(string[i] != '|'  && string[i] != '<' &&  string[i] != '>' && string[i] )
+	//	{
+	//		j++;
+	//		i++;
+	//	}
+	//	//printf("ft_substr == |%s|\n",)
+	//}
+	//i++;
+	//}
 
-		}
-		//printf("ft_substr == |%s|\n",)
-	}
-	if (c == -1)
-	storeinfos(pip,head);
-	if (mainhelper2(j, i, head, string) == 0)
-	{
-		free(pip);
-		return (0);
-	}
 	free(in_db);
 	free(in_sgl);
 	free(pip);
@@ -907,6 +925,13 @@ int main(int argc, char **argv, char **env)
 		{
 			split = ft_split(buffer, ' ');
 			head = mainhelper3(split);
+			t_linked_list *spl;
+			spl = head;
+			while(spl != NULL)
+			{
+				printf("|%s|\n",(char *)((t_file *)spl->data)->file);
+				spl = spl->next;
+			}
 			if (check_errors(head) == 0)
 				return (0);
 			Parser = parser(head, env);
