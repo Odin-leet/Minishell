@@ -417,17 +417,19 @@ char **ft_split(char *s, char c)
 
 int findtype(char *s)
 {
+	//pipe == 1
 	if (ft_strncmp(s, "|", ft_strlen(s)) == 0)
 		return (1);
-	//pipe == 1
+	//redirection input
 	if (ft_strncmp(s, "<", ft_strlen(s)) == 0)
 		return (2);
-	//redirection input
+	//redirection output
 	if (ft_strncmp(s, ">", ft_strlen(s)) == 0)
 		return (3);
-	//redirection output
+	//here-doc output
 	if (ft_strncmp(s, ">>", ft_strlen(s) + 1) == 0)
 		return (4);
+	//here-doc input
 	if (ft_strncmp(s, "<<", ft_strlen(s) + 1) == 0)
 		return (5);
 	return (0);
@@ -658,7 +660,7 @@ int checkforpipe(char *s)
 	i = 0;
 	while (s[i] != '\0')
 	{
-		if ((s[i] == '|' || s[i] == '<' || s[i] == '>') && in_db[i] == 0 && in_sgl[i] == 0)
+		if ((s[i] == '|' || s[i] == '<' || s[i] == '>')  && in_db[i] == 0 && in_sgl[i] == 0)
 		{
 			free(in_db);
 			free(in_sgl);
@@ -768,61 +770,70 @@ int mainhelper(char *string, int j, t_linked_list **head)
 {
 	int *in_db;
 	int *in_sgl;
-	int i;
 	char *pip= strdup("|");
-	//int thereisred = 0;
+	int i;
 	int c;
+	int t;
+	int k;
 	c = 0;
-
+	k = 0;
+	t = 0;
 	i = 0;
 	in_db = traitmask(string, 1);
 	in_sgl = traitmask(string, 0);
-	//while (string[i] != '\0')
-	//{
-	//	while ((string[i] == '|' && string[i] == '<' && string[i] == '>' && (in_db[i] == 1 || in_sgl[i] == 1)) || (string[i] != '|' && string[i] != '<' && string[i] != '>') )
-	//		i++;
-	//		printf("im hereeeeeee \n");
-	//	if (i != 0)	
-	//		storeinfos(ft_substr(string, 0, i), head);
-	//	//storeinfos(pip,head);
-	//	break;
+	while (string[i] != '\0')
+	{
+			
+			 t = i;
+			 k = in_sgl[i];
+		while (((in_db[i] == 1 || in_sgl[i] == 1) || (string[i] != '|' && string[i] !='>' &&  string[i] != '<') ) && string[i] != '\0')
+		{
+			i++;
+		}
+		if (i != 0)	
+		{
+			//if (t == 0)
+			//{
+			storeinfos(ft_substr(string, t, i - t), head);
+			printf("''%s''\n", ft_substr(string, t, i - t));	
+			//}
+		//	else
+		//	{
+		//	storeinfos(ft_substr(string, t, i - 2), head);
+//printf("''%s''\n", ft_substr(string, t, i-5));
+		//	}
+			
+		}
+		//storeinfos(pip,head);
+		//break;
 	//}
-	//c = i;
-	//while(string[i])
-	//{c=i;
-	//while ((string[i] == '|' || string[i] == '<' ||  string[i] == '>' ) && in_sgl[i] == 0 && in_sgl[i] == 0)
-	//{
-	//	//c = i;
-	//	j++;
-	//	i++;
-	//	if (string[i] != '|'  || string[i] != '<' ||  string[i] != '>')
-	//	{	//c = -1;
-	//	 printf("%d , %d \n",c , j);
-	//		storeinfos(ft_substr(string, c, j), head);
-	//		if (string[i - 1] == '|')
-	//		{
-	//			//if (c == -1)
-	//				storeinfos(pip,head);
-	//			if (mainhelper2(j, i, head, string) == 0)
-	//			{
-	//				free(pip);
-	//				return (0);
-	//			}
-	//		}
-	//		c = i;
-	//		j = -1;
-	//		//while()
-	//	}
-	//	while(string[i] != '|'  && string[i] != '<' &&  string[i] != '>' && string[i] )
-	//	{
-	//		j++;
-	//		i++;
-	//	}
-	//	//printf("ft_substr == |%s|\n",)
-	//}
-	//i++;
-	//}
+	c = i;
+	j = 0;
+	 printf("im hereeeee\n");
+	while (((string[i] =='>' ||  string[i] == '<' || string[i] == '|' )&& in_sgl[i] == 0 && in_sgl[i] == 0) && string[i] != '\0')
+	{
+		//if ( i == 0)
+		j++;
+	//	printf()
+		i++;
+		if (string[i] != '|' &&  string[i]!='>' && string[i] != '<')
+		{	//c = -1;
+		printf("%d ===== \n ",j);
+				storeinfos(ft_substr(string, c, j), head);
+			
+			break;
+		}
 
+		//printf("ft_substr == |%s|\n",)
+	}
+	}
+	if (c == -1)
+	storeinfos(pip,head);
+//if (mainhelper2(j, i, head, string) == 0)
+//{
+//	free(pip);
+//	return (0);
+//}
 	free(in_db);
 	free(in_sgl);
 	free(pip);

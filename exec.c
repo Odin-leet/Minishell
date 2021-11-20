@@ -97,86 +97,95 @@ int *type_collector(t_linked_list *lfile)
 		lfile = lfile->next;
 		size++;
 	}
+	//tab[size] = NULL;
 	return (tab);
 }
 
-// int file_manager(char *out_or_in)
-// {
-
-// 	if ()
-// }
 void exec(t_linked_list *head, char **env)
 {
 	t_vars v;
-	//int fd[2];
+	int fd[2];
+	int count;
+	t_linked_list *tmp;
 	int i;
-	char **ss;
-	ss = env;
 
 	v.in = 0;
 	v.pin = 0;
 	v.out = 1;
+	tmp = head;
+	v.cmd_size = 0;
+	while (tmp)
+	{
+		v.cmd_size++;
+		tmp = tmp->next;
+	}
 	i = 0;
+	v.pid = malloc(sizeof(pid_t) * v.cmd_size);
 	while (head)
 	{
 		v.lcmd = ((t_command *)head->data)->nameargs;
 		v.lfile = ((t_command *)head->data)->files;
 		v.collected_cmd = cmd_collector(v.lcmd);
-		int c = 0;
 		v.collected_files = files_collector(v.lfile);
 		v.collected_type = type_collector(v.lfile);
-		while (v.collected_files[c] != NULL)
-		{printf("command  %s\n file name: %s\n type : %d\n",v.collected_cmd[0], v.collected_files[c], v.collected_type[c]);
-		c++;}
-		// pipe(fd);
-		// v.pin = fd[0];
-		// v.out = fd[1];
-		// if (!(head->next))
-		// 	v.out = 1;
 		
-		// v.pid = fork();
-		// if (v.pid == 0)
-		// {
-
-		// 	// // if first command in pipeline has input redirection
-        //     // if (hasInputFile && is1stCommand) { 
-        //     // int fdin = open(inputFile, O_RDONLY, 0644);
-        //     // dup2(fdin, STDIN_FILENO);
-        //     // close(fdin);
-        //     // }
-
-        //     // // if last command in pipeline has output redirection
-        //     // if (hasOutputFile && isLastCommand) { 
-        //     // int fdout = open(outputFile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-        //     // dup2(fdout, STDOUT_FILENO);
-        //     // close(fdout);
-        //     // }
-		// 	dup2(v.in, 0);
-		// 	dup2(v.out, 1);
-		// 	if (v.in != 0)
-		// 		close(v.in);
-		// 	if (v.out != 1)
-		// 		close(v.out);
-		// 	if (v.pin != 0)
-		// 		close (v.pin);
-		// 	execve(v.collected_cmd[0], v.collected_cmd, env);
-		// 	dprintf(2, "%s : wrong\n",v.collected_cmd[0]);
-		// 	exit(0);
-		// }
-		// else
-		// {
-		// 	wait(0);
-		// 	// I need to save PIDs inside my struct
-		// 	if (v.in != 0)
-		// 		close(v.in);
-		// 	if (v.out != 1)
-		// 		close(v.out);
-		// 	v.in = v.pin;
-		// }
-
+		pipe(fd);
+		v.pin = fd[0];
+		v.out = fd[1];
+		if (!(head->next))
+			v.out = 1;
+		count = 0;
+		v.pid[i] = fork();
+		if (v.pid[i] == 0)
+		{
+			//dprintf(2, "out =  %d \n",v.out);
+			while (v.collected_files[count])
+			{
+				if (v.out != 0 && (v.collected_type[count] == 4 || v.collected_type[count] == 3))
+					close(v.out);
+				else if(v.in != 1 && (v.collected_type[count] == 2 || v.collected_type[count] == 5))
+					close(v.in);
+				if (v.collected_type[count] == 3)
+					v.out = open(v.collected_files[count], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+				else if (v.collected_type[count] == 4)
+					v.out = open(v.collected_files[count], O_WRONLY | O_CREAT | O_APPEND, 0644);
+				else if (v.collected_type[count] == 2)
+					v.in = open(v.collected_files[count], O_RDONLY, 0644);
+				count++;
+			}
+			
+			dup2(v.in, 0);
+			dup2(v.out, 1);
+			if (v.in != 0)
+				close(v.in);
+			if (v.out != 1)
+				close(v.out);
+			if (v.pin != 0)
+				close (v.pin);
+				
+			execve(v.collected_cmd[0], v.collected_cmd, env);
+			
+			exit(0);
+		}
+		else
+		{
+			if (v.in != 0)
+				close(v.in);
+			if (v.out != 1)
+				close(v.out);
+			v.in = v.pin;
+		}
+		i++;
+		
 		//free(v.collected_cmd);
 		head = head->next;
 		v.collected_cmd = NULL;
-		//i++;
 	}
+	i = 0;
+	while (i < v.cmd_size)
+	{
+		waitpid(v.pid[i], NULL,0);
+		i++;
+	}
+	free(v.pid);
 }

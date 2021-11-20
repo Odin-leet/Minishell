@@ -18,6 +18,7 @@
 # include <string.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <fcntl.h>
 #include <sys/_types.h>
 #include <dirent.h>
 
@@ -43,7 +44,8 @@ typedef struct s_vars
 	int		in;
 	int		out;
 	int		pin;
-	pid_t	pid;
+	pid_t	*pid;
+	int		cmd_size;
 	char	**collected_cmd;
 	char	**collected_files;
 	int 	*collected_type;
