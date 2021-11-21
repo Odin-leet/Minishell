@@ -13,6 +13,7 @@ ft_split1.c
 ft_split1.o
 gnl.c
 haha15
+haha16
 main.c
 main2.c
 main3.c
@@ -23,4 +24,3 @@ pipe.c
 plc.c
 unset.c
 workspace.code-workspace
-cat
