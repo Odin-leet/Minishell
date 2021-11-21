@@ -100,7 +100,28 @@ int *type_collector(t_linked_list *lfile)
 	//tab[size] = NULL;
 	return (tab);
 }
+int echo(char **s, int n)
+{
+    if (!s)
+        return (0);
+    //if s = empty return new line with the return signal (but I'm the sys now)
+    if (n)
+        printf("%s",s[0]);
+    else
+        printf("%s\n",s[0]);
+    return (1);
+}
 
+int cd(char *path)
+{
+   char cwd[256];
+   getcwd(cwd,sizeof(cwd));
+   ft_strlcat(cwd,"/",1); 
+   ft_strcat(cwd,path,ft_strlen(path));
+   chdir(cwd);
+   printf("%s-%s","Minishell 0.0$",path);
+   return 0;
+}
 void exec(t_linked_list *head, char **env)
 {
 	t_vars v;
@@ -135,10 +156,12 @@ void exec(t_linked_list *head, char **env)
 		if (!(head->next))
 			v.out = 1;
 		count = 0;
+		//should i fork ?????
+		//
 		v.pid[i] = fork();
+		
 		if (v.pid[i] == 0)
 		{
-			//dprintf(2, "out =  %d \n",v.out);
 			while (v.collected_files[count])
 			{
 				if (v.out != 0 && (v.collected_type[count] == 4 || v.collected_type[count] == 3))
@@ -153,7 +176,7 @@ void exec(t_linked_list *head, char **env)
 					v.in = open(v.collected_files[count], O_RDONLY, 0644);
 				count++;
 			}
-			
+			//export + redirection + |
 			dup2(v.in, 0);
 			dup2(v.out, 1);
 			if (v.in != 0)
@@ -162,9 +185,8 @@ void exec(t_linked_list *head, char **env)
 				close(v.out);
 			if (v.pin != 0)
 				close (v.pin);
-				
 			execve(v.collected_cmd[0], v.collected_cmd, env);
-			
+			dprintf(1,"bash: %s: command not found\n", s[0]);
 			exit(0);
 		}
 		else
