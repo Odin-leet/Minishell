@@ -246,12 +246,12 @@ char *replaceenv(char *string, int start, int end, char **env)
 	tmp = NULL;
 	if (end == 0)
 		end = ft_strlen(string);
-	//tmp = string;
+	tmp = string;
 	string = ft_substr(string, start + 1, (end - 1) - start);
-	//free(tmp);
-	//tmp = string;
+	free(tmp);
+	tmp = string;
 	string = ft_strjoin(string, "=");
-	//free(tmp);
+	free(tmp);
 	tmp = NULL;
 	while (env[i])
 	{
@@ -264,16 +264,31 @@ char *replaceenv(char *string, int start, int end, char **env)
 			i++;
 	}
 	if (j == 1)
-		return (ft_strdup(env[i], ft_strlen(string)));
+	{
+		i =  ft_strlen(string);
+		free(string);
+		return (ft_strdup(env[i],i ));
+	}
 	return (NULL);
 }
 
 char *handleenvir2(char *string, char *tmp, char *tmp2)
 {
+		char *tmp3;
+
 	if (tmp != NULL && string != NULL)
+	{
+		tmp3 = string;
 		string = ft_strjoin(tmp, string);
+		free(tmp3);
+
+	}
 	if (tmp2 != NULL && string != NULL)
+	{
+		tmp3 = string;
 		string = ft_strjoin(string, tmp2);
+		free(tmp3);
+	}
 	if (string == NULL)
 	{
 		if (tmp != NULL && tmp2 != NULL)
@@ -334,11 +349,20 @@ char *handleenvir(char *string, char **env)
 			}
 			i++;
 			if (string[i] >= 48 && string[i] <= 57)
+			{
+				if (tmp)
+					free(tmp);
 				return (ft_substr(string, i + 1, ft_strlen(string) - (i + 1)));
+			}
 			else if (string[i] == '_' || (string[i] >= 65 && string[i] <= 90))
-				string = handleenvir1(string, i, start, tmp, env);
+			{
+				if (tmp)
+					free(tmp);
+				return(string = handleenvir1(string, i, start, tmp, env));
+			}
 		}
-		free(tmp);
+		if(tmp)
+			free(tmp);
 		i++;
 	}
 	return (string);
@@ -527,6 +551,7 @@ char *elsefunction(char *string, char **env)
 			 tmp3 = ft_strjoin(tab[i], string);
 			 free_pre(tab, 0);
 			 free(tmp);
+			 free(string);
 			return (tmp3);
 		}
 		if (!(tmp2))
@@ -580,9 +605,19 @@ char *handleargs(char *string, char **env)
 	{
 			printf("zaaaab im hereee \n");
 		string = elsefunction(string, env);
-		// printf("string == %s\n", string);
+		 printf("string == %s\n", string);
 	}
 	return (string);
+}
+
+void free_files_linked2(t_linked_list *files)
+{
+	if (!files)
+		return;
+	//free_files_linked(files->next);
+	free(((t_file *)(files->data))->file);
+	//free(files->data);
+	//free(files);
 }
 
 t_linked_list *parser(t_linked_list *lexer, char **env)
@@ -620,8 +655,9 @@ t_linked_list *parser(t_linked_list *lexer, char **env)
 			t_file *tmp = (t_file *)(lexer->next->data);
 
 			f = (t_file *)malloc(sizeof(t_file));
-			f->file = strdup(tmp->file);
+		//	f->file = strdup(tmp->file);
 			f->file = tmp->file;
+			free(token->file);
 			f->type = token->type;
 			append(&(command->files), (void *)f);
 			lexer = lexer->next;
@@ -636,7 +672,10 @@ t_linked_list *parser(t_linked_list *lexer, char **env)
 			{
 			command = (t_command *)malloc(sizeof(t_command));
 			command->files = NULL;
-			command->nameargs = NULL;
+			command->nameargs = NULL;\
+			//free(lexer->data);
+			//free(lexer);
+			free_files_linked2(lexer);
 			i = 0;
 			}
 
@@ -792,48 +831,29 @@ int mainhelper(char *string, int j, t_linked_list **head)
 		}
 		if (i != 0)	
 		{
-			//if (t == 0)
-			//{
 			storeinfos(ft_substr(string, t, i - t), head);
 			printf("''%s''\n", ft_substr(string, t, i - t));	
-			//}
-		//	else
-		//	{
-		//	storeinfos(ft_substr(string, t, i - 2), head);
-//printf("''%s''\n", ft_substr(string, t, i-5));
-		//	}
-			
 		}
-		//storeinfos(pip,head);
-		//break;
-	//}
 	c = i;
 	j = 0;
 	 printf("im hereeeee\n");
 	while (((string[i] =='>' ||  string[i] == '<' || string[i] == '|' )&& in_sgl[i] == 0 && in_sgl[i] == 0) && string[i] != '\0')
 	{
-		//if ( i == 0)
 		j++;
 	//	printf()
 		i++;
 		if (string[i] != '|' &&  string[i]!='>' && string[i] != '<')
 		{	//c = -1;
-		printf("%d ===== \n ",j);
+		//printf("%d ===== \n ",j);
+
 				storeinfos(ft_substr(string, c, j), head);
 			
 			break;
 		}
-
-		//printf("ft_substr == |%s|\n",)
 	}
 	}
 	if (c == -1)
 	storeinfos(pip,head);
-//if (mainhelper2(j, i, head, string) == 0)
-//{
-//	free(pip);
-//	return (0);
-//}
 	free(in_db);
 	free(in_sgl);
 	free(pip);
@@ -845,6 +865,7 @@ void free_head2(t_linked_list *head)
 	if (head == NULL)
 		return;
 	free_head2(head->next);
+	//free(((t_file *)(head->data))->file); 
 	   free(head->data);
 	free(head);
 }
@@ -853,10 +874,10 @@ void free_head(t_linked_list *head)
 	if (head == NULL)
 		return;
 	free_head(head->next);
+	// free(((t_file *)(head->data))->file);  
 	   free(head->data);
-	//free(head);
+	free(head);
 }
-
 void free_files_linked(t_linked_list *files)
 {
 	if (!files)
@@ -866,7 +887,6 @@ void free_files_linked(t_linked_list *files)
 	free(files->data);
 	free(files);
 }
-
 void free_lin_command(t_linked_list *command)
 {
 	t_command *cmd;
@@ -898,7 +918,10 @@ t_linked_list *mainhelper3(char **split)
 			free(split[n]);
 		}
 		else
+		{
 			storeinfos(split[n], &head);
+			//free(split[n]);
+		}
 		n++;
 	}
 	return (head);
@@ -948,7 +971,7 @@ int main(int argc, char **argv, char **env)
 			Parser = parser(head, env);
 			free_head2(head);
             exec(Parser, env);
-
+			free(split);
 			
 			free_lin_command(Parser);
 		}

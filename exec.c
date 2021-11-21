@@ -178,8 +178,14 @@ void exec(t_linked_list *head, char **env)
 		i++;
 		
 		//free(v.collected_cmd);
+		free(v.collected_cmd);
+				free(v.collected_files);
+		free(v.collected_type);
+
 		head = head->next;
 		v.collected_cmd = NULL;
+		v.collected_files = NULL;
+		v.collected_type = 0;
 	}
 	i = 0;
 	while (i < v.cmd_size)
