@@ -1061,7 +1061,7 @@ int main(int argc, char **argv, char **env)
 				return (0);
 			Parser = parser(head, v.envprinc);
 			free_head2(head);
-            exec(Parser, v.envprinc);
+            exec(Parser, v);
 			free(split);
 			free_lin_command(Parser);
 		}
