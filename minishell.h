@@ -45,6 +45,8 @@ typedef struct s_vars
 	int		out;
 	int		pin;
 	pid_t	*pid;
+	char	**env1;
+	char	**envprinc;
 	int		cmd_size;
 	char	**collected_cmd;
 	char	**collected_files;
@@ -61,6 +63,8 @@ char	*ft_strjoin(char *s1, char *s2);
 size_t	ft_strlen(char *s);
 char	*ft_substr(char *s, unsigned int start, size_t len);
 char	*ft_calloc(size_t count, size_t size);
-void	exec(t_linked_list *head, char **env);
+void	exec(t_linked_list *head, t_vars *v);
+int builtins(char *string);
+int ft_strncmp(const char *s1, const char *s2, size_t n);
 char	**ft_split1(char const *s, char c);
 #endif

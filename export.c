@@ -7,6 +7,30 @@ typedef struct s_struct{
 	int key;
 }               t_struct;
 t_struct pl;
+
+int ft_isdigit(int c)
+{
+	unsigned char k;
+
+	k = (unsigned char)c;
+	if (c <= 57 && c >= 48)
+		return (1);
+	else
+		return (0);
+}
+
+int ft_isalpha(int c)
+{
+	unsigned char k;
+
+	k = (unsigned char)c;
+	if (c <= 90 && c >= 65)
+		return (1);
+		else if (c >= 97 && c <= 122)
+			return(1);
+	else
+		return (0);
+}
 size_t	ft_strlen(char *s)
 {
 	int i;
@@ -505,26 +529,49 @@ char **addenv(t_struct *pl, char *string)
 	}
 	return(NULL);
 }
-
-void    export(t_struct *pl, char *string)
+int 	checkifitscomp(char *string)
+{
+		int i = 0;
+			if (i == 0 && string[i] == '=')
+				return(1);
+		while (string[i] != '\0' && string[i] != '=')
+		{
+			if (string[i] != '_' && (ft_isdigit(string[i]) == 0) && (ft_isalpha(string[i]) == 0))
+				return(1);
+			i++;
+		}
+		return (0);
+}	
+void    export(t_struct *pl, char **string)
 {
 	char **env1;
-	int i = 0;
-
+	int i = 1;
+	if (string[1] == NULL)
+	{
+		i =0;
+		while(pl->env1[i])
+		{
+			printf("%s \n",pl->env1[i]);
+			i++;
+		}
+	}
+	else{
 	//  if (strncmp(env[0], "declare -x", 6) != 0)
+	i = 1;
+	while (string[i] != NULL)
+	{
+		if (checkifitscomp(string[i]) == 1)
+			{
+				printf("error of export\n");
+			}
+		else
+	 		addenv(pl, string[i]);
+		i++;
+
+		
+	}	
+	}
 	
-	 addenv(pl, string);
-	while(pl->env1[i])
-	{
-		printf("%s \n",pl->env1[i]);
-		i++;
-	}
-	i =0;
-	while(pl->envprinc[i])
-	{
-		printf("%s \n",pl->envprinc[i]);
-		i++;
-	}
 
 }
 
@@ -569,14 +616,15 @@ int main(int argc , char **argv, char **env)
     pl.env1 =  transferenv(pl.envprinc);
 	i = 0; 
 	//(1)
-	while(1)
-	{
-		buffer = readline("$");
-		export(&pl, buffer);
-		i++;
-        
-    }   
-    //i = 0;
+	//while(1)
+	//{
+	//	buffer = readline("$");
+	//	export(&pl, buffer);
+	//	i++;
+   //    
+   //}   
+   ////i = 0;
+   export (&pl, argv);
      while(pl.env1[i])
 		{
 			//printf("%d -- \n", i);
@@ -591,6 +639,6 @@ int main(int argc , char **argv, char **env)
 		}	
 		free(pl.envprinc);
 		
-    while (1);
+   // while (1);
     return(0);
 }

@@ -231,7 +231,6 @@ int ft_isalpha(int c)
 	k = (unsigned char)c;
 	if (c <= 90 && c >= 65)
 		return (1);
-	else
 		return (0);
 }
 
@@ -927,29 +926,128 @@ t_linked_list *mainhelper3(char **split)
 	return (head);
 }
 
+int thereisequ(char *env)
+{
+	int i;
+
+	i = 0;
+	while(env[i] != '\0')
+	{
+		if (env[i] == '=')
+			return(i);
+		i++;
+	}
+	return(-1);
+}
+char *traitement1(char *str, int j)
+{
+	char *tmp1;
+	char *tmp2;
+	char *tmp3;
+	char *str2;
+
+	str2 = malloc(sizeof(char) * 2);
+	str2[0] = '\"';
+	str2[1] = '\0';
+	tmp1 = ft_substr(str, 0, j + 1);
+	tmp2 = ft_substr(str, j + 1, ft_strlen(str) - (j + 1) );
+	//free(str); decommenter quand str ca sera un string deja allouer 
+	tmp3 = tmp2;
+	tmp2 = ft_strjoin(str2, tmp2);
+	free(tmp3);
+    //free(str);
+	tmp3 = tmp2;
+	tmp2 =ft_strjoin(tmp2,str2);
+	free(tmp3);
+	tmp3 = tmp2;
+	tmp2 = ft_strjoin(tmp1, tmp2);
+	free(tmp3);
+	free(tmp1);
+    tmp3 = tmp2;
+	tmp2 = ft_strjoin("declare -x ", tmp2);
+    free(tmp3);
+	free(str2);
+	return(tmp2);
+
+}
+
+char *traitement2(char *str)
+{
+	char *tmp;
+
+	tmp = ft_strjoin("declare -x ", str);
+	return(tmp);
+}
+char **transferenv(char **tmp)
+{
+	int i;
+	int j;
+	char **tmp1 =NULL;
+
+	i = 0;
+	j = 0;
+	while(tmp[i])
+		i++;
+	tmp1 = malloc(sizeof(char*) * i +1);
+	i = 0;
+	while(tmp[i] != NULL)
+	{
+		if ((j = thereisequ(tmp[i])) != -1)
+		{
+			tmp1[i] = traitement1(tmp[i], j);
+		}
+		else
+			tmp1[i] = traitement2(tmp[i]);
+		i++;
+	}
+	tmp1[i] = NULL;
+	return(tmp1);
+}
+void 	get_env(t_vars *pl, char **env)
+{
+	int i = 0;
+	int j = 0;
+	while (env[i] != NULL)
+		i++;
+	pl->envprinc = malloc(sizeof (char *) * (i + 1));
+	//printf("%d -- \n",i);
+	i = 0;
+	while(env[i])
+	{
+		j = 0;
+		j = ft_strlen(env[i]);
+		pl->envprinc[i] = malloc(sizeof(char) * (j  + 1));
+		i++;
+	}
+	i = 0;
+	while (env[i] != NULL)
+	{
+		j = 0;
+		while (env[i][j] != '\0')
+		{
+			pl->envprinc[i][j] = env[i][j];
+			j++;
+		}
+		pl->envprinc[i][j] = '\0';
+		i++;
+	}
+	pl->envprinc[i] = NULL;
+    pl->env1 =  transferenv(pl->envprinc);
+}
 int main(int argc, char **argv, char **env)
 {
 	char *buffer;
 	char **split;
+	t_linked_list *head;
+	t_linked_list *Parser;
+	t_vars	v;
 
-//	char **s;
-
-	//pid_t pid;
-		t_linked_list *head;
-		t_linked_list *Parser;
-
-//	t_linked_list *cmd;
-
+	get_env(&v, env);
 	g_count = 0;
 	argc = 2;
 	split = NULL;
 	argc = 0;
 	argv = NULL;
-	//env = NULL;
-//	int fd[2];
-//			int in = 0;
-//			int pin = 0;
-//			int out = 1;
 	while (1)
 	{
 		head = NULL;
@@ -959,23 +1057,28 @@ int main(int argc, char **argv, char **env)
 		{
 			split = ft_split(buffer, ' ');
 			head = mainhelper3(split);
-			t_linked_list *spl;
-			spl = head;
-			while(spl != NULL)
-			{
-				printf("|%s|\n",(char *)((t_file *)spl->data)->file);
-				spl = spl->next;
-			}
 			if (check_errors(head) == 0)
 				return (0);
-			Parser = parser(head, env);
+			Parser = parser(head, v.envprinc);
 			free_head2(head);
-            exec(Parser, env);
+            exec(Parser, &v);
 			free(split);
-			
 			free_lin_command(Parser);
 		}
 	}
-
+	int i =0;
+	 while(v.env1[i])
+		{
+			//printf("%d -- \n", i);
+			free(v.env1[i++]);
+		}
+			free(v.env1);
+		i = 0;
+		while(v.envprinc[i])
+		{
+//
+			free(v.envprinc[i++]);
+		}	
+		free(v.envprinc);
 	return (0);
 }

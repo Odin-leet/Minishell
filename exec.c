@@ -38,10 +38,10 @@ char **cmd_collector(t_linked_list *cmd)
 		tempo = tempo->next;
 		size++;
 	}
-	sequance = malloc(sizeof(char*) * (size  + 1));
+	sequance = malloc(sizeof(char *) * (size + 1));
 	sequance[size] = NULL;
 	size = 0;
-	while(cmd!= NULL)
+	while (cmd != NULL)
 	{
 		sequance[size] = (char *)cmd->data;
 		cmd = cmd->next;
@@ -62,10 +62,10 @@ char **files_collector(t_linked_list *lfile)
 		tempo = tempo->next;
 		size++;
 	}
-	sequance = malloc(sizeof(char*) * (size  + 1));
+	sequance = malloc(sizeof(char *) * (size + 1));
 	sequance[size] = NULL;
 	size = 0;
-	while(lfile!= NULL)
+	while (lfile != NULL)
 	{
 		sequance[size] = ((t_file *)lfile->data)->file;
 		lfile = lfile->next;
@@ -80,39 +80,41 @@ int *type_collector(t_linked_list *lfile)
 	int size;
 	size = 0;
 	tempo = lfile;
-	while(tempo!=  NULL)
+	while (tempo != NULL)
 	{
 		tempo = tempo->next;
 		size++;
 	}
-	tab = malloc(sizeof(int*) * (size));
+	tab = malloc(sizeof(int *) * (size));
 
-	size= 0;
-	while(lfile!= NULL)
+	size = 0;
+	while (lfile != NULL)
 	{
 		tab[size] = ((t_file *)lfile->data)->type;
-		printf("tab[size] == %d\n",tab[size]);
+		printf("tab[size] == %d\n", tab[size]);
 		lfile = lfile->next;
 		size++;
 	}
 	return (tab);
 }
-// int echo(char **s, int n)
-// {
-//    if (!s)
-//        return (0);
-//    //if s = empty return new line with the return signal (but I'm the sys now)
-//    if (n)
-//        printf("%s",s[0]);
-//    else
-//        printf("%s\n",s[0]);
-//    return (1);
-// }
+int echo(t_vars *v)
+{
+	//char **s;
+	//int n;
+   if (!(v->collected_cmd))
+       return (0);
+   //if s = empty return new line with the return signal (but I'm the sys now)
+   if (v->collected_cmd[1][1] == 'n')
+       printf("%s",v->collected_cmd[2]);
+   else
+       printf("%s\n",v->collected_cmd[1]);
+   return (1);
+}
 // int cd(char *path)
 // {
 //   char cwd[256];
 //   getcwd(cwd,sizeof(cwd));
-//   ft_strlcat(cwd,"/",1); 
+//   ft_strlcat(cwd,"/",1);
 //   ft_strcat(cwd,path,ft_strlen(path));
 //   chdir(cwd);
 //   printf("%s-%s","Minishell 0.0$",path);
@@ -129,7 +131,7 @@ void file_manager(t_vars *v)
 	{
 		if (v->out != 0 && (v->collected_type[count] == 4 || v->collected_type[count] == 3))
 			close(v->out);
-		else if(v->in != 1 && (v->collected_type[count] == 2 || v->collected_type[count] == 5))
+		else if (v->in != 1 && (v->collected_type[count] == 2 || v->collected_type[count] == 5))
 			close(v->in);
 		if (v->collected_type[count] == 3)
 			v->out = open(v->collected_files[count], O_WRONLY | O_CREAT | O_TRUNC, 0644);
@@ -139,6 +141,24 @@ void file_manager(t_vars *v)
 			v->in = open(v->collected_files[count], O_RDONLY, 0644);
 		count++;
 	}
+}
+int builtve(t_vars *v)
+{
+	if (ft_strncmp(v->collected_cmd[0], "echo", ft_strlen(v->collected_cmd[0])) == 0)
+		return (echo(v));
+	// if (ft_strncmp(v->collected_cmd[0], "cd", ft_strlen(v->collected_cmd[0])) == 0)
+	// 	return (cd(v));
+	// if (ft_strncmp(v->collected_cmd[0], "pwd", ft_strlen(v->collected_cmd[0])) == 0)
+	// 	return (pwd(v));
+	// if (ft_strncmp(v->collected_cmd[0], "unset", ft_strlen(v->collected_cmd[0])) == 0)
+	// 	return (unset(v));
+	// if (ft_strncmp(v->collected_cmd[0], "env", ft_strlen(v->collected_cmd[0])) == 0)
+	// 	return (env(v));
+	// if (ft_strncmp(v->collected_cmd[0], "exit", ft_strlen(v->collected_cmd[0])) == 0)
+	// 	return (exit());
+	// if (ft_strncmp(v->collected_cmd[0], "export", ft_strlen(v->collected_cmd[0])) == 0)
+	// 	return (export(v));
+	return (0);
 }
 void exec(t_linked_list *head, t_vars *v)
 {
@@ -153,11 +173,11 @@ void exec(t_linked_list *head, t_vars *v)
 	v->cmd_size = 0;
 	while (tmp)
 	{
-		v->cmd_size++;
+		(v->cmd_size)++;
 		tmp = tmp->next;
 	}
 	i = 0;
-	v->pid = malloc(sizeof(pid_t) * v->cmd_size);
+	v->pid = malloc(sizeof(pid_t) * (v->cmd_size));
 	while (head)
 	{
 		v->lcmd = ((t_command *)head->data)->nameargs;
@@ -168,41 +188,44 @@ void exec(t_linked_list *head, t_vars *v)
 		v->out = fd[1];
 		if (!(head->next))
 			v->out = 1;
-		// if (built_it)
-		// 	builtve(v->collected_cmd[0], v->collected_cmd, env);
-		// else
-		// 	v->pid[i] = fork();
-		if (v->pid[i] == 0)
-		{
-			file_manager(v);
-			//export + redirection + |
-			dup2(v->in, 0);
-			dup2(v->out, 1);
-			if (v->in != 0)
-				close(v->in);
-			if (v->out != 1)
-				close(v->out);
-			if (v->pin != 0)
-				close (v->pin);
-			// if (built_it)
-			// 	builtve(v->collected_cmd[0], v->collected_cmd, env);
-			// else
-				execve(v->collected_cmd[0], v->collected_cmd, v->envprinc);
-			//dprintf(2,"bash: %s: command not found\n", s[0]);
-			exit(0);
-		}
+		if (i == 0 && !(head->next) && builtins(v->collected_cmd[0]))
+			builtve(v);
 		else
 		{
-			if (v->in != 0)
-				close(v->in);
-			if (v->out != 1)
-				close(v->out);
-			v->in = v->pin;
+			v->pid[i] = fork();
+			if (v->pid[i] == 0)
+			{
+				file_manager(v);
+				//export + redirection + |
+				dup2(v->in, 0);
+				dup2(v->out, 1);
+				if (v->in != 0)
+					close(v->in);
+				if (v->out != 1)
+					close(v->out);
+				if (v->pin != 0)
+					close(v->pin);
+				if (builtins(v->collected_cmd[0]))
+					builtve(v);
+				else
+					execve(v->collected_cmd[0], v->collected_cmd, v->envprinc);
+				//dprintf(2,"bash: %s: command not found\n", s[0]);
+				exit(0);
+			}
+			else
+			{
+				if (v->in != 0)
+					close(v->in);
+				if (v->out != 1)
+					close(v->out);
+				v->in = v->pin;
+			}
 		}
+
 		i++;
-		free(v->collected_cmd);
-		free(v->collected_files);
-		free(v->collected_type);
+		// free(v->collected_cmd);
+		// free(v->collected_files);
+		// free(v->collected_type);
 		head = head->next;
 		v->collected_cmd = NULL;
 		v->collected_files = NULL;
@@ -211,7 +234,7 @@ void exec(t_linked_list *head, t_vars *v)
 	i = 0;
 	while (i < v->cmd_size)
 	{
-		waitpid(v->pid[i], NULL,0);
+		waitpid(v->pid[i], NULL, 0);
 		i++;
 	}
 	free(v->pid);
