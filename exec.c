@@ -99,16 +99,37 @@ int *type_collector(t_linked_list *lfile)
 }
 int echo(t_vars *v)
 {
-	//char **s;
-	//int n;
-   if (!(v->collected_cmd))
-       return (0);
-   //if s = empty return new line with the return signal (but I'm the sys now)
-   if (v->collected_cmd[1][1] == 'n')
-       printf("%s",v->collected_cmd[2]);
-   else
-       printf("%s\n",v->collected_cmd[1]);
-   return (1);
+	int i;
+	int j;
+	int flag;
+
+	i = 1;
+	j = 1;
+	flag = 0;
+	if (!(v->collected_cmd))
+		return (0);
+	//if s = empty return new line with the return signal (but I'm the sys now)
+	if (v->collected_cmd[i][0] == '-')
+	{
+		while(v->collected_cmd[i][j] == 'n')
+			j++;
+		if (v->collected_cmd[i][j] == ' ')
+		{
+			flag = 2;
+			i = 2;
+		}	
+	}
+	while (v->collected_cmd[i])
+	{
+		if (v->collected_cmd[i + 1])
+			printf("%s ", v->collected_cmd[i]);
+		else
+			printf("%s", v->collected_cmd[i]);
+		i++;
+	}
+	if (flag == 0)
+		printf("\n");
+	return (1);
 }
 // int cd(char *path)
 // {
