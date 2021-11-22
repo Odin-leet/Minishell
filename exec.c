@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <string.h>
 // int		ft_strchr(const char *s, int c)
 // {
 // 	while (*s != '\0')
@@ -24,6 +25,27 @@
 // 	return (0);
 // }
 //dprintf(2, "%s : wrong\n",s[0]);
+
+size_t	ft_strlcat(char *dst, char *src, size_t size)
+{
+	size_t	src_len;
+	size_t		i;
+	size_t	dst_len;
+
+	src_len = ft_strlen(src);
+	dst_len = ft_strlen(dst);
+	i = 0;
+	while (i + dst_len < (size - 1) && src[i] != '\0')
+	{
+		dst[i + (int)dst_len] = src[i];
+		i++;
+	}
+	dst[i + (int)dst_len] = '\0';
+	if (size < dst_len)
+		return (size + src_len);
+	else
+		return (dst_len + src_len);
+}
 
 char **cmd_collector(t_linked_list *cmd)
 {
@@ -131,16 +153,28 @@ int echo(t_vars *v)
 		printf("\n");
 	return (1);
 }
-// int cd(char *path)
-// {
-//   char cwd[256];
-//   getcwd(cwd,sizeof(cwd));
-//   ft_strlcat(cwd,"/",1);
-//   ft_strcat(cwd,path,ft_strlen(path));
-//   chdir(cwd);
-//   printf("%s-%s","Minishell 0.0$",path);
-//   return 0;
-// }
+
+int pwd(void)
+{
+  char cwd[256];
+
+  getcwd(cwd,sizeof(cwd));
+  printf("%s\n" ,cwd);
+  return (1);
+}
+
+int cd(t_vars *v)
+{
+  char cwd[256];
+  getcwd(cwd,sizeof(cwd));
+  if (v->collected_cmd[1])
+  ft_strlcat(cwd,"/",1);
+  ft_strlcat(cwd,v->collected_cmd[1],ft_strlen(v->collected_cmd[1]));
+  printf("[%s]\n", cwd);
+  chdir(cwd);
+  printf("%s\n",v->collected_cmd[1]);
+  return 0;
+}
 void file_manager(t_vars *v)
 {
 	int count;
@@ -167,10 +201,10 @@ int builtve(t_vars *v)
 {
 	if (ft_strncmp(v->collected_cmd[0], "echo", ft_strlen(v->collected_cmd[0])) == 0)
 		return (echo(v));
-	// if (ft_strncmp(v->collected_cmd[0], "cd", ft_strlen(v->collected_cmd[0])) == 0)
-	// 	return (cd(v));
-	// if (ft_strncmp(v->collected_cmd[0], "pwd", ft_strlen(v->collected_cmd[0])) == 0)
-	// 	return (pwd(v));
+	if (ft_strncmp(v->collected_cmd[0], "cd", ft_strlen(v->collected_cmd[0])) == 0)
+		return (cd(v));
+	if (ft_strncmp(v->collected_cmd[0], "pwd", ft_strlen(v->collected_cmd[0])) == 0)
+		return (pwd());
 	// if (ft_strncmp(v->collected_cmd[0], "unset", ft_strlen(v->collected_cmd[0])) == 0)
 	// 	return (unset(v));
 	// if (ft_strncmp(v->collected_cmd[0], "env", ft_strlen(v->collected_cmd[0])) == 0)
