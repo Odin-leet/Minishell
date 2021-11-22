@@ -18,6 +18,29 @@ size_t	ft_strlen(char *s)
 	return (i);
 }
 
+int ft_isdigit(int c)
+{
+	unsigned char k;
+
+	k = (unsigned char)c;
+	if (c <= 57 && c >= 48)
+		return (1);
+	else
+		return (0);
+}
+
+int ft_isalpha(int c)
+{
+	unsigned char k;
+
+	k = (unsigned char)c;
+	if (c <= 90 && c >= 65)
+		return (1);
+		else if (c >= 97 && c <= 122)
+			return(1);
+	else
+		return (0);
+}
 char	*ft_strjoin(char *s1, char *s2)
 {
 	char			*dest;
@@ -343,20 +366,50 @@ void    unsetenv1(t_struct *pl, char *string)
     pl->env1 = tmp2;
  //  pl->envprinc = tmp1;
     
-
-
-
-
-
 }
-void    unset(t_struct *pl, char *string)
-{
-    int i=0;
 
-    if(checkifthereisenv(pl->env1, string) == 1)
+int 	checkifitscomp1(char *string)
+{
+		int i = 0;
+			if (i == 0 && string[i] != '_' &&  (ft_isalpha(string[i]) == 0)){
+				
+				return(1);
+			}
+		while (string[i] != '\0')
+		{
+			if (string[i] != '_' && (ft_isdigit(string[i]) == 0) && (ft_isalpha(string[i]) == 0))
+			{
+			//	printf("bash: unset: `%s': not a valid identifier",string);
+				return(1);
+			}
+			i++;
+		}
+		return (0);
+}	
+
+
+
+void    unset(t_struct *pl, char **string)
+{
+    int i=1;
+
+	//if (ch)
+
+	while(string[i])
+	{
+		
+	if (checkifitscomp1(string[i]) == 1)
+	{
+			printf("bash: unset: `%s': not a valid identifier\n",string[i]);
+	}
+    else if(checkifthereisenv(pl->env1, string[i]) == 1)
     {
-        unsetenv1(pl , string);
+        unsetenv1(pl , string[i]);
     }
+	i++;
+		
+	}  
+	i = 0;
     while(pl->env1[i])
     {
         printf("%s\n",pl->env1[i++]);
@@ -405,12 +458,12 @@ int main(int argc, char **Argv, char **env)
     pl.env1 =  transferenv(pl.envprinc);
 	i = 0; 
 	//(1)
-	while(1)
-	{
-		buffer = readline("$");
-		unset(&pl, buffer);
+//	while(1)
+//	{
+	//	buffer = readline("$");
+		unset(&pl, Argv);
         
-    }   
+   // }   
     //i = 0;
      while(pl.env1[i])
 		{

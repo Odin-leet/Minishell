@@ -116,13 +116,14 @@ int cd(char *path)
 {
    char cwd[256];
    getcwd(cwd,sizeof(cwd));
-   ft_strlcat(cwd,"/",1); 
-   ft_strcat(cwd,path,ft_strlen(path));
-   chdir(cwd);
-   printf("%s-%s","Minishell 0.0$",path);
+   path = NULL;
+ // ft_strlcat(cwd,"/",1); 
+ // ft_strcat(cwd,path,ft_strlen(path));
+ // chdir(cwd);
+ // printf("%s-%s","Minishell 0.0$",path);
    return 0;
 }
-void exec(t_linked_list *head, char **env)
+void exec(t_linked_list *head, char **env, t_vars *v)
 {
 	t_vars v;
 	int fd[2];
@@ -186,7 +187,7 @@ void exec(t_linked_list *head, char **env)
 			if (v.pin != 0)
 				close (v.pin);
 			execve(v.collected_cmd[0], v.collected_cmd, env);
-			dprintf(1,"bash: %s: command not found\n", s[0]);
+		//	dprintf(1,"bash: %s: command not found\n", s[0]);
 			exit(0);
 		}
 		else
