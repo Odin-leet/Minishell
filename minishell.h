@@ -57,6 +57,7 @@ typedef struct s_vars
 }				t_vars;
 int		get_next_line(int fd, char **line, int BUFFER_SIZE);
 char 	**collector(t_linked_list *cmd);
+int    unset(t_vars *pl);
 char	*ft_strchr(char *s, int c);
 char	*ft_strdup(char *s1, size_t i);
 char	*ft_strjoin(char *s1, char *s2);
@@ -67,4 +68,19 @@ void	exec(t_linked_list *head, t_vars *v);
 int builtins(char *string);
 int ft_strncmp(const char *s1, const char *s2, size_t n);
 char	**ft_split1(char const *s, char c);
+int    export(t_vars *pl);
+int ft_isdigit(int c);
+int ft_isalpha2(int c);
+size_t	ft_strlen(char *s);
+char	*ft_strjoin(char *s1, char *s2);
+char	*ft_substr(char *s, unsigned int start, size_t len);
+char *traitement1(char *str, int j);
+char *traitement2(char *str);
+char **transferenv(char **tmp);
+int thereisequ(char *env);
+int     counttab(char **tab);
+void replaceenv(t_vars *pl, char *string);
+char **addenv(t_vars *pl, char *string);
+int     checkifthereisenv2(char **env, char *string);
+int		env(t_vars *pl);
 #endif

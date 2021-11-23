@@ -234,7 +234,7 @@ int ft_isalpha(int c)
 		return (0);
 }
 
-char *replaceenv(char *string, int start, int end, char **env)
+char *replaceenv2(char *string, int start, int end, char **env)
 {
 	int i;
 	int j;
@@ -321,7 +321,7 @@ char *handleenvir1(char *string, int i, int start, char *tmp, char **env)
 		else
 			i++;
 	}
-	string = replaceenv(string, start, end, env);
+	string = replaceenv2(string, start, end, env);
 	string = handleenvir2(string, tmp, tmp2);
 	return (string);
 }
@@ -1050,9 +1050,11 @@ int main(int argc, char **argv, char **env)
 	argv = NULL;
 	while (1)
 	{
+		//dsadasdasdasdas
 		head = NULL;
 		Parser = NULL;
 		buffer = readline("Minishell 0.0$ ");
+		add_history(buffer);
 		if (buffer[0] != '\0')
 		{
 			split = ft_split(buffer, ' ');

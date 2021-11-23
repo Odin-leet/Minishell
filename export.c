@@ -1,25 +1,25 @@
 #include "minishell.h"
 #include <string.h>
-typedef struct s_struct{
-	char **env1;
-	char **envprinc;
-	int value;
-	int key;
-}               t_struct;
-t_struct pl;
+//typedef struct s_struct{
+//	char **env1;
+//	char **envprinc;
+//	int value;
+//	int key;
+//}               t_struct;
+//t_struct pl;
 
-int ft_isdigit(int c)
-{
-	unsigned char k;
-
-	k = (unsigned char)c;
-	if (c <= 57 && c >= 48)
-		return (1);
-	else
-		return (0);
-}
-
-int ft_isalpha(int c)
+//int ft_isdigit(int c)
+//{
+//	unsigned char k;
+//
+//	k = (unsigned char)c;
+//	if (c <= 57 && c >= 48)
+//		return (1);
+//	else
+//		return (0);
+//}
+//
+int ft_isalpha2(int c)
 {
 	unsigned char k;
 
@@ -31,150 +31,152 @@ int ft_isalpha(int c)
 	else
 		return (0);
 }
-size_t	ft_strlen(char *s)
-{
-	int i;
+//size_t	ft_strlen(char *s)
+//{
+//	int i;
+//
+//	i = 0;
+//	while (s[i] != '\0')
+//		i++;
+//	return (i);
+//}
 
-	i = 0;
-	while (s[i] != '\0')
-		i++;
-	return (i);
-}
-
-char	*ft_strjoin(char *s1, char *s2)
-{
-	char			*dest;
-	unsigned long	i;
-	unsigned long	j;
-	size_t			res_len;
-
-	if (!(res_len = 0) && s1)
-		res_len = ft_strlen(s1);
-	j = 0;
-	if (!(dest = (char*)malloc(res_len + ft_strlen(s2) + 1)))
-		return (0);
-	i = -1;
-	if (s1 == 0 && s2 == 0)
-		return (0);
-	while (++i < res_len)
-		dest[i] = s1[i];
-	res_len = ft_strlen(s2);
-	while (j < res_len)
-		dest[i++] = s2[j++];
-	dest[i] = '\0';
-	//free(s1);
-	//free(s2);
-	return (dest);
-}
-char	*ft_substr(char *s, unsigned int start, size_t len)
-{
-	char			*dest;
-	char			*src;
-	unsigned long	j;
-
-	if (s == 0)
-		return (0);
-	//	if (start > ft_strlen(s))
-	//		return (dest = ft_calloc(1, 1));
-	else
-	{
-		j = 0;
-		src = (char*)s;
-		if (!(dest = (char*)malloc(len + 1)))
-			return (0);
-		while (*src && j < len)
-		{
-			dest[j] = src[start];
-			j++;
-			start++;
-		}
-		dest[j] = '\0';
-	}
-	//free(s);
-	return (dest);
-}
-char *traitement1(char *str, int j)
-{
-	char *tmp1;
-	char *tmp2;
-	char *tmp3;
-	char *str2;
-
-	str2 = malloc(sizeof(char) * 2);
-	str2[0] = '\"';
-	str2[1] = '\0';
-	tmp1 = ft_substr(str, 0, j +1);
-	tmp2 = ft_substr(str, j + 1, ft_strlen(str) - (j + 1) );
-	//free(str); decommenter quand str ca sera un string deja allouer 
-	tmp3 = tmp2;
-	tmp2 = ft_strjoin(str2, tmp2);
-	free(tmp3);
-    //free(str);
-	tmp3 = tmp2;
-	tmp2 =ft_strjoin(tmp2,str2);
-	free(tmp3);
-	tmp3 = tmp2;
-	tmp2 = ft_strjoin(tmp1, tmp2);
-	free(tmp3);
-	free(tmp1);
-    tmp3 = tmp2;
-	tmp2 = ft_strjoin("declare -x ", tmp2);
-    free(tmp3);
-	free(str2);
-	return(tmp2);
-
-}
-
-char *traitement2(char *str)
-{
-	char *tmp;
-
-	tmp = ft_strjoin("declare -x ", str);
-	return(tmp);
-}
-int thereisequ(char *env)
-{
-	int i;
-
-	i = 0;
-	while(env[i] != '\0')
-	{
-		if (env[i] == '=')
-			return(i);
-		i++;
-	}
-	return(-1);
-}
-char **transferenv(char **tmp)
-{
-	int i;
-	int j;
-	char **tmp1 =NULL;
-
-	i = 0;
-	j = 0;
-	while(tmp[i])
-		i++;
-	tmp1 = malloc(sizeof(char*) * i +1);
-	i = 0;
-	while(tmp[i] != NULL)
-	{
-		if ((j = thereisequ(tmp[i])) != -1)
-		{
-			tmp1[i] = traitement1(tmp[i], j);
-		}
-		else
-			tmp1[i] = traitement2(tmp[i]);
-		i++;
-	}
-	tmp1[i] = NULL;
-	return(tmp1);
-}
+//char	*ft_strjoin(char *s1, char *s2)
+//{
+//	char			*dest;
+//	unsigned long	i;
+//	unsigned long	j;
+//	size_t			res_len;
+//
+//	if (!(res_len = 0) && s1)
+//		res_len = ft_strlen(s1);
+//	j = 0;
+//	if (!(dest = (char*)malloc(res_len + ft_strlen(s2) + 1)))
+//		return (0);
+//	i = -1;
+//	if (s1 == 0 && s2 == 0)
+//		return (0);
+//	while (++i < res_len)
+//		dest[i] = s1[i];
+//	res_len = ft_strlen(s2);
+//	while (j < res_len)
+//		dest[i++] = s2[j++];
+//	dest[i] = '\0';
+//	//free(s1);
+//	//free(s2);
+//	return (dest);
+//}
+//char	*ft_substr(char *s, unsigned int start, size_t len)
+//{
+//	char			*dest;
+//	char			*src;
+//	unsigned long	j;
+//
+//	if (s == 0)
+//		return (0);
+//	//	if (start > ft_strlen(s))
+//	//		return (dest = ft_calloc(1, 1));
+//	else
+//	{
+//		j = 0;
+//		src = (char*)s;
+//		if (!(dest = (char*)malloc(len + 1)))
+//			return (0);
+//		while (*src && j < len)
+//		{
+//			dest[j] = src[start];
+//			j++;
+//			start++;
+//		}
+//		dest[j] = '\0';
+//	}
+//	//free(s);
+//	return (dest);
+//}
+//char *traitement1(char *str, int j)
+////{
+////	char *tmp1;
+////	char *tmp2;
+////	char *tmp3;
+////	char *str2;
+////
+////	str2 = malloc(sizeof(char) * 2);
+////	str2[0] = '\"';
+////	str2[1] = '\0';
+////	tmp1 = ft_substr(str, 0, j +1);
+////	tmp2 = ft_substr(str, j + 1, ft_strlen(str) - (j + 1) );
+////	//free(str); decommenter quand str ca sera un string deja allouer 
+////	tmp3 = tmp2;
+////	tmp2 = ft_strjoin(str2, tmp2);
+////	free(tmp3);
+////    //free(str);
+////	tmp3 = tmp2;
+////	tmp2 =ft_strjoin(tmp2,str2);
+////	free(tmp3);
+////	tmp3 = tmp2;
+////	tmp2 = ft_strjoin(tmp1, tmp2);
+////	free(tmp3);
+////	free(tmp1);
+////    tmp3 = tmp2;
+////	tmp2 = ft_strjoin("declare -x ", tmp2);
+////    free(tmp3);
+////	free(str2);
+////	return(tmp2);
+////
+////}
+////
+////char *traitement2(char *str)
+////{
+////	char *tmp;
+////
+////	tmp = ft_strjoin("declare -x ", str);
+////	return(tmp);
+//}
+//i//nt thereisequ(char *env)
+//{//
+//	int i;
+//
+//	i = 0;
+//	while(env[i] != '\0')
+//	{
+//		if (env[i] == '=')
+//			return(i);
+//		i++;
+//	}
+//	return(-1);
+//}//
+////char **transferenv(char **tmp)
+//{
+//	int i;
+//	int j;
+//	char **tmp1 =NULL;
+//
+//	i = 0;
+//	j = 0;
+//	while(tmp[i])
+//		i++;
+//	tmp1 = malloc(sizeof(char*) * i +1);
+//	i = 0;
+//	while(tmp[i] != NULL)
+//	{
+//		if ((j = thereisequ(tmp[i])) != -1)
+//		{
+//			tmp1[i] = traitement1(tmp[i], j);
+//		}
+//		else
+//			tmp1[i] = traitement2(tmp[i]);
+//		i++;
+//	}
+//	tmp1[i] = NULL;
+//	return(tmp1);
+//}
 
 int     checkifthereisenv(char **env, char *string)
 {
 	int i;
 	int count;
+	int count2;
+	count2 = 0;
 	count= 0;
 	int j;
 	char *tmp;
@@ -205,14 +207,16 @@ int     checkifthereisenv(char **env, char *string)
         {
             if(env[i][j] == '=')
             {
-                count = j;
+                count2 = j;
                 break;
             }
             j++;
             if(env[i][j] == '\0')
-                count = j;
+                count2 = j;
 
         }
+		if (count2 > count)
+			count = count2;
 		if (strncmp(tmp, env[i], count ) == 0)
 		{
 		//	 int c = 0;
@@ -229,7 +233,7 @@ int     checkifthereisenv(char **env, char *string)
         //******************** here i need to check with the len of the envi not the string cause when i add a string like "a"
         //******************** and there is before a string like "aaa" he traiting it like it s a old var
  	}
-	 int c = 0;
+	// int c = 0;
 	// while(env[c])
 	// {
 	//	 printf("||||||||||||%s\n",env[c]);
@@ -239,7 +243,7 @@ int     checkifthereisenv(char **env, char *string)
 	return(0);
 }
 
-void    replaceenv(t_struct *pl, char *string)
+void    replaceenv(t_vars *pl, char *string)
 {
 	int i;
 	char *tmp;
@@ -317,7 +321,7 @@ int     counttab(char **tab)
 
 	return(i);
 }
-char **addenv2(char *string, t_struct *pl)
+char **addenv2(char *string, t_vars *pl)
 {
 	int c;
 	char *tmp;
@@ -326,7 +330,7 @@ char **addenv2(char *string, t_struct *pl)
 	char *string1 = strdup(string);
 
 	tmp3 =NULL;
-	int j;
+	size_t j;
 	j = 0;
 	c = 0;
 //	printf("%s \n",string);
@@ -462,7 +466,7 @@ char **addenv2(char *string, t_struct *pl)
 	int i = 0;
 	while (pl->env1[i] != NULL)
 	{
-			printf("|%s |\n",pl->env1[i]);
+			//printf("|%s |\n",pl->env1[i]);
 
 		free(pl->env1[i]);
 		i++;
@@ -492,7 +496,7 @@ char **addenv2(char *string, t_struct *pl)
 	return(NULL);
 }
 
-char **addenv(t_struct *pl, char *string)
+char **addenv(t_vars *pl, char *string)
 {
 	int i;
     int c;
@@ -515,7 +519,7 @@ char **addenv(t_struct *pl, char *string)
 		}
 	}
 	else{
-                printf("asdasdsasdsasdsadasdas |||%d||\n",c);
+             //   printf("asdasdsasdsasdsadasdas |||%d||\n",c);
 
 		i = 0;
 
@@ -536,17 +540,17 @@ int 	checkifitscomp(char *string)
 				return(1);
 		while (string[i] != '\0' && string[i] != '=')
 		{
-			if (string[i] != '_' && (ft_isdigit(string[i]) == 0) && (ft_isalpha(string[i]) == 0))
+			if (string[i] != '_' && (ft_isdigit(string[i]) == 0) && (ft_isalpha2(string[i]) == 0))
 				return(1);
 			i++;
 		}
 		return (0);
 }	
-void    export(t_struct *pl, char **string)
+int    export(t_vars *pl)
 {
-	char **env1;
+	//char **env1;
 	int i = 1;
-	if (string[1] == NULL)
+	if (pl->collected_cmd[1] == NULL)
 	{
 		i =0;
 		while(pl->env1[i])
@@ -558,87 +562,38 @@ void    export(t_struct *pl, char **string)
 	else{
 	//  if (strncmp(env[0], "declare -x", 6) != 0)
 	i = 1;
-	while (string[i] != NULL)
+	while (pl->collected_cmd[i] != NULL)
 	{
-		if (checkifitscomp(string[i]) == 1)
+		if (checkifitscomp(pl->collected_cmd[i]) == 1)
 			{
 				printf("error of export\n");
+				return(0);
 			}
 		else
-	 		addenv(pl, string[i]);
+	 		addenv(pl, pl->collected_cmd[i]);
 		i++;
-
-		
 	}	
 	}
+	
+	return(1);
 	
 
 }
 
-int main(int argc , char **argv, char **env)
+int		env(t_vars *pl)
 {
-	char **tmp;
-	char *buffer;
-
-
-	int i = 0;
-	int j = 0;
-	t_struct pl;
-
+	int i;
 	i = 0;
-	j = 0;
-    
-	while (env[i] != NULL)
-		i++;
-	pl.envprinc = malloc(sizeof (char *) * (i + 1));
-	//printf("%d -- \n",i);
-	i = 0;
-	while(env[i])
+	if (pl->collected_cmd[1] != NULL)
 	{
-		j = 0;
-		j = ft_strlen(env[i]);
-		pl.envprinc[i] = malloc(sizeof(char) * (j  + 1));
+		printf("env: %s: No such file or directory\n",pl->collected_cmd[1]);
+		return(0);
+	}
+	while(pl->envprinc[i] != NULL)
+	{
+		if ( thereisequ(pl->envprinc[i]) != -1)
+			printf("%s\n",pl->envprinc[i]);
 		i++;
 	}
-	i = 0;
-	while (env[i] != NULL)
-	{
-		j = 0;
-		while (env[i][j] != '\0')
-		{
-			pl.envprinc[i][j] = env[i][j];
-			j++;
-		}
-		pl.envprinc[i][j] = '\0';
-		i++;
-	}
-	pl.envprinc[i] = NULL;
-    pl.env1 =  transferenv(pl.envprinc);
-	i = 0; 
-	//(1)
-	//while(1)
-	//{
-	//	buffer = readline("$");
-	//	export(&pl, buffer);
-	//	i++;
-   //    
-   //}   
-   ////i = 0;
-   export (&pl, argv);
-     while(pl.env1[i])
-		{
-			//printf("%d -- \n", i);
-			free(pl.env1[i++]);
-		}
-			free(pl.env1);
-		i = 0;
-		while(pl.envprinc[i])
-		{
-//
-			free(pl.envprinc[i++]);
-		}	
-		free(pl.envprinc);
-		
-   // while (1);
-    return(0);
+	return(1);
 }

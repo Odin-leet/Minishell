@@ -154,6 +154,8 @@ int echo(t_vars *v)
 	return (1);
 }
 
+
+
 int pwd(void)
 {
   char cwd[256];
@@ -168,8 +170,8 @@ int cd(t_vars *v)
   char cwd[256];
   getcwd(cwd,sizeof(cwd));
   if (v->collected_cmd[1])
-  ft_strlcat(cwd,"/",1);
-  ft_strlcat(cwd,v->collected_cmd[1],ft_strlen(v->collected_cmd[1]));
+  strcat(cwd,"/");
+  strcat(cwd,v->collected_cmd[1]);
   printf("[%s]\n", cwd);
   chdir(cwd);
   printf("%s\n",v->collected_cmd[1]);
@@ -205,20 +207,21 @@ int builtve(t_vars *v)
 		return (cd(v));
 	if (ft_strncmp(v->collected_cmd[0], "pwd", ft_strlen(v->collected_cmd[0])) == 0)
 		return (pwd());
-	// if (ft_strncmp(v->collected_cmd[0], "unset", ft_strlen(v->collected_cmd[0])) == 0)
-	// 	return (unset(v));
-	// if (ft_strncmp(v->collected_cmd[0], "env", ft_strlen(v->collected_cmd[0])) == 0)
-	// 	return (env(v));
-	// if (ft_strncmp(v->collected_cmd[0], "exit", ft_strlen(v->collected_cmd[0])) == 0)
-	// 	return (exit());
-	// if (ft_strncmp(v->collected_cmd[0], "export", ft_strlen(v->collected_cmd[0])) == 0)
-	// 	return (export(v));
+	 if (ft_strncmp(v->collected_cmd[0], "unset", ft_strlen(v->collected_cmd[0])) == 0)
+	 	return (unset(v));
+	 if (ft_strncmp(v->collected_cmd[0], "env", ft_strlen(v->collected_cmd[0])) == 0)
+	 	return (env(v));
+	 if (ft_strncmp(v->collected_cmd[0], "exit", ft_strlen(v->collected_cmd[0])) == 0)
+	 	exit(1);
+	 if (ft_strncmp(v->collected_cmd[0], "export", ft_strlen(v->collected_cmd[0])) == 0)
+	 	return (export(v));
 	return (0);
 }
 void exec(t_linked_list *head, t_vars *v)
 {
 	t_linked_list *tmp;
 	int fd[2];
+	int  s_out;
 	int i;
 
 	v->in = 0;
@@ -244,7 +247,18 @@ void exec(t_linked_list *head, t_vars *v)
 		if (!(head->next))
 			v->out = 1;
 		if (i == 0 && !(head->next) && builtins(v->collected_cmd[0]))
+		{
+			s_out = dup(1);
+			file_manager(v);
+			dup2(v->in, 0);
+			dup2(v->out, 1);
+			if (v->in != 0)
+				close(v->in);
+			if (v->out != 1)
+				close(v->out);
 			builtve(v);
+			dup2(s_out,1);
+		}
 		else
 		{
 			v->pid[i] = fork();
