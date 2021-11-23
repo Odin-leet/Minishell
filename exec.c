@@ -123,24 +123,30 @@ int echo(t_vars *v)
 {
 	int i;
 	int j;
-	int flag;
-
+	int c;
+	
+	c = 0;
 	i = 1;
 	j = 1;
-	flag = 0;
 	if (!(v->collected_cmd))
 		return (0);
 	//if s = empty return new line with the return signal (but I'm the sys now)
 	if (v->collected_cmd[i][0] == '-')
 	{
-		while(v->collected_cmd[i][j] == 'n')
-			j++;
-		if (v->collected_cmd[i][j] == ' ')
-		{
-			flag = 2;
-			i = 2;
-		}	
+
+		while(v->collected_cmd[i][j] == 'n' && v->collected_cmd[i][j] != '\0')
+			{
+				j++;
+				if (v->collected_cmd[i][j] != 'n'&& v->collected_cmd[i][j] != '\0')
+				{
+					c = 1;
+					
+				}
+			}	
 	}
+	if ( c != 1)
+		i = 2;
+
 	while (v->collected_cmd[i])
 	{
 		if (v->collected_cmd[i + 1])
@@ -149,7 +155,7 @@ int echo(t_vars *v)
 			printf("%s", v->collected_cmd[i]);
 		i++;
 	}
-	if (flag == 0)
+	if (c == 1)
 		printf("\n");
 	return (1);
 }
@@ -303,8 +309,10 @@ void exec(t_linked_list *head, t_vars *v)
 	i = 0;
 	while (i < v->cmd_size)
 	{
-		waitpid(v->pid[i], NULL, 0);
+		waitpid(v->pid[i], &v->exit_status, 0);
+		printf("exit status == %d\n",v->exit_status);
 		i++;
 	}
+
 	free(v->pid);
 }
