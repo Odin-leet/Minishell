@@ -26,11 +26,11 @@
 // }
 //dprintf(2, "%s : wrong\n",s[0]);
 
-size_t	ft_strlcat(char *dst, char *src, size_t size)
+size_t ft_strlcat(char *dst, char *src, size_t size)
 {
-	size_t	src_len;
-	size_t		i;
-	size_t	dst_len;
+	size_t src_len;
+	size_t i;
+	size_t dst_len;
 
 	src_len = ft_strlen(src);
 	dst_len = ft_strlen(dst);
@@ -123,30 +123,27 @@ int echo(t_vars *v)
 {
 	int i;
 	int j;
-	int c;
-	
-	c = 0;
+	int n;
+
+	n = 0;
 	i = 1;
-	j = 1;
-	if (!(v->collected_cmd))
-		return (0);
-	//if s = empty return new line with the return signal (but I'm the sys now)
+	j = 1;printf("\ns = %s\n", v->collected_cmd[0]);
+	if (!(v->collected_cmd) || !v->collected_cmd[1])
+	{
+		printf("\n");
+		return (1);
+	}	
 	if (v->collected_cmd[i][0] == '-')
 	{
-
-		while(v->collected_cmd[i][j] == 'n' && v->collected_cmd[i][j] != '\0')
-			{
-				j++;
-				if (v->collected_cmd[i][j] != 'n'&& v->collected_cmd[i][j] != '\0')
-				{
-					c = 1;
-					
-				}
-			}	
+		while (v->collected_cmd[i][j] == 'n' && v->collected_cmd[i][j] != '\0')
+			j++;
+		if (v->collected_cmd[i][j] != 'n' &&  v->collected_cmd[i][j - 1] == 'n' 
+		&& v->collected_cmd[i][j] == '\0')
+			n = 1;
+		if (n == 1)
+			i = 2;
 	}
-	if ( c != 1)
-		i = 2;
-
+	printf("\ni = %d\n", n);
 	while (v->collected_cmd[i])
 	{
 		if (v->collected_cmd[i + 1])
@@ -155,33 +152,47 @@ int echo(t_vars *v)
 			printf("%s", v->collected_cmd[i]);
 		i++;
 	}
-	if (c == 1)
+	if (n != 1)
 		printf("\n");
 	return (1);
 }
 
-
-
 int pwd(void)
 {
-  char cwd[256];
+	char cwd[256];
 
-  getcwd(cwd,sizeof(cwd));
-  printf("%s\n" ,cwd);
-  return (1);
+	getcwd(cwd, sizeof(cwd));
+	printf("%s\n", cwd);
+	return (1);
 }
 
 int cd(t_vars *v)
 {
-  char cwd[256];
-  getcwd(cwd,sizeof(cwd));
-  if (v->collected_cmd[1])
-  strcat(cwd,"/");
-  strcat(cwd,v->collected_cmd[1]);
-  printf("[%s]\n", cwd);
-  chdir(cwd);
-  printf("%s\n",v->collected_cmd[1]);
-  return 0;
+	char cwd[256];
+	int ret;
+	//cd ~ -> cd
+	if (!v->collected_cmd)
+		strcat(cwd, "")
+	else if (v->collected_cmd[1][0] == '~')
+		cd_moja(v);
+	else if 
+	//cd ............... [done]
+	//cd - or cd ---------
+	//cd chihaja with space inside
+
+	getcwd(cwd, sizeof(cwd));
+	if (v->collected_cmd[1])
+		strcat(cwd, "/");
+	strcat(cwd, v->collected_cmd[1]);
+	// strcat(cwd, " ");
+	// strcat(cwd, v->collected_cmd[2]);
+	printf("[%s]\n", cwd);
+	ret = chdir(cwd);
+	printf("%s\n", v->collected_cmd[1]);
+	if (ret == 0)
+		return (1);
+	printf("No such file or directory\n");
+	return (0);
 }
 void file_manager(t_vars *v)
 {
@@ -213,21 +224,21 @@ int builtve(t_vars *v)
 		return (cd(v));
 	if (ft_strncmp(v->collected_cmd[0], "pwd", ft_strlen(v->collected_cmd[0])) == 0)
 		return (pwd());
-	 if (ft_strncmp(v->collected_cmd[0], "unset", ft_strlen(v->collected_cmd[0])) == 0)
-	 	return (unset(v));
-	 if (ft_strncmp(v->collected_cmd[0], "env", ft_strlen(v->collected_cmd[0])) == 0)
-	 	return (env(v));
-	 if (ft_strncmp(v->collected_cmd[0], "exit", ft_strlen(v->collected_cmd[0])) == 0)
-	 	exit(1);
-	 if (ft_strncmp(v->collected_cmd[0], "export", ft_strlen(v->collected_cmd[0])) == 0)
-	 	return (export(v));
+	if (ft_strncmp(v->collected_cmd[0], "unset", ft_strlen(v->collected_cmd[0])) == 0)
+		return (unset(v));
+	if (ft_strncmp(v->collected_cmd[0], "env", ft_strlen(v->collected_cmd[0])) == 0)
+		return (env(v));
+	if (ft_strncmp(v->collected_cmd[0], "exit", ft_strlen(v->collected_cmd[0])) == 0)
+		exit(1);
+	if (ft_strncmp(v->collected_cmd[0], "export", ft_strlen(v->collected_cmd[0])) == 0)
+		return (export(v));
 	return (0);
 }
 void exec(t_linked_list *head, t_vars *v)
 {
 	t_linked_list *tmp;
 	int fd[2];
-	int  s_out;
+	int s_out;
 	int i;
 
 	v->in = 0;
@@ -263,7 +274,7 @@ void exec(t_linked_list *head, t_vars *v)
 			if (v->out != 1)
 				close(v->out);
 			builtve(v);
-			dup2(s_out,1);
+			dup2(s_out, 1);
 		}
 		else
 		{
@@ -310,7 +321,7 @@ void exec(t_linked_list *head, t_vars *v)
 	while (i < v->cmd_size)
 	{
 		waitpid(v->pid[i], &v->exit_status, 0);
-		printf("exit status == %d\n",v->exit_status);
+		printf("exit status == %d\n", v->exit_status);
 		i++;
 	}
 

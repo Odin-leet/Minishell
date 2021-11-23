@@ -51,12 +51,12 @@ int	findtype(char *s)
 int	funmain22(t_vars *v, char **split, char *buffer)
 {
 	t_linked_list	*head;
-	t_linked_list	*parser;
+	t_linked_list	*parseur;
 
 	while (1)
 	{
 		head = NULL;
-		parser = NULL;
+		parseur = NULL;
 		buffer = readline("Minishell 0.0$ ");
 		add_history(buffer);
 		if (buffer[0] != '\0')
@@ -65,11 +65,11 @@ int	funmain22(t_vars *v, char **split, char *buffer)
 			head = mainhelper3(split);
 			if (check_errors(head) == 0)
 				return (0);
-			parser = parser(head, v->envprinc);
+			parseur = parser(head, v->envprinc);
 			free_head2(head);
-			exec(parser, v);
+			exec(parseur, v);
 			free(split);
-			free_lin_command(parser);
+			free_lin_command(parseur);
 		}
 	}
 	return (1);
