@@ -184,7 +184,7 @@ int cd(t_vars *v)
 	//cd - or cd ---------
 	//cd chihaja with space inside
 
-	getcwd(cwd, sizeof(cwd));
+//	getcwd(cwd, sizeof(cwd));
 	if (v->collected_cmd[1])
 		strcat(cwd, "/");
 	strcat(cwd, v->collected_cmd[1]);
@@ -235,7 +235,7 @@ int builtve(t_vars *v)
 	if (ft_strncmp(v->collected_cmd[0], "exit", ft_strlen(v->collected_cmd[0])) == 0)
 		exit(1);
 	if (ft_strncmp(v->collected_cmd[0], "export", ft_strlen(v->collected_cmd[0])) == 0)
-		return (export(v));
+		return (export(v));  
 	return (0);
 }
 void exec(t_linked_list *head, t_vars *v)
