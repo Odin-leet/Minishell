@@ -12,15 +12,16 @@
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+# include <stdio.h>
+# include <fcntl.h>
 # include <stdlib.h>
 # include <unistd.h>
-# include <stdio.h>
 # include <string.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-# include <fcntl.h>
-# include <sys/_types.h>
 # include <dirent.h>
+# include <sys/_types.h>
+# include <sys/syslimits.h>
+# include <readline/history.h>
+# include <readline/readline.h>
 
 int	g_count;
 

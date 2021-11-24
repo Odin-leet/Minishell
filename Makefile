@@ -4,7 +4,7 @@ SRC =	parsing.c\
 		ft_split1.c\
 		export.c\
 		unset.c\
-		exec.c\
+		execution/exec.c\
 		libftfunc.c\
 		libftfunc1.c\
 		parser.c\

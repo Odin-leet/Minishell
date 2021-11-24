@@ -10,42 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-#include <string.h>
-// int		ft_strchr(const char *s, int c)
-// {
-// 	while (*s != '\0')
-// 	{
-// 		if (*s == c)
-// 			return (1);
-// 		s++;
-// 	}
-// 	if (c == '\0')
-// 		return (1);
-// 	return (0);
-// }
-//dprintf(2, "%s : wrong\n",s[0]);
-
-size_t ft_strlcat(char *dst, char *src, size_t size)
-{
-	size_t src_len;
-	size_t i;
-	size_t dst_len;
-
-	src_len = ft_strlen(src);
-	dst_len = ft_strlen(dst);
-	i = 0;
-	while (i + dst_len < (size - 1) && src[i] != '\0')
-	{
-		dst[i + (int)dst_len] = src[i];
-		i++;
-	}
-	dst[i + (int)dst_len] = '\0';
-	if (size < dst_len)
-		return (size + src_len);
-	else
-		return (dst_len + src_len);
-}
+#include "../minishell.h"
 
 char **cmd_collector(t_linked_list *cmd)
 {
@@ -71,6 +36,7 @@ char **cmd_collector(t_linked_list *cmd)
 	}
 	return (sequance);
 }
+
 char **files_collector(t_linked_list *lfile)
 {
 	char **sequance;
@@ -95,6 +61,7 @@ char **files_collector(t_linked_list *lfile)
 	}
 	return (sequance);
 }
+
 int *type_collector(t_linked_list *lfile)
 {
 	int *tab;
@@ -119,6 +86,43 @@ int *type_collector(t_linked_list *lfile)
 	}
 	return (tab);
 }
+// void antiquotes(t_vars *v)
+// {
+// 	int i;
+// 	int j;
+// 	int k;
+// 	char **s;
+// 	char *tmp;
+
+// 	i = 0;
+// 	j = 0;
+// 	s = NULL;
+// 	while (v->collected_cmd[i])
+// 	{
+// 		j = 0;
+// 		while (v->collected_cmd[i][j])
+// 		{
+// 			if (v->collected_cmd[i][j] == '"')
+// 			{
+// 				k = 0;
+// 				s = ft_split(v->collected_cmd[i], '"');
+// 				while (s[k])
+// 					tmp = ft_strjoin(tmp,s[k++]);//leak
+// 				else
+// 				{
+// 					free(v->collected_cmd[i]);
+// 					v->collected_cmd[i] = s[i];
+// 				}
+// 				break;
+// 			}	
+// 		}
+// 		i++;
+// 		while (s[i])
+// 		{
+			
+// 		}
+// 	}
+// }
 int echo(t_vars *v)
 {
 	int i;
@@ -127,12 +131,11 @@ int echo(t_vars *v)
 
 	n = 0;
 	i = 1;
-	j = 1;printf("\ns = %s\n", v->collected_cmd[0]);
+	j = 1;
+	
 	if (!(v->collected_cmd) || !v->collected_cmd[1])
-	{
-		printf("\n");
-		return (1);
-	}	
+		return (printf("\n"));
+	//antiquotes(v);
 	if (v->collected_cmd[i][0] == '-')
 	{
 		while (v->collected_cmd[i][j] == 'n' && v->collected_cmd[i][j] != '\0')
@@ -143,7 +146,6 @@ int echo(t_vars *v)
 		if (n == 1)
 			i = 2;
 	}
-	printf("\ni = %d\n", n);
 	while (v->collected_cmd[i])
 	{
 		if (v->collected_cmd[i + 1])
@@ -159,10 +161,10 @@ int echo(t_vars *v)
 
 int pwd(void)
 {
-	char cwd[256];
+	char cwwd[256];
 
-	getcwd(cwd, sizeof(cwd));
-	printf("%s\n", cwd);
+	getcwd(cwwd, sizeof(cwwd));
+	printf("%s\n", cwwd);
 	return (1);
 }
 // void	ft_cd(t_builtin_vars var, int *retv)
@@ -170,31 +172,98 @@ int pwd(void)
 // int	change_oldpwd(char ***envp)
 // int	change_pwd(char ***envp)
 // void	ft_cd_oldpwd(t_builtin_vars var, int *retv)
+char    *exportenv(t_vars *pl, char *string)
+{
+    int     i;
+    int     count;
+    int     c;
+
+    i = 0;
+    while(pl->envprinc[i] != NULL)
+    {
+        count = ft_strlen(string);
+        c = thereisequ(pl->envprinc[i]);
+        if (c != -1)
+        {
+            if (count < c)
+                count = c;
+        }
+        else
+        {
+            c = ft_strlen(pl->envprinc[i]);
+            if (count < c)
+                count = c;
+        }
+        if (strncmp(pl->envprinc[i], string, count) == 0)
+            return(ft_substr(pl->envprinc[i], count + 1, ft_strlen(pl->envprinc[i]) - count ));
+        i++;
+    }
+    return (NULL);
+}
+/*cat << d | << hjsd >f
+cat << k << f
+cat << k > file0 << f> file1*/
+
 int cd(t_vars *v)
 {
-	char cwd[256];
-	int ret;
-	//cd ~ -> cd
-	if (!v->collected_cmd[1])
-		//Go home
-	else if (v->collected_cmd[1][0] == '~')
-		cd_moja(v);
-	else if 
-	//cd ............... [done]
-	//cd - or cd ---------
-	//cd chihaja with space inside
+	char *cwd;
+	char *home;
+	char *oldpwd;
+	char *str;
+	int i;
 
-//	getcwd(cwd, sizeof(cwd));
-	if (v->collected_cmd[1])
+	int ret;
+
+	//cd ~ -> cd
+	cwd = malloc(sizeof(char) * PATH_MAX);
+	home = exportenv(v, "HOME");
+	oldpwd = exportenv(v, "OLDPWD");
+	if (!v->collected_cmd[1] && cwd[0] != '/')
+		cwd = strcat(cwd, home);
+	else if (v->collected_cmd[1])
+	{
+		str = v->collected_cmd[1];
+		if (v->collected_cmd[1][0] == '-')
+		{
+			i = 0;
+			while (str[i])
+			{
+				if (str[i] != '-')
+					return (0);
+				i++;
+			}
+			if (i%2 == 1)
+				ret = chdir(oldpwd);
+			getcwd(cwd, PATH_MAX);
+			replaceenv(v, cwd);
+			return(1);
+		}
+		getcwd(cwd, PATH_MAX);
+		free(oldpwd);
+		oldpwd = ft_strjoin("OLDPWD=", cwd);
+		if (v->collected_cmd[1][0] == '~')
+		{
+			v->collected_cmd[1][0] = '/';
+			str = ft_strjoin(home, v->collected_cmd[1]);
+		}
 		strcat(cwd, "/");
-	strcat(cwd, v->collected_cmd[1]);
-	// strcat(cwd, " ");
-	// strcat(cwd, v->collected_cmd[2]);
-	printf("[%s]\n", cwd);
+		strcat(cwd, str);
+		i = 2;
+		while (v->collected_cmd[i])
+		{
+			strcat(cwd, " ");
+			strcat(cwd, v->collected_cmd[i++]);
+		}
+	}
 	ret = chdir(cwd);
-	printf("%s\n", v->collected_cmd[1]);
+	printf("[%s]\n", cwd);
+	free(cwd);
+	free(home);
 	if (ret == 0)
+	{
+		replaceenv(v, oldpwd);
 		return (1);
+	}	
 	printf("No such file or directory\n");
 	return (0);
 }
@@ -235,11 +304,11 @@ int builtve(t_vars *v)
 	if (ft_strncmp(v->collected_cmd[0], "exit", ft_strlen(v->collected_cmd[0])) == 0)
 		exit(1);
 	if (ft_strncmp(v->collected_cmd[0], "export", ft_strlen(v->collected_cmd[0])) == 0)
-		return (export(v));  
+		return (export(v));
 	return (0);
 }
 void exec(t_linked_list *head, t_vars *v)
-{
+{ 
 	t_linked_list *tmp;
 	int fd[2];
 	int s_out;
