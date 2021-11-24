@@ -1,5 +1,7 @@
 {
     "recommendations": [
-        "hoovercj.vscode-power-mode"
+        "hoovercj.vscode-power-mode",
+        "eyhn.vscode-vibrancy",
+        "merko.merko-green-theme"
     ]
 }

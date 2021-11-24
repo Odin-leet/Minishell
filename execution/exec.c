@@ -12,11 +12,11 @@
 
 #include "../minishell.h"
 
-char **cmd_collector(t_linked_list *cmd)
+char	**cmd_collector(t_linked_list *cmd)
 {
-	char **sequance;
-	t_linked_list *tempo;
-	int size;
+	char			**sequance;
+	t_linked_list	*tempo;
+	int				size;
 
 	size = 0;
 	tempo = cmd;
@@ -37,11 +37,11 @@ char **cmd_collector(t_linked_list *cmd)
 	return (sequance);
 }
 
-char **files_collector(t_linked_list *lfile)
+char	**files_collector(t_linked_list *lfile)
 {
-	char **sequance;
-	t_linked_list *tempo;
-	int size;
+	char			**sequance;
+	t_linked_list	*tempo;
+	int				size;
 
 	size = 0;
 	tempo = lfile;
@@ -62,11 +62,12 @@ char **files_collector(t_linked_list *lfile)
 	return (sequance);
 }
 
-int *type_collector(t_linked_list *lfile)
+int	*type_collector(t_linked_list *lfile)
 {
-	int *tab;
-	t_linked_list *tempo;
-	int size;
+	int				*tab;
+	t_linked_list	*tempo;
+	int				size;
+
 	size = 0;
 	tempo = lfile;
 	while (tempo != NULL)
@@ -75,7 +76,6 @@ int *type_collector(t_linked_list *lfile)
 		size++;
 	}
 	tab = malloc(sizeof(int *) * (size));
-
 	size = 0;
 	while (lfile != NULL)
 	{
@@ -87,34 +87,33 @@ int *type_collector(t_linked_list *lfile)
 	return (tab);
 }
 
-
 int	checkforquotes2(char *string)
 {
-	int i;
+	int	i;
 	int	count;
 
 	i = 0;
 	count = 0;
 	while (string[i] != '\0')
 	{
-		if (string[i] == '\"')
+		if (string[i] == '"')
 		{
 			count++;
 			i++;
-			if (string[i] == '\"')
+			if (string[i] == '"')
 			{
 				i++;
 				count++;
 			}
 			else
 			{
-				while (string[i] != '\"' && string[i])
+				while (string[i] != '"' && string[i])
 					i++;
-				if (string[i] == '\"')
-					{
-						count++;
-						i++;
-					}
+				if (string[i] == '"')
+				{
+					count++;
+					i++;
+				}
 			}
 		}
 		if (string[i] == '\'')
@@ -131,16 +130,15 @@ int	checkforquotes2(char *string)
 				while (string[i] != '\'' && string[i])
 					i++;
 				if (string[i] == '\'')
-					{
-						count++;
-						i++;
-					}
+				{
+					count++;
+					i++;
+				}
 			}
 		}
 		i++;
 	}
-	return(count);
-
+	return (count);
 }
 //void antiquotes(t_vars *v)
 //{
@@ -169,12 +167,12 @@ int	checkforquotes2(char *string)
 //					v->collected_cmd[i] = s[i];
 //				}
 //				break;
-//			}	
+//			}
 //		}
 //		i++;
 //		while (s[i])
 //		{
-//		
+//
 //		}
 //	}
 //}
@@ -195,73 +193,59 @@ char	*changecollectedcmd(char *string, int count)
 		{
 			i++;
 			if (string[i] == '\"')
-			{
 				i++;
-			}
 			else
 			{
 				while (string[i] != '\"' && string[i])
-				{
 					tmp[c++] = string[i++];
-				}
 				if (string[i] == '\"')
-					{
-						i++;
-					}
+					i++;
 			}
 		}
 		if (string[i] == '\'')
 		{
 			i++;
 			if (string[i] == '\'')
-			{
 				i++;
-			}
 			else
 			{
 				while (string[i] != '\'' && string[i])
-				{
 					tmp[c++] = string[i++];
-				}
 				if (string[i] == '\'')
-					{
-						i++;
-					}
+					i++;
 			}
 		}
 		if (string[i] != '\0')
 		{
-		tmp[c] = string[i];
-		c++;
-		i++;
+			tmp[c] = string[i];
+			c++;
+			i++;
 		}
 	}
 	tmp[c] = '\0';
 	free(string);
-	return(tmp);
-
+	return (tmp);
 }
-int echo(t_vars *v)
+
+int	echo(t_vars *v)
 {
-	int i;
-	int j;
-	int n;
+	int	i;
+	int	j;
+	int	n;
 	int	count;
 
 	n = 0;
 	count = 0;
 	i = 1;
 	j = 1;
-	
 	if (!(v->collected_cmd) || !v->collected_cmd[1])
 		return (printf("\n"));
-
-	//antiquotes(v);
 	if (v->collected_cmd[i][0] == '-')
-	{	checkforquotes2(v->collected_cmd[i]);
+	{
+		checkforquotes2(v->collected_cmd[i]);
 		while (v->collected_cmd[i][j] == 'n' && v->collected_cmd[i][j] != '\0')
 			j++;
-		if (v->collected_cmd[i][j] != 'n' &&  v->collected_cmd[i][j - 1] == 'n' 
+		if (v->collected_cmd[i][j] != 'n' && v->collected_cmd[i][j - 1] == 'n' \
 		&& v->collected_cmd[i][j] == '\0')
 			n = 1;
 		if (n == 1)
@@ -282,66 +266,68 @@ int echo(t_vars *v)
 	return (1);
 }
 
-int pwd(void)
+int	pwd(void)
 {
-	char cwwd[256];
+	char	cwd[256];
 
-	getcwd(cwwd, sizeof(cwwd));
-	printf("%s\n", cwwd);
+	getcwd(cwd, sizeof(cwd));
+	printf("%s\n", cwd);
 	return (1);
 }
+
+char	*exportenv(t_vars *pl, char *string)
+{
+	int	i;
+	int	count;
+	int	c;
+
+	i = 0;
+	while (pl->envprinc[i] != NULL)
+	{
+		count = ft_strlen(string);
+		c = thereisequ(pl->envprinc[i]);
+		if (c != -1)
+		{
+			if (count < c)
+				count = c;
+		}
+		else
+		{
+			c = ft_strlen(pl->envprinc[i]);
+			if (count < c)
+				count = c;
+		}
+		if (strncmp(pl->envprinc[i], string, count) == 0)
+			return (ft_substr(pl->envprinc[i], count + 1,
+					ft_strlen(pl->envprinc[i]) - count));
+		i++;
+	}
+	return (NULL);
+}
+
+/*cat << d | << hjsd >f
+cat << k << f
+cat << k > file0 << f> file1*/
+
 // void	ft_cd(t_builtin_vars var, int *retv)
 // void	ft_cd_normal_case(t_builtin_vars var, char *dest_path, int *retv)
 // int	change_oldpwd(char ***envp)
 // int	change_pwd(char ***envp)
 // void	ft_cd_oldpwd(t_builtin_vars var, int *retv)
-char    *exportenv(t_vars *pl, char *string)
-{
-    int     i;
-    int     count;
-    int     c;
-
-    i = 0;
-    while(pl->envprinc[i] != NULL)
-    {
-        count = ft_strlen(string);
-        c = thereisequ(pl->envprinc[i]);
-        if (c != -1)
-        {
-            if (count < c)
-                count = c;
-        }
-        else
-        {
-            c = ft_strlen(pl->envprinc[i]);
-            if (count < c)
-                count = c;
-        }
-        if (strncmp(pl->envprinc[i], string, count) == 0)
-            return(ft_substr(pl->envprinc[i], count + 1, ft_strlen(pl->envprinc[i]) - count ));
-        i++;
-    }
-    return (NULL);
-}
-/*cat << d | << hjsd >f
-cat << k << f
-cat << k > file0 << f> file1*/
 
 int cd(t_vars *v)
 {
-	char *cwd;
-	char *home;
-	char *oldpwd;
-	char *str;
-	int i;
+	char	*cwd;
+	char	*home;
+	char	*oldpwd;
+	char	*str;
+	int		i;
+	int		ret;
 
-	int ret;
-
-	//cd ~ -> cd
-	cwd = malloc(sizeof(char) * PATH_MAX);
+	cwd = calloc(1, sizeof(char) * PATH_MAX);
 	home = exportenv(v, "HOME");
 	oldpwd = exportenv(v, "OLDPWD");
-	if (!v->collected_cmd[1] && cwd[0] != '/')
+	if (!v->collected_cmd[1])
 		cwd = strcat(cwd, home);
 	else if (v->collected_cmd[1])
 	{
@@ -355,11 +341,11 @@ int cd(t_vars *v)
 					return (0);
 				i++;
 			}
-			if (i%2 == 1)
+			if (i % 2 == 1)
 				ret = chdir(oldpwd);
 			getcwd(cwd, PATH_MAX);
 			replaceenv(v, cwd);
-			return(1);
+			return (1);
 		}
 		getcwd(cwd, PATH_MAX);
 		free(oldpwd);
@@ -378,6 +364,7 @@ int cd(t_vars *v)
 			strcat(cwd, v->collected_cmd[i++]);
 		}
 	}
+	//replaceenv(v, cwd);
 	ret = chdir(cwd);
 	printf("[%s]\n", cwd);
 	free(cwd);
@@ -386,56 +373,80 @@ int cd(t_vars *v)
 	{
 		replaceenv(v, oldpwd);
 		return (1);
-	}	
+	}
 	printf("No such file or directory\n");
 	return (0);
 }
-void file_manager(t_vars *v)
+
+void	file_manager(t_vars *v)
 {
-	int count;
+	int	count;
 
 	count = 0;
 	v->collected_files = files_collector(v->lfile);
 	v->collected_type = type_collector(v->lfile);
 	while (v->collected_files[count])
 	{
-		if (v->out != 0 && (v->collected_type[count] == 4 || v->collected_type[count] == 3))
+		if (v->out != 0 && (v->collected_type[count] == 4 \
+		|| v->collected_type[count] == 3))
 			close(v->out);
-		else if (v->in != 1 && (v->collected_type[count] == 2 || v->collected_type[count] == 5))
+		else if (v->in != 1 && (v->collected_type[count] == 2 \
+		|| v->collected_type[count] == 5))
 			close(v->in);
 		if (v->collected_type[count] == 3)
-			v->out = open(v->collected_files[count], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			v->out = open(v->collected_files[count],
+					O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		else if (v->collected_type[count] == 4)
-			v->out = open(v->collected_files[count], O_WRONLY | O_CREAT | O_APPEND, 0644);
+			v->out = open(v->collected_files[count],
+					O_WRONLY | O_CREAT | O_APPEND, 0644);
 		else if (v->collected_type[count] == 2)
 			v->in = open(v->collected_files[count], O_RDONLY, 0644);
 		count++;
 	}
 }
-int builtve(t_vars *v)
+
+int	builtve(t_vars *v)
 {
-	if (ft_strncmp(v->collected_cmd[0], "echo", ft_strlen(v->collected_cmd[0])) == 0)
+	if (ft_strncmp(v->collected_cmd[0], "echo",
+			ft_strlen(v->collected_cmd[0])) == 0)
 		return (echo(v));
-	if (ft_strncmp(v->collected_cmd[0], "cd", ft_strlen(v->collected_cmd[0])) == 0)
+	if (ft_strncmp(v->collected_cmd[0], "cd",
+			ft_strlen(v->collected_cmd[0])) == 0)
 		return (cd(v));
-	if (ft_strncmp(v->collected_cmd[0], "pwd", ft_strlen(v->collected_cmd[0])) == 0)
+	if (ft_strncmp(v->collected_cmd[0], "pwd",
+			ft_strlen(v->collected_cmd[0])) == 0)
 		return (pwd());
-	if (ft_strncmp(v->collected_cmd[0], "unset", ft_strlen(v->collected_cmd[0])) == 0)
+	if (ft_strncmp(v->collected_cmd[0], "unset",
+			ft_strlen(v->collected_cmd[0])) == 0)
 		return (unset(v));
-	if (ft_strncmp(v->collected_cmd[0], "env", ft_strlen(v->collected_cmd[0])) == 0)
+	if (ft_strncmp(v->collected_cmd[0], "env",
+			ft_strlen(v->collected_cmd[0])) == 0)
 		return (env(v));
-	if (ft_strncmp(v->collected_cmd[0], "exit", ft_strlen(v->collected_cmd[0])) == 0)
+	if (ft_strncmp(v->collected_cmd[0], "exit",
+			ft_strlen(v->collected_cmd[0])) == 0)
 		exit(1);
-	if (ft_strncmp(v->collected_cmd[0], "export", ft_strlen(v->collected_cmd[0])) == 0)
+	if (ft_strncmp(v->collected_cmd[0], "export",
+			ft_strlen(v->collected_cmd[0])) == 0)
 		return (export(v));
 	return (0);
 }
+void piper(t_vars *v, int i)
+{
+	dup2(v->in, 0);
+	dup2(v->out, 1);
+	if (v->in != 0)
+		close(v->in);
+	if (v->out != 1)
+		close(v->out);
+	if (v->pin != 0 && i == 1)
+		close(v->pin);
+}
 void exec(t_linked_list *head, t_vars *v)
-{ 
-	t_linked_list *tmp;
-	int fd[2];
-	int s_out;
-	int i;
+{
+	t_linked_list	*tmp;
+	int				fd[2];
+	int				s_out;
+	int				i;
 
 	v->in = 0;
 	v->pin = 0;
@@ -463,12 +474,7 @@ void exec(t_linked_list *head, t_vars *v)
 		{
 			s_out = dup(1);
 			file_manager(v);
-			dup2(v->in, 0);
-			dup2(v->out, 1);
-			if (v->in != 0)
-				close(v->in);
-			if (v->out != 1)
-				close(v->out);
+			piper(v,0);
 			builtve(v);
 			dup2(s_out, 1);
 		}
@@ -478,20 +484,12 @@ void exec(t_linked_list *head, t_vars *v)
 			if (v->pid[i] == 0)
 			{
 				file_manager(v);
-				//export + redirection + |
-				dup2(v->in, 0);
-				dup2(v->out, 1);
-				if (v->in != 0)
-					close(v->in);
-				if (v->out != 1)
-					close(v->out);
-				if (v->pin != 0)
-					close(v->pin);
+				piper(v, 1);
 				if (builtins(v->collected_cmd[0]))
 					builtve(v);
 				else
 					execve(v->collected_cmd[0], v->collected_cmd, v->envprinc);
-				//dprintf(2,"bash: %s: command not found\n", s[0]);
+				dprintf(2, "bash: %s: command not found\n", v->collected_cmd[0]);
 				exit(0);
 			}
 			else
@@ -503,7 +501,6 @@ void exec(t_linked_list *head, t_vars *v)
 				v->in = v->pin;
 			}
 		}
-
 		i++;
 		// free(v->collected_cmd);\\ free table in nd out cause we dup the cmd not just assigning the pointer
 		// free(v->collected_files);
@@ -520,6 +517,5 @@ void exec(t_linked_list *head, t_vars *v)
 		printf("exit status == %d\n", v->exit_status);
 		i++;
 	}
-
 	free(v->pid);
 }
