@@ -87,6 +87,30 @@ int *type_collector(t_linked_list *lfile)
 	return (tab);
 }
 
+int	quotescount(int *i, int count, char *string, char c)
+{
+	if (string[*i] == c)
+		{
+			count++;
+			(*i)++;
+			if (string[*i] == c)
+			{
+				(*i)++;
+				count++;
+			}
+			else
+			{
+				while (string[*i] != c && string[*i])
+					(*i)++;
+				if (string[*i] == c)
+					{
+						count++;
+						(*i)++;
+					}
+			}
+		}
+		return (count);
+}
 
 int	checkforquotes2(char *string)
 {
@@ -97,87 +121,48 @@ int	checkforquotes2(char *string)
 	count = 0;
 	while (string[i] != '\0')
 	{
-		if (string[i] == '\"')
-		{
-			count++;
-			i++;
-			if (string[i] == '\"')
-			{
-				i++;
-				count++;
-			}
-			else
-			{
-				while (string[i] != '\"' && string[i])
-					i++;
-				if (string[i] == '\"')
-					{
-						count++;
-						i++;
-					}
-			}
-		}
-		if (string[i] == '\'')
-		{
-			count++;
-			i++;
-			if (string[i] == '\'')
-			{
-				i++;
-				count++;
-			}
-			else
-			{
-				while (string[i] != '\'' && string[i])
-					i++;
-				if (string[i] == '\'')
-					{
-						count++;
-						i++;
-					}
-			}
-		}
+		count = quotescount(&i, count, string, '\"');
+		count = quotescount(&i, count , string, '\'');
 		i++;
 	}
 	return(count);
 
 }
-//void antiquotes(t_vars *v)
-//{
-//	int i;
-//	int j;
-//	int k;
-//	char **s;
-//	char *tmp;
-//	i = 0;
-//	j = 0;
-//	s = NULL;
-//	while (v->collected_cmd[i])
-//	{
-//		j = 0;
-//		while (v->collected_cmd[i][j])
-//		{
-//			if (v->collected_cmd[i][j] == '"')
-//			{
-//				k = 0;
-//				s = ft_split(v->collected_cmd[i], '"');
-//				while (s[k])
-//					tmp = ft_strjoin(tmp,s[k++]);//leak
-//				else
-//				{
-//					free(v->collected_cmd[i]);
-//					v->collected_cmd[i] = s[i];
-//				}
-//				break;
-//			}	
-//		}
-//		i++;
-//		while (s[i])
-//		{
-//		
-//		}
-//	}
-//}
+char	*db_quotesreplace(char *tmp, char *string, int *c, int *i)
+{
+	if (string[*i] == '\"')
+	{
+		(*i)++;
+		if (string[*i] == '\"')
+			(*i)++;
+		else
+		{
+			while (string[*i] != '\"' && string[*i])
+				tmp[(*c)++] = string[(*i)++];
+			if (string[(*i)] == '\"')
+					(*i)++;
+		}
+	}
+	return (tmp);
+}
+
+char	*sgl_quotesreplace(char *tmp, char *string, int *c, int *i)
+{
+	if (string[*i] == '\'')
+	{
+		(*i)++;
+		if (string[*i] == '\'')
+			(*i)++;
+		else
+		{
+			while (string[*i] != '\'' && string[*i])
+				tmp[(*c)++] = string[(*i)++];
+			if (string[(*i)] == '\'')
+					(*i)++;
+		}
+	}
+	return (tmp);
+}
 
 char	*changecollectedcmd(char *string, int count)
 {
@@ -191,49 +176,13 @@ char	*changecollectedcmd(char *string, int count)
 	tmp = malloc(sizeof(char) * (ft_strlen(string) - count + 1));
 	while (string[i] != '\0')
 	{
-		if (string[i] == '\"')
-		{
-			i++;
-			if (string[i] == '\"')
-			{
-				i++;
-			}
-			else
-			{
-				while (string[i] != '\"' && string[i])
-				{
-					tmp[c++] = string[i++];
-				}
-				if (string[i] == '\"')
-					{
-						i++;
-					}
-			}
-		}
-		if (string[i] == '\'')
-		{
-			i++;
-			if (string[i] == '\'')
-			{
-				i++;
-			}
-			else
-			{
-				while (string[i] != '\'' && string[i])
-				{
-					tmp[c++] = string[i++];
-				}
-				if (string[i] == '\'')
-					{
-						i++;
-					}
-			}
-		}
+		tmp = db_quotesreplace(tmp, string, &c, &i);
+		tmp = sgl_quotesreplace(tmp, string, &c, &i);
 		if (string[i] != '\0')
 		{
-		tmp[c] = string[i];
-		c++;
-		i++;
+			tmp[c] = string[i];
+			c++;
+			i++;
 		}
 	}
 	tmp[c] = '\0';
