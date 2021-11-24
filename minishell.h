@@ -6,7 +6,7 @@
 /*   By: ashite <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 11:24:56 by ashite            #+#    #+#             */
-/*   Updated: 2021/11/23 08:57:56 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/24 07:47:35 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,13 @@
 
 int	g_count;
 
+typedef struct s_split{
+	int		k;
+	char	**split;
+	int		i;
+	char	c;
+}				t_split;
+
 typedef struct s_file{
 	char	*file;
 	int		type;
@@ -38,6 +45,12 @@ typedef struct command{
 	t_linked_list	*nameargs;
 	t_linked_list	*files;
 }				t_command;
+
+typedef struct s_parser {
+	t_linked_list	*head;
+	t_command		*command;
+	int				i;
+}				t_parser;
 
 typedef struct s_vars
 {
@@ -76,7 +89,7 @@ int				builtins(char *string);
 int				ft_strncmp(const char *s1, const char *s2, size_t n);
 char			**ft_split1(char const *s, char c);
 char			**ft_split(char *s, char c);
-int				splithelper(int i, const char *s, int k, char **split, char c);
+int				splithelper(t_split split1, const char *s, char c);
 int				*traitmask(const char *s, int c);
 int				export(t_vars *pl);
 int				ft_isdigit(int c);

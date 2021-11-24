@@ -127,7 +127,7 @@ int echo(t_vars *v)
 
 	n = 0;
 	i = 1;
-	j = 1;printf("\ns = %s\n", v->collected_cmd[0]);
+	j = 1;//printf("\ns = %s\n", v->collected_cmd[0]);
 	if (!(v->collected_cmd) || !v->collected_cmd[1])
 	{
 		printf("\n");
@@ -143,7 +143,7 @@ int echo(t_vars *v)
 		if (n == 1)
 			i = 2;
 	}
-	printf("\ni = %d\n", n);
+//	printf("\ni = %d\n", n);
 	while (v->collected_cmd[i])
 	{
 		if (v->collected_cmd[i + 1])
@@ -231,7 +231,7 @@ int builtve(t_vars *v)
 	if (ft_strncmp(v->collected_cmd[0], "exit", ft_strlen(v->collected_cmd[0])) == 0)
 		exit(1);
 	if (ft_strncmp(v->collected_cmd[0], "export", ft_strlen(v->collected_cmd[0])) == 0)
-		return (export(v));  
+		return (export(v));
 	return (0);
 }
 void exec(t_linked_list *head, t_vars *v)

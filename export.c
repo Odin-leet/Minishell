@@ -317,17 +317,92 @@ char	**addenv(t_vars *pl, char *string)
 	return (NULL);
 }
 
-int	checkifitscomp(char *string)
+int	errorexport2()
+{
+	printf("bash: export: quotes error \n");
+	return(1);
+}
+
+int	errorexport(char *string)
+{
+	printf("bash: export: %s : not a valid identifier\n",string);
+	return(1);
+}
+
+int	checkifthereisquotes(char *string)
+{
+	int	i;
+	int	db_q;
+	int	sgl_q;
+
+	i = 0;
+	db_q = 0;
+	sgl_q = 0;
+	while(string[i] != '\0')
+	{
+		if(string[i] == '\"' && sgl_q == 0)
+			db_q++;
+		if(string[i] == '\'' && db_q == 0)
+			sgl_q++;
+		if(string[i] == '\"' && ((sgl_q % 2) != 0))
+			return(errorexport(string));
+		if(string[i] == '\'' && ((db_q % 2) != 0))
+			return(errorexport(string));
+		i++;
+	}
+	if (sgl_q % 2 != 0 || db_q % 2 != 0)
+		return(errorexport2());
+	return (0);
+}
+
+void	checkforquotes(char **string)
+{
+	int	i;
+	int	c;
+	int count;
+	char *tmp;
+
+
+	i = 0;
+	c = 0;
+
+	count = 0;
+	while ((*string)[i] != '\0')
+	{
+		if ((*string)[i] == '\"')
+			count++;
+		if ((*string)[i] == '\'')
+			count++;
+		i++;
+	}
+	tmp = malloc(sizeof(char) * (ft_strlen(*string) - count + 1));
+	i = 0;
+	while ((*string)[i] != '\0')
+	{
+		if (!((*string)[i] == '\'' || (*string)[i] == '\"'))
+			tmp[c++] = (*string)[i];
+		i++;
+	}
+	tmp[c] = '\0';
+	free(*string);
+	*string = tmp;
+	printf("asdasdasdasdasdas\n");
+}
+
+
+int	checkifitscomp(char **string)
 {
 	int	i;
 
 	i = 0;
-	if (i == 0 && string[i] == '=')
+	checkforquotes(string);
+	printf("{{%s}}\n",*string);
+	if (i == 0 && (*string)[i] == '=')
 		return (1);
-	while (string[i] != '\0' && string[i] != '=')
+	while ((*string)[i] != '\0' && (*string)[i] != '=')
 	{
-		if (string[i] != '_' && (ft_isdigit(string[i]) == 0)
-			&& (ft_isalpha2(string[i]) == 0))
+		if ((*string)[i] != '_' && (ft_isdigit((*string)[i]) == 0)
+			&& (ft_isalpha2((*string)[i]) == 0))
 			return (1);
 		i++;
 	}
@@ -339,9 +414,12 @@ int	exporthelper(t_vars *pl)
 	int	i;
 
 	i = 1;
+	
 	while (pl->collected_cmd[i] != NULL)
 	{
-		if (checkifitscomp(pl->collected_cmd[i]) == 1)
+		if (checkifthereisquotes(pl->collected_cmd[i]) == 1)
+			return(0);
+		if (checkifitscomp(&pl->collected_cmd[i]) == 1)
 		{
 			printf("error of export\n");
 			return (0);

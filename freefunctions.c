@@ -13,7 +13,7 @@ void	free_head(t_linked_list *head)
 {
 	if (head == NULL)
 		return ;
-	free_head(head->next); 
+	free_head(head->next);
 	free(head->data);
 	free(head);
 }

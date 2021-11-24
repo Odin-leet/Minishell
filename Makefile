@@ -7,7 +7,6 @@ SRC =	parsing.c\
 		exec.c\
 		libftfunc.c\
 		libftfunc1.c\
-		parser.c\
 		mainsplit.c\
 		handleenvir.c\
 		handelenvtab.c\
@@ -15,7 +14,8 @@ SRC =	parsing.c\
 		freefunctions.c\
 		mainhelper1.c\
 		mainhelper2.c\
-		mainhelper3.c
+		mainhelper3.c\
+		parser.c
 
 
 		

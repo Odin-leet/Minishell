@@ -1,439 +1,220 @@
 #include "minishell.h"
 #include <string.h>
-//typedef struct s_struct{
-//	char **env1;
-//	char **envprinc;
-//	int value;
-//	int key;
-//}               t_struct;
-//t_struct pl;
 
-//size_t	ft_strlen(char *s)
-//{
-//	int i;
-//
-//	i = 0;
-//	while (s[i] != '\0')
-//		i++;
-//	return (i);
-//}
-//
-//int ft_isdigit(int c)
-//{
-//	unsigned char k;
-//
-//	k = (unsigned char)c;
-//	if (c <= 57 && c >= 48)
-//		return (1);
-//	else
-//		return (0);
-//}
-//
-//int ft_isalpha(int c)
-//{
-//	unsigned char k;
-//
-//	k = (unsigned char)c;
-//	if (c <= 90 && c >= 65)
-//		return (1);
-//		else if (c >= 97 && c <= 122)
-//			return(1);
-//	else
-//		return (0);
-//}
-//char	*ft_strjoin(char *s1, char *s2)
-//{
-//	char			*dest;
-//	unsigned long	i;
-//	unsigned long	j;
-//	size_t			res_len;
-//
-//	if (!(res_len = 0) && s1)
-//		res_len = ft_strlen(s1);
-//	j = 0;
-//	if (!(dest = (char*)malloc(res_len + ft_strlen(s2) + 1)))
-//		return (0);
-//	i = -1;
-//	if (s1 == 0 && s2 == 0)
-//		return (0);
-//	while (++i < res_len)
-//		dest[i] = s1[i];
-//	res_len = ft_strlen(s2);
-//	while (j < res_len)
-//		dest[i++] = s2[j++];
-//	dest[i] = '\0';
-//	//free(s1);
-//	//free(s2);
-//	return (dest);
-//}
-//char	*ft_substr(char *s, unsigned int start, size_t len)
-//{
-//	char			*dest;
-//	char			*src;
-//	unsigned long	j;
-//
-//	if (s == 0)
-//		return (0);
-//	//	if (start > ft_strlen(s))
-//	//		return (dest = ft_calloc(1, 1));
-//	else
-//	{
-//		j = 0;
-//		src = (char*)s;
-//		if (!(dest = (char*)malloc(len + 1)))
-//			return (0);
-//		while (*src && j < len)
-//		{
-//			dest[j] = src[start];
-//			j++;
-//			start++;
-//		}
-//		dest[j] = '\0';
-//	}
-//	//free(s);
-//	return (dest);
-//}
-//int thereisequ(char *env)
-//{
-//	int i;
-//
-//	i = 0;
-//	while(env[i] != '\0')
-//	{
-//		if (env[i] == '=')
-//			return(i);
-//		i++;
-//	}
-//	return(-1);
-//}
-
-//char *traitement1(char *str, int j)
-//{
-//	char *tmp1;
-//	char *tmp2;
-//	char *tmp3;
-//	char *str2;
-//
-//	str2 = malloc(sizeof(char) * 2);
-//	str2[0] = '\"';
-//	str2[1] = '\0';
-//	tmp1 = ft_substr(str, 0, j + 1);
-//	tmp2 = ft_substr(str, j + 1, ft_strlen(str) - (j + 1) );
-//	//free(str); decommenter quand str ca sera un string deja allouer 
-//	tmp3 = tmp2;
-//	tmp2 = ft_strjoin(str2, tmp2);
-//	free(tmp3);
-//    //free(str);
-//	tmp3 = tmp2;
-//	tmp2 =ft_strjoin(tmp2,str2);
-//	free(tmp3);
-//	tmp3 = tmp2;
-//	tmp2 = ft_strjoin(tmp1, tmp2);
-//	free(tmp3);
-//	free(tmp1);
-//    tmp3 = tmp2;
-//	tmp2 = ft_strjoin("declare -x ", tmp2);
-//    free(tmp3);
-//	free(str2);
-//	return(tmp2);
-//
-//}
-
-//char *traitement2(char *str)
-//{
-//	char *tmp;
-//
-//	tmp = ft_strjoin("declare -x ", str);
-//	return(tmp);
-//}
-//char **transferenv(char **tmp)
-//{
-//	int i;
-//	int j;
-//	char **tmp1 =NULL;
-//
-//	i = 0;
-//	j = 0;
-//	while(tmp[i])
-//		i++;
-//	tmp1 = malloc(sizeof(char*) * i +1);
-//	i = 0;
-//	while(tmp[i] != NULL)
-//	{
-//		if ((j = thereisequ(tmp[i])) != -1)
-//		{
-//			tmp1[i] = traitement1(tmp[i], j);
-//		}
-//		else
-//			tmp1[i] = traitement2(tmp[i]);
-//		i++;
-//	}
-//	tmp1[i] = NULL;
-//	return(tmp1);
-//}
-int     checkifthereisenv2(char **env, char *string)
+int	unsetreturncount(char *string, char *tmp)
 {
-	int i;
-	int count;
-	int count2;
-	count2 = 0;
-	count= 0;
-	int j;
-	char *tmp;
+	int	j;
+	int	count;
 
-	tmp = NULL;
-	i = 0;
-	tmp = ft_strjoin("declare -x ", string);
-
-    i= 0;
-    j = 0;
+	j = 0;
+	count = 0;
 	if (strchr(string, '=') != NULL)
 	{
 		while (tmp[j])
 		{
-			if(tmp[j] == '=')
+			if (tmp[j] == '=')
 			{
 				count = j;
-				break;
+				break ;
 			}
 			j++;
 		}
 	}
-	else 
+	else
 		count = ft_strlen(tmp);
-	while (env[i] != NULL)
-	{   
-        j = 0;
-        while (env[i][j] !='\0')
-        {
-            if(env[i][j] == '=')
-            {
-                count2 = j;
-                break;
-            }
-            j++;
-            if(env[i][j] == '\0')
-                count2 = j;
+	return (count);
+}
 
-        }
-		if (count2 > count)
-			count2=count;
+int	unsetcheckenv(int i, int count, char **env, int count2)
+{
+	int	j;
+
+	j = 0;
+	while (env[i][j] != '\0')
+	{
+		if (env[i][j] == '=')
+		{
+			count2 = j;
+			break ;
+		}
+		j++;
+		if (env[i][j] == '\0')
+			count2 = j;
+	}
+	if (count2 > count)
+		count2 = count;
+	return (count2);
+}
+
+int	checkifthereisenv2(char **env, char *string)
+{
+	int		i;
+	int		count;
+	int		count2;
+	int		j;
+	char	*tmp;
+
+	count2 = 0;
+	tmp = NULL;
+	i = 0;
+	tmp = ft_strjoin("declare -x ", string);
+	count = unsetreturncount(string, tmp);
+	while (env[i] != NULL)
+	{
+		j = 0;
+		count2 = unsetcheckenv(i, count, env, count2);
 		if (strncmp(tmp, env[i], count) == 0)
 		{
 			free(tmp);
-			return(1);
+			return (1);
 		}
 		i++;
- 	}
-    free(tmp);
-	return(0);
-}
-//int     counttab(char **tab)
-//{
-//	int i;
-//
-//	i = 0;
-//	while(tab[i])
-//		i++;
-//
-//	return(i);
-//}
-void    unsetenv1(t_vars *pl, char *string)
-{
-    char **tmp1;
-    char **tmp2;
-    char *tmp;
-    int count;
-    int i;
-    int c = 0;
-    int j;
-
-    i = 0;
-    j = 0;
-
-    tmp2 = malloc(sizeof(char *) * (counttab(pl->env1)));
-
-    tmp1 = malloc(sizeof(char *) * (counttab(pl->envprinc)));
-    tmp =  ft_strjoin("declare -x ", string);
-    while (pl->env1[i] != NULL)
-	{   
-        j = 0;
-        while (pl->env1[i][j] !='\0')
-        {
-            if(pl->env1[i][j] == '=')
-            {
-                count = j;
-                break;
-            }
-            j++;
-            if(pl->env1[i][j] == '\0')
-                count = j;
-
-        }
-		if (strncmp(tmp, pl->env1[i], count) == 0)
-        {
-            count = i;
-            break;
-        }
-		i++;
- 	}
-     i = 0;
-     while(pl->env1[i] != NULL)
-     {
-         if (i == count)
-          i++;
-          else
-          {
-          tmp2[c] = malloc(sizeof(char) * (ft_strlen(pl->env1[i]) + 1));
-            c++;
-            i++;
-          }
-     }
-  
-    i = 0;
-	c = 0;
-    while(pl->env1[i] != NULL)
-    {
-        j = 0;
-        if (i == count)
-            i++;
-        else
-        {
-        while(pl->env1[i][j] != '\0')
-        {
-            tmp2[c][j] = pl->env1[i][j];
-            j++;
-        }
-        tmp2[c][j] = '\0';
-        i++;
-        c++;
-        } 
-    }
-    tmp2[c] = NULL;
-    /*dsadasdashjasdjas;ldjlasjdiasjdioasdjuoasdjioasdjioasdjioasjdas*/
-
-  // i = 0;
-  //  while (pl->envprinc[i] != NULL)
-//{   
-  //     j = 0;
-  //     while (pl->envprinc[i][j] !='\0')
-  //     {
-  //         if(pl->envprinc[i][j] == '=')
-  //         {
-  //             count = j;
-  //             break;
-  //         }
-  //         j++;
-  //         if(pl->envprinc[i][j] == '\0')
-  //             count = j;
-  //     }
-//	if (strncmp(string, pl->envprinc[i], count) == 0)
-  //     {
-  //         count = i;
-  //         break;
-  //     }
-//	i++;
- //}
-  //  i = 0;
-  //  while(pl->envprinc[i] != NULL)
-  //  {
-  //      if (i == count)
-  //       i++;
-  //       else
-  //       {
-  //       tmp1[c] = malloc(sizeof(char) * (ft_strlen(pl->envprinc[i]) + 1));
-  //         c++;
-  //         i++;
-  //       }
-  //  }
-  //
-  // i = 0;
-  // while(pl->envprinc[i] != NULL)
-  // {
-  //     j = 0;
-  //     if (i == count)
-  //         i++;
-  //     else
-  //     {
-  //     while(pl->envprinc[i][j] != '\0')
-    //  {0
-  //         tmp1[c][j] = pl->envprinc[i][j];
-  //         j++;
-  //     }
-  //     tmp1[][j] = '\0';
-  //     i++;
-  //     c++;
-  //     } 
-  // }
-  // tmp1[c] = NULL;
-    i = 0;
-    while (pl->env1[i] != NULL)
-    {
-        free(pl->env1[i]);
-        i++;
-    }
-    free(pl->env1);
-    i = 0;
-  //  while (pl->envprinc[i] != NULL)
-  // {
-  //     free(pl->envprinc[i]);
-  //     i++;
-  // }
-  // free(pl->envprinc);
+	}
 	free(tmp);
-    pl->env1 = tmp2;
- //  pl->envprinc = tmp1;
-    
+	return (0);
 }
 
-int 	checkifitscomp1(char *string)
+int	unsetenv1returncount(char **env, char *tmp, int count, int i)
 {
-		int i = 0;
-			if (i == 0 && string[i] != '_' &&  (ft_isalpha2(string[i]) == 0)){
-				
-				return(1);
-			}
-		while (string[i] != '\0')
+	int	j;
+
+	i = -1;
+	while (env[++i] != NULL)
+	{
+		j = 0;
+		while (env[i][j] != '\0')
 		{
-			if (string[i] != '_' && (ft_isdigit(string[i]) == 0) && (ft_isalpha2(string[i]) == 0))
+			if (env[i][j] == '=')
 			{
-			//	printf("bash: unset: `%s': not a valid identifier",string);
-				return(1);
+				count = j;
+				break ;
 			}
+			j++;
+			if (env[i][j] == '\0')
+				count = j;
+		}
+		if (strncmp(tmp, env[i], count) == 0)
+		{
+			count = i;
+			break ;
+		}
+	}
+	return (count);
+}
+
+char	**unsettaballoc(char **env, char **tmp, int count)
+{
+	int	c;
+	int	i;
+
+	i = 0;
+	c = 0;
+	while (env[i] != NULL)
+	{
+		if (i == count)
+			i++;
+		else
+		{
+			tmp[c] = malloc(sizeof(char) * (ft_strlen(env[i]) + 1));
+			c++;
 			i++;
 		}
-		return (0);
-}	
-
-
-
-int    unset(t_vars *pl)
-{
-    int i=1;
-
-	//if (ch)
-
-	while(pl->collected_cmd[i])
-	{
-		
-	if (checkifitscomp1(pl->collected_cmd[i]) == 1)
-	{
-			printf("bash: unset: `%s': not a valid identifier\n",pl->collected_cmd[i]);
-			return(0);
 	}
-    else if(checkifthereisenv2(pl->env1, pl->collected_cmd[i]) == 1)
-    {
-        unsetenv1(pl , pl->collected_cmd[i]);
-    }
-	i++;
-		
-	}
-	return(1); 
-//	i = 0;
-   // while(pl->env1[i])
-   // {
-   //     printf("%s\n",pl->env1[i++]);
-   // }
+	return (tmp);
 }
 
+char	**remplirtableunset(char **env, char **tmp, int count, int i)
+{
+	int	c;
+	int	j;
 
+	c = 0;
+	j = 0;
+	while (env[i] != NULL)
+	{
+		j = 0;
+		if (i == count)
+			i++;
+		else
+		{
+			while (env[i][j] != '\0')
+			{
+				tmp[c][j] = env[i][j];
+				j++;
+			}
+			tmp[c][j] = '\0';
+			i++;
+			c++;
+		}
+	}
+	tmp[c] = NULL;
+	return (tmp);
+}
+
+void	unsetenv1(t_vars *pl, char *string)
+{
+	char	**tmp1;
+	char	**tmp2;
+	char	*tmp;
+	int		count;
+	int		i;
+
+	i = 0;
+	count = 0;
+	tmp2 = malloc(sizeof(char *) * (counttab(pl->env1)));
+	tmp1 = malloc(sizeof(char *) * (counttab(pl->envprinc)));
+	tmp = ft_strjoin("declare -x ", string);
+	count = unsetenv1returncount(pl->env1, tmp, count, i);
+	tmp2 = unsettaballoc(pl->env1, tmp2, count);
+	i = 0;
+	tmp2 = remplirtableunset(pl->env1, tmp2, count, i);
+	i = 0;
+	count = unsetenv1returncount(pl->envprinc, string, count, i);
+	tmp1 = unsettaballoc(pl->envprinc, tmp1, count);
+	i = 0;
+	tmp1 = remplirtableunset(pl->envprinc, tmp1, count, i);
+	free_pre(pl->env1, 0);
+	free_pre(pl->envprinc, 0);
+	free(tmp);
+	pl->env1 = tmp2;
+	pl->envprinc = tmp1;
+}
+
+int	checkifitscomp1(char *string)
+{
+	int	i;
+
+	i = 0;
+	if (i == 0 && string[i] != '_' && (ft_isalpha2(string[i]) == 0))
+		return (1);
+	while (string[i] != '\0')
+	{
+		if (string[i] != '_' && (ft_isdigit(string[i]) == 0)
+			&& (ft_isalpha2(string[i]) == 0))
+			return (1);
+		i++;
+	}
+	return (0);
+}	
+
+int	unset(t_vars *pl)
+{
+	int	i;
+
+	i = 1;
+	while (pl->collected_cmd[i])
+	{
+		if (checkifitscomp1(pl->collected_cmd[i]) == 1)
+		{
+			printf("bash: unset: `%s': not a valid identifier\n",
+				pl->collected_cmd[i]);
+			return (0);
+		}
+		else if (checkifthereisenv2(pl->env1, pl->collected_cmd[i]) == 1)
+		{
+			unsetenv1(pl, pl->collected_cmd[i]);
+		}
+		i++;
+	}
+	return (1);
+}
