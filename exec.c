@@ -165,14 +165,18 @@ int pwd(void)
 	printf("%s\n", cwd);
 	return (1);
 }
-
+// void	ft_cd(t_builtin_vars var, int *retv)
+// void	ft_cd_normal_case(t_builtin_vars var, char *dest_path, int *retv)
+// int	change_oldpwd(char ***envp)
+// int	change_pwd(char ***envp)
+// void	ft_cd_oldpwd(t_builtin_vars var, int *retv)
 int cd(t_vars *v)
 {
 	char cwd[256];
 	int ret;
 	//cd ~ -> cd
-	if (!v->collected_cmd)
-		strcat(cwd, "")
+	if (!v->collected_cmd[1])
+		//Go home
 	else if (v->collected_cmd[1][0] == '~')
 		cd_moja(v);
 	else if 
