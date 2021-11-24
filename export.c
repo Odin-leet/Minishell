@@ -317,16 +317,16 @@ char	**addenv(t_vars *pl, char *string)
 	return (NULL);
 }
 
-int	errorexport2()
+int	errorexport2(void)
 {
 	printf("bash: export: quotes error \n");
-	return(1);
+	return (1);
 }
 
 int	errorexport(char *string)
 {
-	printf("bash: export: %s : not a valid identifier\n",string);
-	return(1);
+	printf("bash: export: %s : not a valid identifier\n", string);
+	return (1);
 }
 
 int	checkifthereisquotes(char *string)
@@ -338,43 +338,51 @@ int	checkifthereisquotes(char *string)
 	i = 0;
 	db_q = 0;
 	sgl_q = 0;
-	while(string[i] != '\0')
+	while (string[i] != '\0')
 	{
-		if(string[i] == '\"' && sgl_q == 0)
+		if (string[i] == '\"' && sgl_q == 0)
 			db_q++;
-		if(string[i] == '\'' && db_q == 0)
+		if (string[i] == '\'' && db_q == 0)
 			sgl_q++;
-		if(string[i] == '\"' && ((sgl_q % 2) != 0))
-			return(errorexport(string));
-		if(string[i] == '\'' && ((db_q % 2) != 0))
-			return(errorexport(string));
+		if (string[i] == '\"' && ((sgl_q % 2) != 0))
+			return (errorexport(string));
+		if (string[i] == '\'' && ((db_q % 2) != 0))
+			return (errorexport(string));
 		i++;
 	}
 	if (sgl_q % 2 != 0 || db_q % 2 != 0)
-		return(errorexport2());
+		return (errorexport2());
 	return (0);
+}
+
+int	returnquotescount(char *string)
+{
+	int	count;
+	int	i;
+
+	i = 0;
+	count = 0;
+	while (string[i] != '\0')
+	{
+		if (string[i] == '\"')
+			count++;
+		if (string[i] == '\'')
+			count++;
+		i++;
+	}
+	return (count);
 }
 
 void	checkforquotes(char **string)
 {
-	int	i;
-	int	c;
-	int count;
-	char *tmp;
+	int		i;
+	int		c;
+	int		count;
+	char	*tmp;
 
-
-	i = 0;
+	i = -1;
 	c = 0;
-
-	count = 0;
-	while ((*string)[i] != '\0')
-	{
-		if ((*string)[i] == '\"')
-			count++;
-		if ((*string)[i] == '\'')
-			count++;
-		i++;
-	}
+	count = returnquotescount(*string);
 	tmp = malloc(sizeof(char) * (ft_strlen(*string) - count + 1));
 	i = 0;
 	while ((*string)[i] != '\0')
@@ -386,9 +394,7 @@ void	checkforquotes(char **string)
 	tmp[c] = '\0';
 	free(*string);
 	*string = tmp;
-	printf("asdasdasdasdasdas\n");
 }
-
 
 int	checkifitscomp(char **string)
 {
@@ -396,7 +402,6 @@ int	checkifitscomp(char **string)
 
 	i = 0;
 	checkforquotes(string);
-	printf("{{%s}}\n",*string);
 	if (i == 0 && (*string)[i] == '=')
 		return (1);
 	while ((*string)[i] != '\0' && (*string)[i] != '=')
@@ -414,11 +419,10 @@ int	exporthelper(t_vars *pl)
 	int	i;
 
 	i = 1;
-	
 	while (pl->collected_cmd[i] != NULL)
 	{
 		if (checkifthereisquotes(pl->collected_cmd[i]) == 1)
-			return(0);
+			return (0);
 		if (checkifitscomp(&pl->collected_cmd[i]) == 1)
 		{
 			printf("error of export\n");
