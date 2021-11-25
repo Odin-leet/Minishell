@@ -48,18 +48,50 @@ int	findtype(char *s)
 	return (0);
 }
 
+int	checkspace(char *buffer)
+{
+	int	i;
+
+	i = 0;
+	while(buffer[i] != '\0')
+	{
+		if(buffer[i] == ' ')
+			i++;
+		else
+			return(1);
+	}
+	return (0);
+}
+
+void	handlesig(int sig)
+{
+	if (sig == SIGINT)
+	{
+		write(1, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
+	if (sig == SIGQUIT)
+	{
+
+	}
+	//return(0);
+}
+
 int	funmain22(t_vars *v, char **split, char *buffer)
 {
 	t_linked_list	*head;
 	t_linked_list	*parseur;
 
-	while (1)
+		while (1)
 	{
 		head = NULL;
 		parseur = NULL;
 		buffer = readline("Minishell 0.0$ ");
+
 		add_history(buffer);
-		if (buffer[0] != '\0')
+		if (buffer[0] != '\0' && (checkspace(buffer) == 1))
 		{
 			split = ft_split(buffer, ' ');
 			head = mainhelper3(split);
@@ -71,6 +103,8 @@ int	funmain22(t_vars *v, char **split, char *buffer)
 			free(split);
 			free_lin_command(parseur);
 		}
+		if (buffer)
+			free(buffer);
 	}
 	return (1);
 }
@@ -87,8 +121,10 @@ int	main(int argc, char **argv, char **env)
 	split = NULL;
 	argc = 0;
 	argv = NULL;
-	if (funmain22(&v, split, buffer) == 0)
-		return (0);
+	signal(SIGINT, handlesig);
+		signal(SIGQUIT, handlesig);	
+	 if(funmain22(&v, split, buffer) == 0)
+	return (0);
 	free_pre(v.env1, 0);
 	free_pre(v.envprinc, 0);
 	return (0);

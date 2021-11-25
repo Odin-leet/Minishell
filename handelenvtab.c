@@ -69,7 +69,7 @@ char	**transferenv(char **tmp)
 	j = 0;
 	while (tmp[i])
 		i++;
-	tmp1 = malloc(sizeof(char *) * i + 1);
+	tmp1 = malloc(sizeof(char *) * (i + 1));
 	i = 0;
 	while (tmp[i] != NULL)
 	{

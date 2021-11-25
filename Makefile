@@ -31,7 +31,7 @@ all : $(NAME)
 
 $(NAME) : ${OBJS}
 		
-		$(CC)  -Wall -Wextra -Werror  -g $(SRC) -o  $(NAME)  -lreadline
+		$(CC)  -Wall -Wextra -Werror  -g $(SRC) -o  $(NAME)  -lreadline -I/Users/aali-mou/.brew/opt/readline/include  -L/Users/aali-mou/.brew/opt/readline/lib 
 
 
 clean:

@@ -90,10 +90,10 @@ int	findenvi(char **env)
 	while (env[i])
 	{
 		if (ft_strncmp(env[i], "PATH=", 5) == 0)
-			break ;
+			return (i);
 		i++;
 	}
-	return (i);
+	return (-1);
 }
 
 char	*elsefunction(char *string, char **env)
@@ -106,7 +106,13 @@ char	*elsefunction(char *string, char **env)
 	tmp = NULL;
 	tmp2 = NULL;
 	i = findenvi(env);
+	if (i != -1)
 	tmp = ft_strdup(env[i], 5);
+	else
+	{
+		printf("bash: %s: No such file or directory \n", string);
+		return (0);
+	}
 	tab = ft_split1(tmp, ':');
 	i = 0;
 	while (tab[i] != NULL)

@@ -389,6 +389,9 @@ void exec(t_linked_list *head, t_vars *v)
 	v->in = 0;
 	v->pin = 0;
 	v->out = 1;
+	v->collected_cmd = NULL;
+	v->collected_files = NULL;
+	v->collected_type = NULL;
 	tmp = head;
 	v->cmd_size = 0;
 	while (tmp)
@@ -455,20 +458,25 @@ void exec(t_linked_list *head, t_vars *v)
 
 		i++;
 		// free(v->collected_cmd);\\ free table in nd out cause we dup the cmd not just assigning the pointer
-		// free(v->collected_files);
-		// free(v->collected_type);
+		free_pre(v->collected_cmd, 0);
+		if (v->collected_files)
+		free(v->collected_files);
+		if(v->collected_type)
+		 free(v->collected_type);
 		head = head->next;
 		v->collected_cmd = NULL;
 		v->collected_files = NULL;
 		v->collected_type = 0;
 	}
 	i = 0;
-	while (i < v->cmd_size)
-	{
-		waitpid(v->pid[i], &v->exit_status, 0);
-		printf("exit status == %d\n", v->exit_status);
-		i++;
-	}
-
+	// while (i < v->cmd_size)
+	// {
+	// 	waitpid(v->pid[i], &v->exit_status, 0);
+	// 	printf("exit status == %d\n", v->exit_status);
+	// 	i++;
+	// }
+	while (waitpid(-1, &v->exit_status, 0) != -1);
+	
+	
 	free(v->pid);
 }
