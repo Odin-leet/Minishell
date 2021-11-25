@@ -65,6 +65,7 @@ typedef struct s_vars
 	char			*home;
 	char			*curr;
 	char			*oldpwd;
+	char			*root;
 	char			**env1;
 	char			**envprinc;
 	int				cmd_size;
