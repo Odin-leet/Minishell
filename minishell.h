@@ -119,6 +119,7 @@ t_linked_list	*mainhelper3(char **split);
 void			free_lin_command(t_linked_list *command);
 void			free_files_linked(t_linked_list *files);
 void			free_head(t_linked_list *head);
+char			*ft_itoa(int n);
 void			free_head2(t_linked_list *head);
 int				mainhelper(char *string, int j, t_linked_list **head);
 int				mainhelper2(int j, int i, t_linked_list **head, char *string);

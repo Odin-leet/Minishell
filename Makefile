@@ -15,7 +15,8 @@ SRC =	parsing.c\
 		mainhelper1.c\
 		mainhelper2.c\
 		mainhelper3.c\
-		parser.c
+		parser.c\
+		ft_itoa.c
 
 
 		

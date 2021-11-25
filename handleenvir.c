@@ -1,5 +1,5 @@
 #include "minishell.h"
-
+#include <string.h>
 char	*replaceenv3(char *string, char **env)
 {
 	int	i;
@@ -80,11 +80,17 @@ char	*handleenvir2(char *string, char *tmp, char *tmp2)
 	return (string);
 }
 
+//char	*replacedolar(char *string, int start, int end)
+//{
+//
+//}
+
 char	*handleenvir1(char *string, int i, int start, char **env)
 {
 	char	*tmp2;
 	int		end;
 	char	*tmp;
+	char *tmp3;
 
 	tmp2 = NULL;
 	tmp = NULL;
@@ -95,7 +101,7 @@ char	*handleenvir1(char *string, int i, int start, char **env)
 	while (string[i] != '\0')
 	{
 		if (string[i] != '_' && (ft_isdigit(string[i]) == 0)
-			&& (ft_isalpha(string[i]) == 0))
+			&& (ft_isalpha(string[i]) == 0) && string[i] != '?')
 		{
 			end = i;
 			tmp2 = ft_substr(string, end, ft_strlen(string) - end);
@@ -104,8 +110,17 @@ char	*handleenvir1(char *string, int i, int start, char **env)
 		else
 			i++;
 	}
+	if (string[end - 1] == '?' || (end == 0 && string[i - 1] == '?'))
+	{
+		tmp3 = string;
+	string = handleenvir2(ft_itoa(g_gl.status), tmp, tmp2);
+	free(tmp3);
+	}
+	else
+	{
 	string = replaceenv2(string, start, end, env);
 	string = handleenvir2(string, tmp, tmp2);
+	}
 	return (string);
 }
 
@@ -127,7 +142,8 @@ char	*handleenvir(char *string, char **env)
 			i++;
 			if (string[i] >= 48 && string[i] <= 57)
 				return (ft_substr(string, i + 1, ft_strlen(string) - (i + 1)));
-			else if (string[i] == '_' || (string[i] >= 65 && string[i] <= 90))
+			else if (string[i] == '_' || (string[i] >= 65 && string[i] <= 90)
+					|| (string[i] >= 97 && string[i] <= 123) || string[i] == '?')
 				return (string = handleenvir1(string, i, start, env));
 		}
 		i++;

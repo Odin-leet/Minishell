@@ -279,7 +279,7 @@ cat << k > file0 << f> file1*/
 // void	ft_cd_normal_case(t_builtin_vars var, char *dest_path, int *retv)
 // int	change_oldpwd(char ***envp)
 // int	change_pwd(char ***envp)
-// void	ft_cd_oldpwd(t_builtin_vars var, int *retv)
+// void	ft_cd_oldpwd(t_built in_vars var, int *retv)
 void	setevars(char *s, char *join, t_vars *v)
 {
 	char *str;
@@ -360,6 +360,7 @@ int	cd_extention(t_vars *v, char **cwd)
 	}
 	strcat(*cwd, "/");
 	strcat(*cwd, str);
+		printf("str = |%s|\n",str);
 	i = 2;
 	while (v->collected_cmd[i])
 	{
@@ -374,7 +375,7 @@ int	cd_extention(t_vars *v, char **cwd)
 
 int	cd(t_vars *v)
 {
-	char	*cwd;
+	char	*cwd = NULL;
 	char	*str;
 	int		ret;
 
@@ -385,6 +386,7 @@ int	cd(t_vars *v)
 		cwd = strcat(cwd, v->home);
 	else if (v->collected_cmd[1])
 	{
+		printf("|%s|\n", cwd);
 		ret = 100;
 		ret = cd_extention(v,&cwd);
 		if (ret != 100)
@@ -392,6 +394,7 @@ int	cd(t_vars *v)
 	}
 	ret = chdir(cwd);
 	free(cwd);
+	cwd = NULL;
 	if (ret == 0)
 		return (befree(v, 0, 1));
 	printf("No such file or directory\n");
@@ -544,7 +547,6 @@ void	pid_manager(t_vars *v)
 	i = 0;
 	while (i < v->cmd_size)
 		waitpid(v->pid[i++], &v->exit_status, 0);
-	if
 	free(v->pid);
 }
 
@@ -571,6 +573,8 @@ void	exec(t_linked_list *head, t_vars *v)
 			forker(v, i);
 		i++;
 		head = head->next;
+		free_pre(v->collected_cmd, 0);
+		v->collected_cmd = NULL;
 	}
 	pid_manager(v);
 }
