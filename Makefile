@@ -15,25 +15,18 @@ SRC =	parsing.c\
 		mainhelper1.c\
 		mainhelper2.c\
 		mainhelper3.c\
+		ft_strtrim.c\
 		parser.c\
 		ft_itoa.c
 
-
-		
-
-
 OBJS = ${SRC:.c=.o}
-
-
 
  CC = gcc
 
 all : $(NAME)
 
 $(NAME) : ${OBJS}
-		
-		$(CC)  -Wall -Wextra -Werror  -g $(SRC) -o  $(NAME)  -lreadline -I/Users/aali-mou/.brew/opt/readline/include  -L/Users/aali-mou/.brew/opt/readline/lib 
-
+		$(CC)  -Wall -Wextra -Werror  -g $(SRC) -o  $(NAME)  -lreadline -L /Users/${USER}/.brew/opt/readline/lib -I /Users/${USER}/.brew/opt/readline/include   
 
 clean:
 	@rm -rf $(OBJS)

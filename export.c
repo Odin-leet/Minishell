@@ -62,7 +62,7 @@ int	returnthereisenv(int count, int count2, char **env, char *tmp)
 		}
 			if (env[i][j] == '\0')
 				count2 = j;
-		printf("%s|count = %d || %s|count = %d ||\n",tmp, count,ft_substr(env[i], 0 , count2), count2);	
+		//printf("%s|count = %d || %s|count = %d ||\n",tmp, count,ft_substr(env[i], 0 , count2), count2);	
 		if (count2 > count)
 			count3 = count2;
 		if (strncmp(tmp, env[i], count3) == 0)

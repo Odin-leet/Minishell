@@ -24,7 +24,7 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 
-int	g_count;
+int			g_count;
 
 typedef struct s_split{
 	int		k;
@@ -37,7 +37,6 @@ typedef struct s_file{
 	char	*file;
 	int		type;
 }				t_file;
-
 typedef struct s_ll{
 	void		*data;
 	struct s_ll	*next;
@@ -137,4 +136,5 @@ int				findtype(char *s);
 void			*free_pre(char **split, int k);
 void			append(t_linked_list **head_ref, void *data);
 int				env(t_vars *pl);
+char			*ft_strtrim(char *s1, char const *set);
 #endif
