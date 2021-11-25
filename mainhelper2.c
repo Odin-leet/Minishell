@@ -33,7 +33,6 @@ int	check_errors(t_linked_list *ptr)
 	checks[0] = '>';
 	j = 0;
 	file = (t_file *)ptr->data;
-	printf("ime hererere \n");
 	while (ptr != NULL)
 	{
 		i = 0;
