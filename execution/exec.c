@@ -308,6 +308,8 @@ int	befree(t_vars *v, int status, int i)
 		printf("bash: cd: OLDPWD not set\n");
 		return (10);
 	}
+	else if (status < 0)
+		printf("No such file or directory\n");
 	return (i);
 }
 
@@ -334,46 +336,62 @@ int	cdtier(t_vars *v)
 	setevars("OLDPWD=", v->curr, v);
 	return (befree(v, 0, 1));
 }
+
+void cd_init(t_vars *v)
+{
+	v->home = exportenv(v, "HOME");
+	v->oldpwd = exportenv(v, "OLDPWD");
+	v->curr = exportenv(v, "PWD");
+}
+
+int	cd_extention(t_vars *v, char **cwd)
+{
+	char	*str;
+	int i;
+
+	str = NULL;
+	if (v->collected_cmd[1][0] == '-')
+		return (cdtier(v));
+	getcwd(*cwd, PATH_MAX);
+	if (v->collected_cmd[1][0] == '~')
+	{
+		v->collected_cmd[1][0] = '/';
+		str = ft_strjoin(v->home, v->collected_cmd[1]);
+	}
+	strcat(*cwd, "/");
+	strcat(*cwd, str);
+	i = 2;
+	while (v->collected_cmd[i])
+	{
+		strcat(*cwd, " ");
+		strcat(*cwd, v->collected_cmd[i++]);
+	}
+	setevars("OLDPWD=", v->curr, v);
+	setevars("PWD=", *cwd, v);
+	free(str);
+	return (100);
+}
+
 int	cd(t_vars *v)
 {
 	char	*cwd;
 	char	*str;
-	int		i;
 	int		ret;
 
 	cwd = ft_calloc(1, sizeof(char) * PATH_MAX);
-	v->home = exportenv(v, "HOME");
-	v->oldpwd = exportenv(v, "OLDPWD");
-	v->curr = exportenv(v, "PWD");
+	cd_init(v);
 	str = NULL;
 	if (!v->collected_cmd[1])
 		cwd = strcat(cwd, v->home);
 	else if (v->collected_cmd[1])
 	{
-		if (v->collected_cmd[1][0] == '-')
-			return (cdtier(v));
-		getcwd(cwd, PATH_MAX);
-		free(v->oldpwd);
-		v->oldpwd = ft_strjoin("OLDPWD=", cwd);
-		if (v->collected_cmd[1][0] == '~')
-		{
-			v->collected_cmd[1][0] = '/';
-			str = ft_strjoin(v->home, v->collected_cmd[1]);
-		}
-		strcat(cwd, "/");
-		strcat(cwd, str);
-		i = 2;
-		while (v->collected_cmd[i])
-		{
-			strcat(cwd, " ");
-			strcat(cwd, v->collected_cmd[i++]);
-		}
-		setevars("OLDPWD=", v->curr, v);
-		setevars("PWD=", cwd, v);
+		ret = 100;
+		ret = cd_extention(v,&cwd);
+		if (ret != 100)
+			return(ret);
 	}
 	ret = chdir(cwd);
 	free(cwd);
-	free(str);
 	if (ret == 0)
 		return (befree(v, 0, 1));
 	printf("No such file or directory\n");
