@@ -65,12 +65,16 @@ int	checkspace(char *buffer)
 
 void	handlesig(int sig)
 {
+	
 	if (sig == SIGINT)
 	{
 		write(1, "\n", 1);
+		if (g_gl.status == 0)
+		{
 		rl_on_new_line();
 		rl_replace_line("", 0);
 		rl_redisplay();
+		}
 	}
 	if (sig == SIGQUIT)
 	{
@@ -118,6 +122,7 @@ int	main(int argc, char **argv, char **env)
 	get_env(&v, env);
 	argc = 2;
 	buffer = NULL;
+	g_gl.status = 0;
 	split = NULL;
 	argc = 0;
 	argv = NULL;

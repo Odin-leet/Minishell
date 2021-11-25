@@ -526,6 +526,7 @@ void	pid_manager(t_vars *v)
 	i = 0;
 	while (i < v->cmd_size)
 		waitpid(v->pid[i++], &v->exit_status, 0);
+	if
 	free(v->pid);
 }
 

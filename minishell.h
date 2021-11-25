@@ -53,7 +53,10 @@ typedef struct s_parser {
 	t_command		*command;
 	int				i;
 }				t_parser;
-
+typedef struct s_global {
+	int	status;
+}				t_global;
+t_global	g_gl;
 typedef struct s_vars
 {
 	int				in;
@@ -68,6 +71,7 @@ typedef struct s_vars
 	int				cmd_size;
 	char			**collected_cmd;
 	int				exit_status;
+	int				status;
 	char			**collected_files;
 	int				*collected_type;
 	t_linked_list	*newhead;
