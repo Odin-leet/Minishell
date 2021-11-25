@@ -63,7 +63,6 @@ static int	len_word(const char *s, t_split split1, int *in_sgl, int *in_db)
 		i++;
 		k++;
 	}
-	
 	return (len);
 }
 
