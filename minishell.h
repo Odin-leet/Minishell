@@ -137,4 +137,6 @@ void			*free_pre(char **split, int k);
 void			append(t_linked_list **head_ref, void *data);
 int				env(t_vars *pl);
 char			*ft_strtrim(char *s1, char const *set);
+int				cd(t_vars *v);
+char			*exportenv(t_vars *pl, char *string);
 #endif

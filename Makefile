@@ -16,6 +16,7 @@ SRC =	parsing.c\
 		mainhelper2.c\
 		mainhelper3.c\
 		ft_strtrim.c\
+		execution/cd.c\
 		parser.c\
 		ft_itoa.c
 
