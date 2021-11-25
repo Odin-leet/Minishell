@@ -63,8 +63,7 @@ static int	len_word(const char *s, t_split split1, int *in_sgl, int *in_db)
 		i++;
 		k++;
 	}
-	free(in_db);
-	free(in_sgl);
+	
 	return (len);
 }
 
@@ -119,6 +118,8 @@ int	splithelper(t_split split1, const char *s, char c)
 		j++;
 	}
 	split1.split[split1.i][j] = '\0';
+	free(in_db);
+	free(in_sgl);
 	return (split1.k);
 }
 

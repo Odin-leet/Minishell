@@ -31,7 +31,7 @@ all : $(NAME)
 
 $(NAME) : ${OBJS}
 		
-		$(CC)  -Wall -Wextra -Werror  -g $(SRC) -o  $(NAME)  -lreadline
+		$(CC)  -Wall -Wextra -Werror  -g $(SRC) -o  $(NAME)  -lreadline -fsanitize=address
 
 
 clean:

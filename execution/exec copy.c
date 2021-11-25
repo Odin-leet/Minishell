@@ -122,7 +122,7 @@ int	checkforquotes2(char *string)
 	while (string[i] != '\0')
 	{
 		count = quotescount(&i, count, string, '\"');
-		count = quotescount(&i, count , string, '\'');
+		count = quotescount(&i, count, string, '\'');
 		i++;
 	}
 	return (count);
@@ -189,9 +189,10 @@ char	*changecollectedcmd(char *string, int count)
 	free(string);
 	return (tmp);
 }
+
 void	echo_logie(t_vars *v, int i, int n)
 {
-	int count;
+	int	count;
 
 	while (v->collected_cmd[i])
 	{
@@ -206,7 +207,8 @@ void	echo_logie(t_vars *v, int i, int n)
 	if (n != 1)
 		printf("\n");
 }
-int		echo(t_vars *v)
+
+int	echo(t_vars *v)
 {
 	int	i;
 	int	j;
@@ -234,7 +236,7 @@ int		echo(t_vars *v)
 	return (1);
 }
 
-int		pwd(void)
+int	pwd(void)
 {
 	char	cwd[256];
 
@@ -254,11 +256,8 @@ char	*exportenv(t_vars *pl, char *string)
 	{
 		count = ft_strlen(string);
 		c = thereisequ(pl->envprinc[i]);
-		if (c != -1)
-		{
-			if (count < c)
+		if (c != -1 && count < c)
 				count = c;
-		}
 		else
 		{
 			c = ft_strlen(pl->envprinc[i]);
@@ -280,15 +279,17 @@ cat << k > file0 << f> file1*/
 // int	change_oldpwd(char ***envp)
 // int	change_pwd(char ***envp)
 // void	ft_cd_oldpwd(t_builtin_vars var, int *retv)
+
 void	setevars(char *s, char *join, t_vars *v)
 {
-	char *str;
+	char	*str;
 
 	str = ft_strjoin(s, join);
 	replaceenv(v, str);
 	free(str);
 	str = NULL;
 }
+
 int	befree(t_vars *v, int status, int i)
 {
 	if (status == 0)
@@ -310,30 +311,12 @@ int	befree(t_vars *v, int status, int i)
 	}
 	return (i);
 }
+// int cdtiri(t_vars *v)
+// {
+// 	int	i;
 
-int	cdtier(t_vars *v)
-{
-	int	i;
-	int ret;
-
-	i = 0;
-	while (v->collected_cmd[1][i])
-	{
-		if (v->collected_cmd[1][i] != '-' && \
-			v->collected_cmd[1][i] != '\0')
-			return (befree(v, 0, 1));
-		i++;
-	}
-	if (i % 2 == 1)
-	{
-		if (!v->oldpwd)
-			return (befree(v, 1, 10));
-		ret = chdir(v->oldpwd);
-		setevars("PWD=", v->oldpwd, v);
-	}
-	setevars("OLDPWD=", v->curr, v);
-	return (befree(v, 0, 1));
-}
+	
+// }
 int	cd(t_vars *v)
 {
 	char	*cwd;
@@ -346,12 +329,31 @@ int	cd(t_vars *v)
 	v->oldpwd = exportenv(v, "OLDPWD");
 	v->curr = exportenv(v, "PWD");
 	str = NULL;
+	printf("%s\n", v->home);
 	if (!v->collected_cmd[1])
 		cwd = strcat(cwd, v->home);
 	else if (v->collected_cmd[1])
 	{
 		if (v->collected_cmd[1][0] == '-')
-			return (cdtier(v));
+		{
+			i = 0;
+			while (v->collected_cmd[1][i])
+			{
+				if (v->collected_cmd[1][i] != '-' && \
+					v->collected_cmd[1][i] != '\0')
+					return (befree(v, 0, 1));
+				i++;
+			}
+			if (i % 2 == 1)
+			{
+				if (!v->oldpwd)
+					return (befree(v, 1, 10));
+				chdir(v->oldpwd);
+				setevars("PWD=", v->oldpwd, v);
+			}
+			setevars("OLDPWD=", v->curr, v);
+			return (befree(v, 0, 1));
+		}
 		getcwd(cwd, PATH_MAX);
 		free(v->oldpwd);
 		v->oldpwd = ft_strjoin("OLDPWD=", cwd);

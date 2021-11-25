@@ -59,6 +59,9 @@ typedef struct s_vars
 	int				out;
 	int				pin;
 	pid_t			*pid;
+	char			*home;
+	char			*curr;
+	char			*oldpwd;
 	char			**env1;
 	char			**envprinc;
 	int				cmd_size;

@@ -42,12 +42,15 @@ int	returnthereisenv(int count, int count2, char **env, char *tmp)
 {
 	int	i;
 	int	j;
+	int count3;
 
+	
 	i = 0;
 	j = 0;
 	while (env[i] != NULL)
 	{
 		j = 0;
+		count3 = count;
 		while (env[i][j] != '\0')
 		{
 			if (env[i][j] == '=')
@@ -59,9 +62,9 @@ int	returnthereisenv(int count, int count2, char **env, char *tmp)
 			if (env[i][j] == '\0')
 				count2 = j;
 		}
-		if (count2 > count)
-			count = count2;
-		if (strncmp(tmp, env[i], count) == 0)
+		if (count2 > count3)
+			count3 = count2;
+		if (strncmp(tmp, env[i], count3) == 0)
 		{
 			free(tmp);
 			return (1);
