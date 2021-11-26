@@ -216,7 +216,7 @@ int	echo(t_vars *v)
 
 	i = 1;
 	if (!(v->collected_cmd) || !v->collected_cmd[1])
-		return (printf("\n"));
+		return (printf("\n") - 1);
 	while (v->collected_cmd[i][0] == '-')
 	{
 		n = 0;
@@ -229,11 +229,11 @@ int	echo(t_vars *v)
 		if (n != 1)
 			break ;
 		if (!v->collected_cmd[i + 1] && n == 1)
-			return (2);
+			return (0);
 		i++;
 	}
 	echo_logie(v, i, n);
-	return (1);
+	return (0);
 }
 
 int	pwd(void)
@@ -242,7 +242,7 @@ int	pwd(void)
 
 	getcwd(cwd, sizeof(cwd));
 	printf("%s\n", cwd);
-	return (1);
+	return (0);
 }
 
 char	*exportenv(t_vars *pl, char *string)
@@ -381,12 +381,12 @@ void	children(t_vars *v)
 {
 	file_manager(v);
 	piper(v, 1);
-	v->exit_status = 0;
+	g_gl.status = 0;
 	if (builtins(v->collected_cmd[0]))
-		v->exit_status = builtve(v);
+		g_gl.status = builtve(v);
 	else
 		execve(v->collected_cmd[0], v->collected_cmd, v->envprinc);
-	if (v->exit_status == 0)
+	if (g_gl.status == 0)
 		fail(v->collected_cmd[0], 0);
 	exit(0);
 }
@@ -416,7 +416,7 @@ void	parent(t_vars *v)
 	if (builtins(v->collected_cmd[0]))
 	{
 		v->exit_status = builtve(v);
-		if (v->exit_status != 1)
+		if (v->exit_status == 1)
 			fail(v->collected_cmd[0], v->exit_status);
 	}
 	dup2(s_out, 1);

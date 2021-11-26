@@ -39,7 +39,12 @@ int	befree(t_vars *v, int status, int i)
 	if (status == 1)
 	{
 		printf("bash: cd: OLDPWD not set\n");
-		return (10);
+		return (1);
+	}
+	if (status == 2)
+	{
+		printf("bash: cd: -d: invalid option\ncd: usage: cd [-L|-P] [dir]\n");
+		return (1);
 	}
 	else if (status < 0)
 		printf("No such file or directory\n");
@@ -56,18 +61,18 @@ int	cdtier(t_vars *v)
 	{
 		if (v->collected_cmd[1][i] != '-' && \
 			v->collected_cmd[1][i] != '\0')
-			return (befree(v, 0, 1));
+			return (befree(v, 2, 1));
 		i++;
 	}
 	if (i % 2 == 1)
 	{
 		if (!v->oldpwd)
-			return (befree(v, 1, 10));
+			return (befree(v, 1, 1));
 		ret = chdir(v->oldpwd);
 		setevars("PWD=", v->oldpwd, v);
 	}
 	setevars("OLDPWD=", v->curr, v);
-	return (befree(v, 0, 1));
+	return (befree(v, 0, 0));
 }
 
 void	cd_init(t_vars *v)
@@ -113,7 +118,7 @@ int	cd_extention(t_vars *v, char **cwd)
 		strcat(*cwd, " ");
 		strcat(*cwd, v->collected_cmd[i++]);
 	}
-	return (100);
+	return (0);
 }
 
 int	cd(t_vars *v)
@@ -127,9 +132,10 @@ int	cd(t_vars *v)
 		cwd = strcat(cwd, v->home);
 	else if (v->collected_cmd[1])
 	{
-		ret = 100;
+		//ret = 100;
 		ret = cd_extention(v, &cwd);
-		if (ret != 100)
+	//printf("%d\n", cwd);
+		if (ret != 0)
 			return (ret);
 	}
 	ret = chdir(cwd);
@@ -139,8 +145,8 @@ int	cd(t_vars *v)
 		setevars("PWD=", cwd, v);
 		free(cwd);
 		cwd = NULL;
-		return (befree(v, 0, 1));
+		return (befree(v, 0, 0));
 	}
 	free(cwd);
-	return (befree(v, -4, 0));
+	return (befree(v, 0, 1));
 }
