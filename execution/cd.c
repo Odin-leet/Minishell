@@ -55,6 +55,7 @@ int	cdtier(t_vars *v)
 {
 	int	i;
 	int	ret;
+	char	*s;
 
 	i = 0;
 	while (v->collected_cmd[1][i])
@@ -64,14 +65,18 @@ int	cdtier(t_vars *v)
 			return (befree(v, 2, 1));
 		i++;
 	}
-	if (i % 2 == 1)
+	if (i >= 1)
 	{
-		if (!v->oldpwd)
+		if (i == 1)
+			s = v->oldpwd;
+		else
+			s = v->home;
+		if (!s)
 			return (befree(v, 1, 1));
-		ret = chdir(v->oldpwd);
-		setevars("PWD=", v->oldpwd, v);
+		ret = chdir(v->s);
+		setevars("PWD=", v->s, v);
+		setevars("OLDPWD=", v->curr, v);
 	}
-	setevars("OLDPWD=", v->curr, v);
 	return (befree(v, 0, 0));
 }
 
