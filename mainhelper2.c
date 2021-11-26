@@ -38,7 +38,10 @@ int	check_errors(t_linked_list *ptr)
 		i = 0;
 		file = (t_file *)ptr->data;
 		if (check_errors1(file, i, j, checks) == 0)
+		{
+			free(checks);
 			return (0);
+		}
 		ptr = ptr->next;
 	}
 	free(checks);
@@ -71,6 +74,7 @@ t_linked_list	*mainhelper3(char **split)
 		if (checkforpipe(split[n]) == 1)
 		{
 			mainhelper(split[n], j, &head);
+			printf("split == |%s|\n",split[n]);
 			free(split[n]);
 		}
 		else

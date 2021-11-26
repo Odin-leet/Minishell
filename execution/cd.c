@@ -73,8 +73,8 @@ int	cdtier(t_vars *v)
 			s = v->home;
 		if (!s)
 			return (befree(v, 1, 1));
-		ret = chdir(v->s);
-		setevars("PWD=", v->s, v);
+		ret = chdir(s);
+		setevars("PWD=", s, v);
 		setevars("OLDPWD=", v->curr, v);
 	}
 	return (befree(v, 0, 0));

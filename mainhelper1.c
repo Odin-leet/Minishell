@@ -17,6 +17,7 @@ int	mainhelperhelper2(int i, char *string, int c, t_linked_list **head)
 		if (string[i] != '|' && string[i] != '>' && string[i] != '<')
 		{	
 			storeinfos(ft_substr(string, c, j), head);
+			//free(string);
 			break ;
 		}
 	}

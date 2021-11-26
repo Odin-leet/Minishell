@@ -347,7 +347,7 @@ void	piper(t_vars *v, int i)
 	if (v->pin != 0 && i == 1)
 		close(v->pin);
 }
-
+// << lkl 
 void	exec_initializer(t_vars *v, t_linked_list *head)
 {
 	t_linked_list	*tmp;
@@ -386,10 +386,15 @@ void	children(t_vars *v)
 	if (builtins(v->collected_cmd[0]))
 		g_gl.status = builtve(v);
 	else
+	{
 		execve(v->collected_cmd[0], v->collected_cmd, v->envprinc);
+		 exit(127);
+
+	}
+		//write(,"command not found \n", 20)
 	if (g_gl.status == 0)
 		fail(v->collected_cmd[0], 0);
-	exit(0);
+	exit(1);
 }
 
 void	forker(t_vars *v, int i)
@@ -418,11 +423,18 @@ void	parent(t_vars *v)
 	{
 		g_gl.status = builtve(v);
 		if (g_gl.status == 1)
-			fail(v->collected_cmd[0], v->exit_status);
+			fail(v->collected_cmd[0], g_gl.status);
 	}
 	dup2(s_out, 1);
 }
-
+int    get_fucking_status(int status)
+{
+    if (WIFEXITED(status) == 1)
+        return (WEXITSTATUS(status));
+    if (WIFSIGNALED(status) == 1)
+        return (128 + WTERMSIG(status));
+    return (0);
+}
 void	pid_manager(t_vars *v)
 {
 	int	i;
@@ -430,7 +442,19 @@ void	pid_manager(t_vars *v)
 	i = 0;
 	while (i < v->cmd_size)
 		waitpid(v->pid[i++], &g_gl.status, 0);
-	//if(WIFSIGNALED(g_gL.status))
+	if (g_gl.status > 255)
+		g_gl.status = g_gl.status % 255;
+	else
+		g_gl.status = get_fucking_status(g_gl.status);
+	//if (g_gl.status > 256)
+	//	g_gl.status = g_gl.status % 127;
+	//if(WIFSIGNALED(g_gl.status))
+	//{
+	//	 g_gl.status += 128;
+	//	 printf("sadasdasdasdasdasdasasdasd|}}}\n");
+//
+	//}
+	//g_gl.status = get_fucking_status(g_gl.status);
 	free(v->pid);
 }
 

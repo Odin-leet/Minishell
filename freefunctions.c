@@ -19,13 +19,15 @@ void	free_head(t_linked_list *head)
 }
 void	free_head3(t_linked_list *head)
 {
-	t_file	*file2;
+	//t_file	*file2;
 
 	if (head == NULL)
 		return ;
-	file2 = (t_file *)(head->data);
-	free(file2->file);
 	free_head(head->next);
+	//file2 = (t_file *)(head->next->data);
+	//printf("%s||",file2->file);
+	free_files_linked(head->data);
+	//free((char *)file2->file);
 	free(head->data);
 	free(head);
 }

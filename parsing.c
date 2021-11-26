@@ -79,8 +79,8 @@ void	handlesig(int sig)
 		  rl_on_new_line();
 		 rl_replace_line("", 0);
 		  rl_redisplay();
+		  g_gl.status = 1;
 		 }
-		// g_gl.isin = 0;
 	}
 	if (sig == SIGQUIT)
 	{
@@ -90,7 +90,7 @@ void	handlesig(int sig)
 		{
 		 //write(1, "\n", 1);
 			rl_on_new_line();
-			rl_replace_line("", 1);
+			//rl_replace_line("", 1);
 		  rl_redisplay();
 
 		 }
@@ -128,7 +128,20 @@ int	funmain22(t_vars *v, char **split, char *buffer)
 			free_lin_command(parseur);
 			}
 			else
-				free_head3(head);
+			{
+				t_file *file;
+				t_linked_list *head1;
+				head1 = head;
+				while(head1)
+				{
+				file = (t_file*)head1->data;
+				printf("head |%s| \n", file->file);
+				head1 = head1->next;
+
+				}
+				free_files_linked(head);
+				free(split);	
+			}
 
 		}
 		if (buffer)

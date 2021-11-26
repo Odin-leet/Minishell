@@ -54,6 +54,7 @@ typedef struct s_parser {
 typedef struct s_global {
 	int	status;
 	int	isin;
+	int failed;
 }				t_global;
 t_global	g_gl;
 typedef struct s_vars
