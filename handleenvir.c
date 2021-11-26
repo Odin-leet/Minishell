@@ -84,6 +84,23 @@ char	*handleenvir2(char *string, char *tmp, char *tmp2)
 //{
 //
 //}
+char 	*checkingforendofaenv(char *string, char *tmp2, int *i, int *end)
+{
+	(*i)++;
+	while (string[*i] != '\0')
+	{
+		if (string[*i] != '_' && (ft_isdigit(string[*i]) == 0)
+			&& (ft_isalpha(string[*i]) == 0) && string[*i] != '?')
+		{
+			*end = *i;
+			tmp2 = ft_substr(string, *end, ft_strlen(string) - *end);
+			return(tmp2);
+		}
+		else
+			(*i)++;
+	}
+	return (NULL);
+}
 
 char	*handleenvir1(char *string, int i, int start, char **env)
 {
@@ -97,19 +114,7 @@ char	*handleenvir1(char *string, int i, int start, char **env)
 	if (start != 0)
 		tmp = ft_substr(string, 0, start);
 	end = 0;
-	i++;
-	while (string[i] != '\0')
-	{
-		if (string[i] != '_' && (ft_isdigit(string[i]) == 0)
-			&& (ft_isalpha(string[i]) == 0) && string[i] != '?')
-		{
-			end = i;
-			tmp2 = ft_substr(string, end, ft_strlen(string) - end);
-			break ;
-		}
-		else
-			i++;
-	}
+	tmp2 = checkingforendofaenv(string, tmp2, &i , &end);
 	if (string[end - 1] == '?' || (end == 0 && string[i - 1] == '?'))
 	{
 		tmp3 = string;
