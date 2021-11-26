@@ -298,13 +298,13 @@ void	file_manager(t_vars *v)
 		else if (v->in != 1 && (v->collected_type[count] == 2 \
 		|| v->collected_type[count] == 5))
 			close(v->in);
-		if (v->collected_type[count] == 3)
+		if (v->collected_type[count] == 3 |)
 			v->out = open(v->collected_files[count],
 					O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		else if (v->collected_type[count] == 4)
 			v->out = open(v->collected_files[count],
 					O_WRONLY | O_CREAT | O_APPEND, 0644);
-		else if (v->collected_type[count] == 2)
+		else if (v->collected_type[count] == 2 || v->collected_type[count] == 5)
 			v->in = open(v->collected_files[count], O_RDONLY, 0644);
 		count++;
 	}
@@ -363,6 +363,7 @@ void	exec_initializer(t_vars *v, t_linked_list *head)
 	while (tmp)
 	{
 		(v->cmd_size)++;
+		//herdoc
 		tmp = tmp->next;
 	}
 	v->pid = malloc(sizeof(pid_t) * (v->cmd_size));
@@ -458,6 +459,8 @@ void	pid_manager(t_vars *v)
 	free(v->pid);
 }
 
+
+
 void	exec(t_linked_list *head, t_vars *v)
 {
 	int	fd[2];
@@ -465,7 +468,6 @@ void	exec(t_linked_list *head, t_vars *v)
 
 	i = 0;
 	exec_initializer(v, head);
-		
 	while (head)
 	{
 		v->lcmd = ((t_command *)head->data)->nameargs;
@@ -481,7 +483,6 @@ void	exec(t_linked_list *head, t_vars *v)
 		else
 			forker(v, i);
 		i++;
-		
 		head = head->next;
 		free_pre(v->collected_cmd, 0);
 		v->collected_cmd = NULL;
