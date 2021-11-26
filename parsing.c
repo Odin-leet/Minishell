@@ -68,17 +68,32 @@ void	handlesig(int sig)
 	
 	if (sig == SIGINT)
 	{
-		write(1, "\n", 1);
-		if (g_gl.status == 0)
+		if(g_gl.isin == 1)
 		{
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
+		write(1, "\n", 1);
+			g_gl.isin = 0;
 		}
+		else
+		 {
+		 write(1, "\n", 1);
+		  rl_on_new_line();
+		 rl_replace_line("", 0);
+		  rl_redisplay();
+		 }
+		// g_gl.isin = 0;
 	}
 	if (sig == SIGQUIT)
 	{
+		if (g_gl.isin )
+		write(2, "Quit: 3\n",8);
+		else 
+		{
+		 //write(1, "\n", 1);
+			rl_on_new_line();
+			rl_replace_line("", 1);
+		  rl_redisplay();
 
+		 }
 	}
 	//return(0);
 }
@@ -93,19 +108,28 @@ int	funmain22(t_vars *v, char **split, char *buffer)
 		head = NULL;
 		parseur = NULL;
 		buffer = readline("Minishell 0.0$ ");
-
+		if (buffer == NULL)
+		{
+			printf("exit");
+			exit(0);
+		}
 		add_history(buffer);
 		if (buffer[0] != '\0' && (checkspace(buffer) == 1))
 		{
+			g_gl.isin = 1;
 			split = ft_split(buffer, ' ');
 			head = mainhelper3(split);
-			if (check_errors(head) == 0)
-				return (0);
+			if (check_errors(head) != 0)
+			{
 			parseur = parser(head, v->envprinc);
 			free_head2(head);
 			exec(parseur, v);
 			free(split);
 			free_lin_command(parseur);
+			}
+			else
+				free_head3(head);
+
 		}
 		if (buffer)
 			free(buffer);
@@ -126,6 +150,7 @@ int	main(int argc, char **argv, char **env)
 	split = NULL;
 	argc = 0;
 	argv = NULL;
+	g_gl.isin = 0;
 	signal(SIGINT, handlesig);
 		signal(SIGQUIT, handlesig);	
 	 if(funmain22(&v, split, buffer) == 0)

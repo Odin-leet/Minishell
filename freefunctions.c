@@ -17,6 +17,18 @@ void	free_head(t_linked_list *head)
 	free(head->data);
 	free(head);
 }
+void	free_head3(t_linked_list *head)
+{
+	t_file	*file2;
+
+	if (head == NULL)
+		return ;
+	file2 = (t_file *)(head->data);
+	free(file2->file);
+	free_head(head->next);
+	free(head->data);
+	free(head);
+}
 
 void	free_files_linked(t_linked_list *files)
 {

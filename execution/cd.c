@@ -53,8 +53,8 @@ int	befree(t_vars *v, int status, int i)
 
 int	cdtier(t_vars *v)
 {
-	int	i;
-	int	ret;
+	int		i;
+	int		ret;
 	char	*s;
 
 	i = 0;
