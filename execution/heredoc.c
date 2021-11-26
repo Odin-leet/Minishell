@@ -1,4 +1,16 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ashite <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/05 11:25:30 by ashite            #+#    #+#             */
+/*   Updated: 2021/11/05 11:25:35 by ashite           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../minishell.h"
 
 int	ft_strcmp(const char *s1, const char *s2)
 {
@@ -18,39 +30,119 @@ int	ft_strcmp(const char *s1, const char *s2)
 	return (0);
 }
 
+void	close_and_exit(int fd)
+{
+	close(fd);
+	exit(fd);
+}
 
+int	get_status(int status)
+{
+	if (WIFEXITED(status) == 1)
+		return (WEXITSTATUS(status));
+	if (WIFSIGNALED(status) == 1)
+		return (128 + WTERMSIG(status));
+	return (0);
+}
 
+int	exit_status(pid_t pid, int fd)
+{
+	int	exit_status;
+	int	status;
 
+	waitpid(pid, &status, 0);
+	exit_status = get_status(status);
+	close(fd);
+	if (exit_status == 2)
+		return (1);
+	return (0);
+}
 
+void	ctrl_handler(int sig)
+{
+	exit(sig);
+}
 
+void	signals(void)
+{
+	if (signal(SIGINT, ctrl_handler) == SIG_ERR)
+		exit(1);
+}
 
+int	heredoc(char *delimeter, char *file_name)
+{
+	int		fd;
+	char	*line;
+	pid_t	pid;
 
+	fd = open(file_name, O_RDWR | O_TRUNC | O_CREAT, S_IWUSR | S_IRUSR);
+    g_gl.herdo = 1;
+	pid = fork();
+	if (pid == 0)
+	{
+		signals();
+		while (1)
+		{
+			line = NULL;
+			line = readline(">");
+			if (line == NULL || ft_strcmp(line, delimeter) == 0)
+				close_and_exit(fd);
+			write(fd, line, ft_strlen(line));
+			write(fd, "\n", 1);
+			free(line);
+		}
+		close_and_exit(fd);
+	}
+    g_gl.herdo = 0;
+	return (exit_status(pid, fd));
+}
 
-int	heredocs_finder(char **cmd_tab)
+char	*ft_rng(void)
+{
+	static int	nb = 0;
+	char		*name;
+	char		*str_nb;
+	char		*str_modulo;
+	char		*tmp;
+
+	nb++;
+	str_nb = ft_itoa(nb);
+	str_modulo = ft_itoa(nb % 3);
+	tmp = ft_strdup("/tmp/", 0);
+	tmp = ft_strjoin(tmp, str_nb);
+	name = ft_strjoin(tmp, str_modulo);
+	free(str_nb);
+	free(str_modulo);
+	return (name);
+}
+
+int	heredocs_finder(t_vars *v)
 {
 	int		i;
 	char	*filename;
 
 	i = 0;
-	while (cmd_tab != NULL && cmd_tab[i] != NULL)
+    v->collected_files = files_collector(v->lfile);
+	v->collected_type = type_collector(v->lfile);
+	while (v->collected_files != NULL && v->collected_files[i] != NULL)
 	{
-		if (!ft_strcmp(cmd_tab[i], "<<") && cmd_tab[i + 1] != NULL)
+		if (v->collected_type[i] == 5 && v->collected_files[i] != NULL)
 		{
-			filename = ft_random_name();
-			if (here_doc(cmd_tab[i + 1], filename))
+			filename = ft_rng();
+			if (heredoc(v->collected_files[i], filename))
 			{
 				free(filename);
-				ft_free_args(cmd_tab);
+				free_pre(v->collected_files, 0);
+                free(v->collected_type);
 				return (1);
 			}
-			free(cmd_tab[i]);
-			cmd_tab[i] = ft_strdup("<");
-			free(cmd_tab[i + 1]);
-			cmd_tab[i + 1] = ft_strdup(filename);
+			v->collected_type[i] = 2;
+			free(v->collected_files[i]);
+			v->collected_files[i] = ft_strdup(filename, 0);
 			free(filename);
 			filename = NULL;
 		}
 		i++;
 	}
-	return (0);
+    return (0);
 }

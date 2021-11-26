@@ -26,6 +26,7 @@ void	*free_pre(char **split, int k)
 	while (split[k])
 	{
 		free(split[k]);
+		split[k] = NULL;
 		k++;
 	}
 	free(split);
@@ -65,35 +66,37 @@ int	checkspace(char *buffer)
 
 void	handlesig(int sig)
 {
-	
-	if (sig == SIGINT)
+	if (g_gl.herdo == 0)
 	{
-		if(g_gl.isin == 1)
+		if (sig == SIGINT)
 		{
-		write(1, "\n", 1);
-			g_gl.isin = 0;
-		}
-		else
-		 {
-		 write(1, "\n", 1);
-		  rl_on_new_line();
-		 rl_replace_line("", 0);
-		  rl_redisplay();
-		  g_gl.status = 1;
-		 }
-	}
-	if (sig == SIGQUIT)
-	{
-		if (g_gl.isin )
-		write(2, "Quit: 3\n",8);
-		else 
-		{
-		 //write(1, "\n", 1);
+			if(g_gl.isin == 1)
+			{
+			write(1, "\n", 1);
+				g_gl.isin = 0;
+			}
+			else
+			{
+			write(1, "\n", 1);
 			rl_on_new_line();
-			//rl_replace_line("", 1);
-		  rl_redisplay();
+			rl_replace_line("", 0);
+			rl_redisplay();
+			g_gl.status = 1;
+			}
+		}
+		if (sig == SIGQUIT)
+		{
+			if (g_gl.isin )
+			write(2, "Quit: 3\n",8);
+			else 
+			{
+			//write(1, "\n", 1);
+				rl_on_new_line();
+				//rl_replace_line("", 1);
+			rl_redisplay();
 
-		 }
+			}
+		}
 	}
 	//return(0);
 }
@@ -164,6 +167,7 @@ int	main(int argc, char **argv, char **env)
 	argc = 0;
 	argv = NULL;
 	g_gl.isin = 0;
+	g_gl.herdo = 0;
 	signal(SIGINT, handlesig);
 		signal(SIGQUIT, handlesig);	
 	 if(funmain22(&v, split, buffer) == 0)

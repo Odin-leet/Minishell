@@ -5,6 +5,8 @@ SRC =	parsing.c\
 		export.c\
 		unset.c\
 		execution/exec.c\
+		execution/cd.c\
+		execution/heredoc.c\
 		libftfunc.c\
 		libftfunc1.c\
 		mainsplit.c\
@@ -16,7 +18,6 @@ SRC =	parsing.c\
 		mainhelper2.c\
 		mainhelper3.c\
 		ft_strtrim.c\
-		execution/cd.c\
 		parser.c\
 		ft_itoa.c
 

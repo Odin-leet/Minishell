@@ -54,6 +54,7 @@ typedef struct s_parser {
 typedef struct s_global {
 	int	status;
 	int	isin;
+	int herdo;
 	int failed;
 }				t_global;
 t_global	g_gl;
@@ -142,4 +143,9 @@ int				env(t_vars *pl);
 char			*ft_strtrim(char *s1, char const *set);
 int				cd(t_vars *v);
 char			*exportenv(t_vars *pl, char *string);
+int				heredocs_finder(t_vars *v);
+int				*type_collector(t_linked_list *lfile);
+char			**files_collector(t_linked_list *lfile);
+char			**cmd_collector(t_linked_list *cmd);
+
 #endif
