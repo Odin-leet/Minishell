@@ -64,13 +64,10 @@ int	cdtier(t_vars *v)
 			return (befree(v, 2, 1));
 		i++;
 	}
-	if (i % 2 == 1)
-	{
-		if (!v->oldpwd)
-			return (befree(v, 1, 1));
-		ret = chdir(v->oldpwd);
-		setevars("PWD=", v->oldpwd, v);
-	}
+	if (!v->oldpwd)
+		return (befree(v, 1, 1));
+	ret = chdir(v->oldpwd);
+	setevars("PWD=", v->oldpwd, v);
 	setevars("OLDPWD=", v->curr, v);
 	return (befree(v, 0, 0));
 }

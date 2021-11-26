@@ -58,6 +58,7 @@ char	**files_collector(t_linked_list *lfile)
 		sequance[size] = ((t_file *)lfile->data)->file;
 		lfile = lfile->next;
 		size++;
+		
 	}
 	return (sequance);
 }
@@ -415,8 +416,8 @@ void	parent(t_vars *v)
 	piper(v, 0);
 	if (builtins(v->collected_cmd[0]))
 	{
-		v->exit_status = builtve(v);
-		if (v->exit_status == 1)
+		g_gl.status = builtve(v);
+		if (g_gl.status == 1)
 			fail(v->collected_cmd[0], v->exit_status);
 	}
 	dup2(s_out, 1);
@@ -428,7 +429,8 @@ void	pid_manager(t_vars *v)
 
 	i = 0;
 	while (i < v->cmd_size)
-		waitpid(v->pid[i++], &v->exit_status, 0);
+		waitpid(v->pid[i++], &g_gl.status, 0);
+	//if(WIFSIGNALED(g_gL.status))
 	free(v->pid);
 }
 
@@ -439,6 +441,7 @@ void	exec(t_linked_list *head, t_vars *v)
 
 	i = 0;
 	exec_initializer(v, head);
+		
 	while (head)
 	{
 		v->lcmd = ((t_command *)head->data)->nameargs;
@@ -454,11 +457,13 @@ void	exec(t_linked_list *head, t_vars *v)
 		else
 			forker(v, i);
 		i++;
+		
 		head = head->next;
 		free_pre(v->collected_cmd, 0);
 		v->collected_cmd = NULL;
 	}
 	pid_manager(v);
+	g_gl.isin = 0;
 }
 
 /*

@@ -24,7 +24,6 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 
-int			g_count;
 
 typedef struct s_split{
 	int		k;
@@ -54,6 +53,7 @@ typedef struct s_parser {
 }				t_parser;
 typedef struct s_global {
 	int	status;
+	int	isin;
 }				t_global;
 t_global	g_gl;
 typedef struct s_vars
@@ -94,6 +94,7 @@ size_t			ft_strlen(char *s);
 char			*ft_substr(char *s, unsigned int start, size_t len);
 char			*ft_calloc(size_t count, size_t size);
 void			exec(t_linked_list *head, t_vars *v);
+void			free_head3(t_linked_list *head);
 int				builtins(char *string);
 int				ft_strncmp(const char *s1, const char *s2, size_t n);
 char			**ft_split1(char const *s, char c);
