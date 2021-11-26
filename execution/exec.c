@@ -363,6 +363,7 @@ void	exec_initializer(t_vars *v, t_linked_list *head)
 	while (tmp)
 	{
 		(v->cmd_size)++;
+		check_herdoc(tmp);
 		tmp = tmp->next;
 	}
 	v->pid = malloc(sizeof(pid_t) * (v->cmd_size));
