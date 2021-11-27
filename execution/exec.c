@@ -308,6 +308,33 @@ void	file_manager(t_vars *v)
 	free_pre(v->collected_files, 0);
 }
 
+int	ft_atoi(const char *str)
+{
+	long long	nbr;
+	int			i;
+	int			s;
+
+	i = 0;
+	nbr = 0;
+	s = 1;
+	while (str[i] == 32 || (str[i] < 14 && str[i] > 8))
+		i++;
+	if (str[i] == '-' || str[i] == '+')
+	{
+		if (str[i++] == '-')
+			s = -1;
+	}
+	while (str[i] != '\0' && str[i] >= '0' && str[i] <= '9')
+	{
+		nbr = nbr * 10 + (str[i++] - '0');
+		if (nbr > 4294967295)
+		{
+			return (-1);
+		}
+	}
+	return (nbr * s);
+}
+
 int	is_not_digit(char *s)
 {
 	int i;
@@ -315,7 +342,7 @@ int	is_not_digit(char *s)
 	i = 0;
 	while(s[i])
 	{
-		if (c < '0' || c > '9')
+		if (s[i] < '0' || s[i] > '9')
 			return (1);
 		i++;
 	}
@@ -326,7 +353,7 @@ void ft_exit(t_vars *v)
 {
 	char **s;
 
-	s = s;
+	s = v->collected_cmd;
 	//curr=NULL exit (0)
 	if (!(s[1]))
 		return (exit(0));
@@ -357,7 +384,7 @@ int	builtve(t_vars *v)
 		g_gl.failed = env(v);
 	if (ft_strncmp(v->collected_cmd[0], "exit",
 			ft_strlen(v->collected_cmd[0])) == 0)
-		ft_exit(1);
+		ft_exit(v);
 	if (ft_strncmp(v->collected_cmd[0], "export",
 			ft_strlen(v->collected_cmd[0])) == 0)
 		g_gl.failed = export(v);
@@ -534,7 +561,8 @@ void	exec(t_linked_list *head, t_vars *v)
 		head = head->next;
 		free_pre(v->collected_cmd, 0);
 		free_pre(v->collected_files, 0);
-		free(v->collected_type);
+		// if(v->collected_type)
+		// 	free(v->collected_type);
 		v->collected_cmd = NULL;
 	}
 	pid_manager(v);
