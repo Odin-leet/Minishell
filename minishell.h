@@ -6,7 +6,7 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 11:24:56 by ashite            #+#    #+#             */
-/*   Updated: 2021/11/27 21:08:26 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/27 23:59:22 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ typedef struct s_vars
 	char			**envprinc;
 	int				cmd_size;
 	char			**collected_cmd;
+	char			**collected_cmd2;
 	int				exit_status;
 	int				status;
 	char			**collected_files;

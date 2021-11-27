@@ -6,7 +6,7 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 09:27:51 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/27 19:59:28 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/27 23:42:26 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,6 @@ int	funmain22(t_vars *v, char **split, char *buffer)
 			}
 			else
 			{
-				printf("sadasdasdasdasdasdas\n");
 				head1 = head;
 				while (head1)
 				{

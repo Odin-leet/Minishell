@@ -35,7 +35,7 @@ OBJS = ${SRC:.c=.o}
 all : $(NAME)
 
 $(NAME) : ${OBJS}
-		$(CC)  -Wall -Wextra -Werror  -fsanitize=address -g $(SRC) -o  $(NAME) -lreadline -L /Users/${USER}/.brew/opt/readline/lib -I /Users/${USER}/.brew/opt/readline/include 
+		$(CC)  -Wall -Wextra -Werror  -g $(SRC) -o  $(NAME) -lreadline -L /Users/${USER}/.brew/opt/readline/lib -I /Users/${USER}/.brew/opt/readline/include 
 
 clean:
 	@rm -rf $(OBJS)

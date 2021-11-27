@@ -6,7 +6,7 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 09:26:22 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/27 20:32:35 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/27 23:53:29 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -377,7 +377,7 @@ int	returnquotescount(char *string)
 
 	i = 0;
 	count = 0;
-	while (string[i] != '\0')
+	while (string && string[i] != '\0')
 	{
 		if (string[i] == '\"')
 			count++;
@@ -397,6 +397,10 @@ void	checkforquotes(char **string)
 
 	i = -1;
 	c = 0;
+	if (*string)
+	{
+		
+	
 	count = returnquotescount(*string);
 	tmp = malloc(sizeof(char) * (ft_strlen(*string) - count + 1));
 	i = 0;
@@ -409,6 +413,7 @@ void	checkforquotes(char **string)
 	tmp[c] = '\0';
 	free(*string);
 	*string = tmp;
+	}
 }
 
 int	checkifitscomp(char **string)

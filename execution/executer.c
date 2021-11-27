@@ -6,7 +6,7 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 17:33:43 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/27 21:57:52 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/28 00:01:38 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,31 @@
 
 
 
+char	**cmd_collector2(t_linked_list *cmd)
+{
+	char			**sequance;
+	t_linked_list	*tempo;
+	int				size;
+
+	size = 0;
+	tempo = cmd;
+	while (tempo != NULL)
+	{
+		tempo = tempo->next;
+		size++;
+	}
+	sequance = malloc(sizeof(char *) * (size + 1));
+	sequance[size] = NULL;
+	size = 0;
+	while (cmd != NULL)
+	{
+		sequance[size] = ft_strdup((char *)cmd->data, 0);
+        cmd = cmd->next;
+        checkforquotes(&sequance[size]);
+		size++;
+	}
+	return (sequance);
+}
 
 
 void	children(t_vars *v)
@@ -28,11 +53,11 @@ void	children(t_vars *v)
 			g_gl.status = builtve(v);
 		else
 		{
-            //checkforquotes(&v->collected_cmd[1]);
-			g_gl.failed = execve(v->collected_cmd[0],
-					v->collected_cmd, v->envprinc);
+           v->collected_cmd2 =  cmd_collector2(v->lcmd);
+			g_gl.failed = execve(v->collected_cmd2[0],
+					v->collected_cmd2, v->envprinc);
 			if (g_gl.failed == -1)
-				fail(v->collected_cmd[0], 0);
+				fail(v->collected_cmd2[0], 0);
 			exit(127);
 		}
 	}
