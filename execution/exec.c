@@ -297,9 +297,7 @@ void	file_manager(t_vars *v)
 			v->out = open(v->collected_files[count],
 					O_WRONLY | O_CREAT | O_APPEND, 0644);
 		else if (v->collected_type[count] == 2 || v->collected_type[count] == 5)
-		{
 			v->in = open(v->collected_files[count], O_RDONLY, 0644);
-		}
 		if (v->in < 0 || v->out < 0)
 			write(2, "No such file or directory\n", 26);
 		count++;
@@ -349,19 +347,24 @@ int	is_not_digit(char *s)
 	return (0);
 }
 
-void ft_exit(t_vars *v)
+int ft_exit(t_vars *v)
 {
 	char **s;
 
 	s = v->collected_cmd;
-	//curr=NULL exit (0)
+	
 	if (!(s[1]))
 		return (exit(0));
 	else if ((is_not_digit(s[1]) == 0) && !(s[2]))
-		exit(ft_atoi(s[1]));
-	//is digit && next = NULL exit(digit)
-	//else if digit && next != NULL toomany args
-	//else if not digit exit(1)
+		return (exit(ft_atoi(s[1]));)
+	else if (((is_not_digit(s[1]) == 0) && (s[2])))
+	{
+		write(2, "bash: exit: too many arguments\n", 31);
+		return (1);
+	}
+	else if (((is_not_digit(s[1]) == 1)))
+		return (exit(1));
+	return (1);
 }
 
 int	builtve(t_vars *v)

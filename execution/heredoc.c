@@ -149,13 +149,14 @@ int	heredocs_finder(t_vars *v)
 			if (heredoc(v->collected_files[i], filename))
 			{
 				free(filename);
+				filename = NULL;
 				free_pre(v->collected_files, 0);
                 free(v->collected_type);
 				v->collected_type = NULL;
 				return (1);
 			}
-			v->collected_type[i] = 2;
 			free(v->collected_files[i]);
+			v->collected_files[i] = NULL;
 			v->collected_files[i] = ft_strdup(filename, 0);
 			free(filename);
 			filename = NULL;
