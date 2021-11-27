@@ -113,10 +113,10 @@ char	*handleenvir1(char *string, int i, int start, char **env)
 	tmp = NULL;
 	if (start != 0)
 		tmp = ft_substr(string, 0, start);
-	//printf("%d %d \n", i, start);		
 	end = 0;
 	tmp2 = checkingforendofaenv(string, tmp2, &i , &end);
-	if ((end != 0 && string[end - 1] == '?') || (end == 0 && string[i - 1] == '?'))
+	
+	if (string[end - 1] == '?' ||( end == 0 && string[i - 1] == '?'))
 	{
 		tmp3 = string;
 		string = handleenvir2(ft_itoa(g_gl.status), tmp, tmp2);

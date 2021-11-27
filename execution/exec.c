@@ -58,7 +58,6 @@ char	**files_collector(t_linked_list *lfile)
 		sequance[size] = ft_strdup(((t_file *)lfile->data)->file, 0);
 		lfile = lfile->next;
 		size++;
-		
 	}
 	return (sequance);
 }
@@ -276,25 +275,27 @@ char	*exportenv(t_vars *pl, char *string)
 
 void	file_manager(t_vars *v)
 {
-	int count;
+	int	count;
 
 	count = 0;
-
 	while (v->collected_files[count])
 	{
-		if (v->out != 0 && (v->collected_type[count] == 4 || v->collected_type[count] == 3))
+		if (v->out != 0 && (v->collected_type[count] == 4
+				|| v->collected_type[count] == 3))
 			close(v->out);
-		else if (v->in != 1 && (v->collected_type[count] == 2 || v->collected_type[count] == 5))
+		else if (v->in != 1 && (v->collected_type[count] == 2
+				|| v->collected_type[count] == 5))
 			close(v->in);
 		if (v->collected_type[count] == 3)
-			v->out = open(v->collected_files[count], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			v->out = open(v->collected_files[count],
+					O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		else if (v->collected_type[count] == 4)
-			v->out = open(v->collected_files[count], O_WRONLY | O_CREAT | O_APPEND, 0644);
+			v->out = open(v->collected_files[count],
+					O_WRONLY | O_CREAT | O_APPEND, 0644);
 		else if (v->collected_type[count] == 2 || v->collected_type[count] == 5)
-		{
-			if ((v->in = open(v->collected_files[count], O_RDONLY, 0644)) == -1)
-				printf("la laa mabghiiitch ! n7el l file : %s\n", v->collected_files[count]);
-		}	
+			v->in = open(v->collected_files[count], O_RDONLY, 0644);
+		if (v->in < 0 || v->out < 0)
+			write(2, "No such file or directory\n", 26);
 		count++;
 	}
 	free_pre(v->collected_files, 0);
@@ -302,27 +303,29 @@ void	file_manager(t_vars *v)
 
 int	builtve(t_vars *v)
 {
+	g_gl.failed = 0;
 	if (ft_strncmp(v->collected_cmd[0], "echo",
 			ft_strlen(v->collected_cmd[0])) == 0)
-		return (echo(v));
+		g_gl.failed = echo(v);
 	if (ft_strncmp(v->collected_cmd[0], "cd",
 			ft_strlen(v->collected_cmd[0])) == 0)
-		return (cd(v));
+		g_gl.failed = cd(v);
 	if (ft_strncmp(v->collected_cmd[0], "pwd",
 			ft_strlen(v->collected_cmd[0])) == 0)
-		return (pwd());
+		g_gl.failed = pwd();
 	if (ft_strncmp(v->collected_cmd[0], "unset",
 			ft_strlen(v->collected_cmd[0])) == 0)
-		return (unset(v));
+		g_gl.failed = unset(v);
 	if (ft_strncmp(v->collected_cmd[0], "env",
 			ft_strlen(v->collected_cmd[0])) == 0)
-		return (env(v));
+		g_gl.failed = env(v);
 	if (ft_strncmp(v->collected_cmd[0], "exit",
 			ft_strlen(v->collected_cmd[0])) == 0)
 		exit(1);
 	if (ft_strncmp(v->collected_cmd[0], "export",
 			ft_strlen(v->collected_cmd[0])) == 0)
-		return (export(v));
+		g_gl.failed = export(v);
+	//if (g_gl->failed )
 	return (0);
 }
 
@@ -341,7 +344,7 @@ void	piper(t_vars *v, int i)
 int	exec_initializer(t_vars *v, t_linked_list *head)
 {
 	t_linked_list	*tmp;
-	int ret;
+	int				ret;
 
 	ret = 0;
 	v->collected_cmd = NULL;
@@ -368,7 +371,7 @@ void	fail(char *s, int act)
 {
 	if (act == 0 && s)
 	{
-		write(2, "bash: ", 6);
+		write(2, "Minishell: ", 12);
 		write(2, s, ft_strlen(s));
 		write(2, ":command not found\n", 19);
 	}	
@@ -378,6 +381,7 @@ void	children(t_vars *v)
 {
 	file_manager(v);
 	piper(v, 1);
+	g_gl.failed = 0;
 	g_gl.status = 0;
 	if (v->collected_cmd && v->collected_cmd[0])
 	{
@@ -385,12 +389,11 @@ void	children(t_vars *v)
 			g_gl.status = builtve(v);
 		else
 		{
-			execve(v->collected_cmd[0], v->collected_cmd, v->envprinc);
+			g_gl.failed = execve(v->collected_cmd[0], v->collected_cmd, v->envprinc);
+			if (g_gl.failed == -1)
+				fail(v->collected_cmd[0], 0);
 			exit(127);
-
 		}
-		if (g_gl.status == 0)
-			fail(v->collected_cmd[0], 0);
 	}
 	exit(1);
 }
@@ -422,20 +425,20 @@ void	parent(t_vars *v)
 		if (builtins(v->collected_cmd[0]))
 		{
 			g_gl.status = builtve(v);
-			if (g_gl.status == 1)
-				fail(v->collected_cmd[0], g_gl.status);
+			// if (g_gl.status == 1)
+			// 	fail(v->collected_cmd[0], g_gl.status);
 		}
-	} 
+	}
 	dup2(s_out, 1);
 }
 
-int    get_fucking_status(int status)
+int	get_fucking_status(int status)
 {
-    if (WIFEXITED(status) == 1)
-        return (WEXITSTATUS(status));
-    if (WIFSIGNALED(status) == 1)
-        return (128 + WTERMSIG(status));
-    return (0);
+	if (WIFEXITED(status) == 1)
+		return (WEXITSTATUS(status));
+	if (WIFSIGNALED(status) == 1)
+		return (128 + WTERMSIG(status));
+	return (0);
 }
 
 void	pid_manager(t_vars *v)
@@ -449,16 +452,16 @@ void	pid_manager(t_vars *v)
 		g_gl.status = g_gl.status % 255;
 	else
 		g_gl.status = get_fucking_status(g_gl.status);
-	//if (g_gl.status > 256)
-	//	g_gl.status = g_gl.status % 127;
-	//if(WIFSIGNALED(g_gl.status))
-	//{
-	//	 g_gl.status += 128;
-	//	 printf("sadasdasdasdasdasdasasdasd|}}}\n");
-//
-	//}
-	//g_gl.status = get_fucking_status(g_gl.status);
 	free(v->pid);
+}
+
+void	executer(t_linked_list *head, t_vars *v, int i)
+{
+	if ((v->collected_cmd && v->collected_cmd[0]
+			&& i == 0 && !(head->next)) && builtins(v->collected_cmd[0]))
+		parent(v);
+	else
+		forker(v, i);
 }
 
 void	exec(t_linked_list *head, t_vars *v)
@@ -478,15 +481,10 @@ void	exec(t_linked_list *head, t_vars *v)
 		v->out = fd[1];
 		if (!(head->next))
 			v->out = 1;
-		if ((v->collected_cmd && v->collected_cmd[0] && i == 0 && !(head->next)) && v->collected_cmd[0] && builtins(v->collected_cmd[0]))
-			parent(v);
-		else
-			forker(v, i);
+		executer(head, v, i);
 		i++;
 		head = head->next;
 		free_pre(v->collected_cmd, 0);
-		// free_pre(v->collected_files, 0);
-		// free(v->collected_type);
 		v->collected_cmd = NULL;
 	}
 	pid_manager(v);
@@ -494,6 +492,8 @@ void	exec(t_linked_list *head, t_vars *v)
 }
 
 /*
+free_pre(v->collected_files, 0);
+free(v->collected_type);
 *free(v->collected_cmd);
 *[free table in nd out cause we dup 
 *the cmd not just assigning the pointer]

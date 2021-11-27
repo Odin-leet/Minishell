@@ -16,68 +16,99 @@ void	setevars(char *s, char *join, t_vars *v)
 {
 	char	*str;
 
-	str = ft_strjoin(s, join);
+	
+	if (s)
+		str = ft_strjoin(s, join);
+	else
+		str = join;
 	replaceenv(v, str);
 	free(str);
 	str = NULL;
 }
 
-int	befree(t_vars *v, int status, int i)
+int cd_cleanup(t_vars *v, int ret)
 {
-	if (status == 0)
+	if (v->oldpwd)
+		free(v->oldpwd);
+	if (v->home)
+		free(v->home);
+	if (v->curr)
+		free(v->curr);
+	v->oldpwd = NULL;
+	v->home = NULL;
+	v->curr = NULL;
+	return (ret);
+}
+
+int	change_dir(t_vars *v, char* dir)
+{
+	int	ret;
+
+	if (dir)
 	{
-		if (v->home != NULL)
-			free(v->home);
-		if (v->oldpwd != NULL)
-			free(v->oldpwd);
-		if (v->curr != NULL)
-			free(v->curr);
-		v->home = NULL;
-		v->oldpwd = NULL;
-		v->curr = NULL;
+		ret = chdir(dir);
+		if (ret == 0)
+		{
+			setevars("PWD=", dir, v);
+			if (v->curr)
+				setevars("OLDPWD=", v->curr, v);
+			return (cd_cleanup(v,0));
+		}
+		write(2, "No such file or directory\n", 27);
+		return (cd_cleanup(v,1));
 	}
-	if (status == 1)
+	else
 	{
-		printf("bash: cd: OLDPWD not set\n");
-		return (1);
+		write(2, "No such file or directory\n", 27);
+		return (cd_cleanup(v,1));
 	}
-	if (status == 2)
+}
+
+int cdback(t_vars *v)
+{
+	if (v->oldpwd)
+		return (change_dir(v,v->oldpwd));
+	else
 	{
-		printf("bash: cd: -d: invalid option\ncd: usage: cd [-L|-P] [dir]\n");
-		return (1);
+		write(2, "Minishell: cd: OLDPWD not set\n", 31);
+		return (cd_cleanup(v,1));
 	}
-	else if (status < 0)
-		printf("No such file or directory\n");
-	return (i);
+}
+
+int cdhome(t_vars *v)
+{
+	if (v->home)
+		return (change_dir(v,v->home));
+	else
+	{
+		write(2, "Minishell: cd: HOME not set\n", 29);
+		return (cd_cleanup(v,1));
+	}
 }
 
 int	cdtier(t_vars *v)
 {
 	int		i;
-	int		ret;
-	char	*s;
+	int		count;
+	int		j;
 
 	i = 0;
-	while (v->collected_cmd[1][i])
+	j = 1;
+	count = 0;
+	while (v->collected_cmd[j][i])
 	{
-		if (v->collected_cmd[1][i] != '-' && \
-			v->collected_cmd[1][i] != '\0')
-			return (befree(v, 2, 1));
-		i++;
+		while (v->collected_cmd[j][i])
+		{
+			if (v->collected_cmd[j][i] == '-' && v->collected_cmd[j][i + 1] == '\0')
+				return (cdback(v));
+			else if(v->collected_cmd[j][i] == '-' && v->collected_cmd[j][i + 1] == '-')
+				return (cdhome(v));
+			i++;
+		}
+		j++;
 	}
-	if (i >= 1)
-	{
-		if (i == 1)
-			s = v->oldpwd;
-		else
-			s = v->home;
-		if (!s)
-			return (befree(v, 1, 1));
-		ret = chdir(s);
-		setevars("PWD=", s, v);
-		setevars("OLDPWD=", v->curr, v);
-	}
-	return (befree(v, 0, 0));
+	write(2, "bash: cd: -d: invalid option\ncd: usage: cd [-L|-P] [dir]\n", 58);
+	return (cd_cleanup(v, 1));
 }
 
 void	cd_init(t_vars *v)
@@ -87,17 +118,25 @@ void	cd_init(t_vars *v)
 	v->curr = exportenv(v, "PWD");
 }
 
-void	cd_moja(t_vars *v, char **tmp, char **cwd)
+int	cd_moja(t_vars *v)
 {
-	char	*str;
+	char	*dir;
+	char	*tmp;
+	int		ret;
 
-	str = ft_strtrim(v->collected_cmd[1], "~");
-	*tmp = ft_strjoin(v->home, str);
-	free(str);
-	if (*tmp[0] != '/')
-		strcat(*cwd, "/");
-	strcat(*cwd, *tmp);
-	free(*tmp);
+	ret = 0;
+	dir = v->home;
+	if (v->collected_cmd[1][1] != '\0' && v->home)
+	{
+		tmp = ft_strtrim(v->collected_cmd[1], "~");
+		dir = ft_strjoin(dir, tmp);
+		free(tmp);
+		ret = change_dir(v, dir);
+		free(dir);
+	}
+	else
+		ret = change_dir(v, dir);
+	return (ret);
 }
 
 int	cd_extention(t_vars *v, char **cwd)
@@ -109,21 +148,22 @@ int	cd_extention(t_vars *v, char **cwd)
 	if (tmp[0] == '-')
 		return (cdtier(v));
 	else if (tmp[0] == '~')
-		cd_moja(v, &tmp, cwd);
+		return (cd_moja(v));
+	else if (v->collected_cmd[1][0] == '/')
+		return (change_dir(v, v->collected_cmd[1]));
 	else
 	{
 		getcwd(*cwd, PATH_MAX);
-		if (v->collected_cmd[1][0] != '/')
-			strcat(*cwd, "/");
+		strcat(*cwd, "/");
 		strcat(*cwd, tmp);
-	}	
-	i = 2;
-	while (v->collected_cmd[i])
-	{
-		strcat(*cwd, " ");
-		strcat(*cwd, v->collected_cmd[i++]);
+		i = 2;
+		while (v->collected_cmd[i])
+		{
+			strcat(*cwd, " ");
+			strcat(*cwd, v->collected_cmd[i++]);
+		}
+		return (change_dir(v, *cwd));
 	}
-	return (0);
 }
 
 int	cd(t_vars *v)
@@ -134,24 +174,9 @@ int	cd(t_vars *v)
 	cwd = ft_calloc(1, sizeof(char) * PATH_MAX);
 	cd_init(v);
 	if (!v->collected_cmd[1])
-		cwd = strcat(cwd, v->home);
-	else if (v->collected_cmd[1])
-	{
-		//ret = 100;
+		ret = cdhome(v);
+	else
 		ret = cd_extention(v, &cwd);
-	//printf("%d\n", cwd);
-		if (ret != 0)
-			return (ret);
-	}
-	ret = chdir(cwd);
-	if (ret == 0)
-	{
-		setevars("OLDPWD=", v->curr, v);
-		setevars("PWD=", cwd, v);
-		free(cwd);
-		cwd = NULL;
-		return (befree(v, 0, 0));
-	}
 	free(cwd);
-	return (befree(v, 0, 1));
+	return (ret);
 }
