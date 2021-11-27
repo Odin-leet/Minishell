@@ -6,11 +6,15 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 17:33:43 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/27 17:42:55 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/27 21:57:52 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+
+
+
 
 void	children(t_vars *v)
 {
@@ -24,6 +28,7 @@ void	children(t_vars *v)
 			g_gl.status = builtve(v);
 		else
 		{
+            //checkforquotes(&v->collected_cmd[1]);
 			g_gl.failed = execve(v->collected_cmd[0],
 					v->collected_cmd, v->envprinc);
 			if (g_gl.failed == -1)

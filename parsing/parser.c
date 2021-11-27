@@ -6,7 +6,7 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 09:27:46 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/27 21:11:41 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/27 23:35:20 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,10 @@ int	handle_parser(t_parser *p, char **env, t_linked_list **lexer)
 
 	token = (t_file *)((*lexer)->data);
 	if (token->type == 0 && p->i == 0)
-	{
+	{	token->file = (void *)handleenvir((char *)token->file, env);
 		token->file = (void *)handleargs((char *)token->file, env);
 		if (token->file == NULL)
-		{
+		{	
 			free(p->command);
 			return (0);
 		}
@@ -72,9 +72,15 @@ int	handle_parser(t_parser *p, char **env, t_linked_list **lexer)
 		else1(token, env, &(p->command));
 	else if (token->type != 0 && token->type != 1
 		&& ((*lexer)->next) && ((t_file *)((*lexer)->next->data))->type == 0)
+		{//
+				//token->nefile
 		else2(token, &(p->command), lexer, env);
+		}
 	else if (token->type != 1)
+	{
+		printf("erroorororororororororor\n");
 		free(token->file);
+	}
 	if (token->type == 1 || (*lexer)->next == NULL)
 		lastif(&(p->i), &(p->command), lexer, &(p->head));
 	return (1);

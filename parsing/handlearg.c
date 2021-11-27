@@ -6,7 +6,7 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 09:27:02 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/27 20:49:53 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/27 23:33:57 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,6 +175,9 @@ char	*handleargs(char *string, char **env)
 	j = 0;
 	ptr = NULL;
 	ptr2 = NULL;
+	if (string)
+	{
+		
 	if (builtins(string) == 1)
 		return (string);
 	else if (thereisslach(string) == 1)
@@ -183,5 +186,6 @@ char	*handleargs(char *string, char **env)
 	}
 	else
 		string = elsefunction(string, env);
+	}
 	return (string);
 }

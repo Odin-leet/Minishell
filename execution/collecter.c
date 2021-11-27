@@ -6,7 +6,7 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 17:30:42 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/27 21:09:02 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/27 21:57:13 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,9 @@ char	**cmd_collector(t_linked_list *cmd)
 	while (cmd != NULL)
 	{
 		sequance[size] = ft_strdup((char *)cmd->data, 0);
-        checkforquotes(&sequance[size]);
-		cmd = cmd->next;
+        cmd = cmd->next;
+       // if (sequance[size] && builtins(sequance[0]))
+       //     checkforquotes(&sequance[size]);
 		size++;
 	}
 	return (sequance);
@@ -57,6 +58,7 @@ char	**files_collector(t_linked_list *lfile)
 	while (lfile != NULL)
 	{
 		sequance[size] = ft_strdup(((t_file *)lfile->data)->file, 0);
+        checkforquotes(&sequance[size]);
 		lfile = lfile->next;
 		size++;
 	}

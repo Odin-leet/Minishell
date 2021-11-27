@@ -6,7 +6,7 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 09:27:07 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/27 19:50:03 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/27 22:42:07 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ char	*replaceenv3(char *string, char **env)
 		free(string);
 		return (ft_strdup(env[i], j));
 	}
+	free(string);
 	return (NULL);
 }
 
@@ -53,7 +54,9 @@ char	*replaceenv2(char *string, int start, int end, char **env)
 	string = ft_strjoin(string, "=");
 	free(tmp);
 	tmp = NULL;
+	tmp = string;
 	string = replaceenv3(string, env);
+	// free(tmp);
 	return (string);
 }
 
@@ -159,7 +162,10 @@ char	*handleenvir(char *string, char **env)
 				return (ft_substr(string, i + 1, ft_strlen(string) - (i + 1)));
 			else if (string[i] == '_' || (string[i] >= 65 && string[i] <= 90)
 				|| (string[i] >= 97 && string[i] <= 123) || string[i] == '?')
-				return (string = handleenvir1(string, i, start, env));
+				{
+				string = handleenvir1(string, i, start, env);
+				i = 0;	
+				}
 		}
 		i++;
 	}

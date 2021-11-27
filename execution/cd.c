@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec.c                                             :+:      :+:    :+:   */
+/*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ashite <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 11:25:30 by ashite            #+#    #+#             */
-/*   Updated: 2021/11/05 11:25:35 by ashite           ###   ########.fr       */
+/*   Updated: 2021/11/27 21:43:58 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ int	cd_extention(t_vars *v, char **cwd)
 {
 	char	*tmp;
 	int		i;
-
+	checkforquotes(&v->collected_cmd[1]);
 	tmp = v->collected_cmd[1];
 	if (tmp[0] == '-')
 		return (cdtier(v));
@@ -160,6 +160,7 @@ int	cd_extention(t_vars *v, char **cwd)
 		while (v->collected_cmd[i])
 		{
 			strcat(*cwd, " ");
+			checkforquotes(&v->collected_cmd[i]);
 			strcat(*cwd, v->collected_cmd[i++]);
 		}
 		return (change_dir(v, *cwd));
@@ -170,7 +171,8 @@ int	cd(t_vars *v)
 {
 	char	*cwd;
 	int		ret;
-
+	
+	
 	cwd = ft_calloc(1, sizeof(char) * PATH_MAX);
 	cd_init(v);
 	if (!v->collected_cmd[1])

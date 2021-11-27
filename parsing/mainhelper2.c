@@ -6,7 +6,7 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 09:27:29 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/27 09:27:30 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/27 22:57:35 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ int	check_errors1(t_file *file, int i, int j, char *checks)
 int	check_errors(t_linked_list *ptr)
 {
 	t_file	*file;
+//	t_file 	*file2;
 	char	*checks;
 	int		i;
 	int		j;
@@ -49,6 +50,9 @@ int	check_errors(t_linked_list *ptr)
 	{
 		i = 0;
 		file = (t_file *)ptr->data;
+		//if (ptr->next->data)
+		//	file2 = (t_file *)ptr->next->data;
+		//if (file[0] == '|' )
 		if (check_errors1(file, i, j, checks) == 0)
 		{
 			free(checks);
