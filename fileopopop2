@@ -7,13 +7,6 @@ SRC =	parsing/parsing.c\
 		execution/exec.c\
 		execution/cd.c\
 		execution/heredoc.c\
-		execution/herdoc2.c\
-		execution/executer.c\
-		execution/exechelepr.c\
-		execution/filemanager.c\
-		execution/otherbuiltins.c\
-		execution/builtins1.c\
-		execution/collecter.c\
 		parsing/libftfunc.c\
 		parsing/libftfunc1.c\
 		parsing/mainsplit.c\

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ashite <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 11:24:56 by ashite            #+#    #+#             */
-/*   Updated: 2021/11/27 09:06:11 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/27 18:02:34 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ typedef struct s_vars
 	int				*collected_type;
 	t_linked_list	*newhead;
 	t_linked_list	*lcmd;
+	t_linked_list	*herdoc;
 	t_linked_list	*lfile;
 }				t_vars;
 int				get_next_line(int fd, char **line, int BUFFER_SIZE);
@@ -147,5 +148,34 @@ int				heredocs_finder(t_vars *v);
 int				*type_collector(t_linked_list *lfile);
 char			**files_collector(t_linked_list *lfile);
 char			**cmd_collector(t_linked_list *cmd);
+int				quotescount(int *i, int count, char *string, char c);
+int				checkforquotes2(char *string);
+char			*sgl_quotesreplace(char *tmp, char *string, int *c, int *i);
+char			*db_quotesreplace(char *tmp, char *string, int *c, int *i);
+char			*changecollectedcmd(char *string, int count);
+int				ft_atoi(const char *str);
+char			*exportenv(t_vars *pl, char *string);
+void			piper(t_vars *v, int i);
+void			executer(t_linked_list *head, t_vars *v, int i);
+void			parent(t_vars *v);
+void			forker(t_vars *v, int i);
+void			children(t_vars *v);
+int				builtve(t_vars *v);
+int				ft_exit(t_vars *v);
+int				pwd(void);
+int				echo(t_vars *v);
+void			echo_logie(t_vars *v, int i, int n);
+void			file_manager(t_vars **v);
+int				is_not_digit(char *s);
+int				exec_initializer(t_vars *v, t_linked_list *head);
+void			fail(char *s, int act);
+int				exit_status(pid_t pid, int fd);
+int				get_status(int status);
+void			close_and_exit(int fd);
+int				ft_strcmp(const char *s1, const char *s2);
+void			ctrl_handler(int sig);
+
+
+
 
 #endif

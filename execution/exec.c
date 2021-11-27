@@ -6,499 +6,11 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 11:25:30 by ashite            #+#    #+#             */
-/*   Updated: 2021/11/27 09:55:40 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/27 17:41:25 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-
-char	**cmd_collector(t_linked_list *cmd)
-{
-	char			**sequance;
-	t_linked_list	*tempo;
-	int				size;
-
-	size = 0;
-	tempo = cmd;
-	while (tempo != NULL)
-	{
-		tempo = tempo->next;
-		size++;
-	}
-	sequance = malloc(sizeof(char *) * (size + 1));
-	sequance[size] = NULL;
-	size = 0;
-	while (cmd != NULL)
-	{
-		sequance[size] = ft_strdup((char *)cmd->data, 0);
-		cmd = cmd->next;
-		size++;
-	}
-	return (sequance);
-}
-
-char	**files_collector(t_linked_list *lfile)
-{
-	char			**sequance;
-	t_linked_list	*tempo;
-	int				size;
-
-	size = 0;
-	tempo = lfile;
-	while (tempo != NULL)
-	{
-		tempo = tempo->next;
-		size++;
-	}
-	sequance = malloc(sizeof(char *) * (size + 1));
-	sequance[size] = NULL;
-	size = 0;
-	while (lfile != NULL)
-	{
-		sequance[size] = ft_strdup(((t_file *)lfile->data)->file, 0);
-		lfile = lfile->next;
-		size++;
-	}
-	return (sequance);
-}
-
-int	*type_collector(t_linked_list *lfile)
-{
-	int				*tab;
-	t_linked_list	*tempo;
-	int				size;
-
-	size = 0;
-	tempo = lfile;
-	while (tempo != NULL)
-	{
-		tempo = tempo->next;
-		size++;
-	}
-	tab = malloc(sizeof(int *) * (size));
-	size = 0;
-	while (lfile != NULL)
-	{
-		tab[size] = ((t_file *)lfile->data)->type;
-		lfile = lfile->next;
-		size++;
-	}
-	return (tab);
-}
-
-int	quotescount(int *i, int count, char *string, char c)
-{
-	if (string[*i] == c)
-	{
-		count++;
-		(*i)++;
-		if (string[*i] == c)
-		{
-			(*i)++;
-			count++;
-		}
-		else
-		{
-			while (string[*i] != c && string[*i])
-				(*i)++;
-			if (string[*i] == c)
-			{
-				count++;
-				(*i)++;
-			}
-		}
-	}
-	return (count);
-}
-
-int	checkforquotes2(char *string)
-{
-	int	i;
-	int	count;
-
-	i = 0;
-	count = 0;
-	while (string[i] != '\0')
-	{
-		count = quotescount(&i, count, string, '\"');
-		count = quotescount(&i, count, string, '\'');
-		i++;
-	}
-	return (count);
-}
-
-char	*db_quotesreplace(char *tmp, char *string, int *c, int *i)
-{
-	if (string[*i] == '\"')
-	{
-		(*i)++;
-		if (string[*i] == '\"')
-			(*i)++;
-		else
-		{
-			while (string[*i] != '\"' && string[*i])
-				tmp[(*c)++] = string[(*i)++];
-			if (string[(*i)] == '\"')
-					(*i)++;
-		}
-	}
-	return (tmp);
-}
-
-char	*sgl_quotesreplace(char *tmp, char *string, int *c, int *i)
-{
-	if (string[*i] == '\'')
-	{
-		(*i)++;
-		if (string[*i] == '\'')
-			(*i)++;
-		else
-		{
-			while (string[*i] != '\'' && string[*i])
-				tmp[(*c)++] = string[(*i)++];
-			if (string[(*i)] == '\'')
-					(*i)++;
-		}
-	}
-	return (tmp);
-}
-
-char	*changecollectedcmd(char *string, int count)
-{
-	char	*tmp;
-	int		i;
-	int		c;
-
-	i = 0;
-	c = 0;
-	tmp = NULL;
-	tmp = malloc(sizeof(char) * (ft_strlen(string) - count + 1));
-	while (string[i] != '\0')
-	{
-		tmp = db_quotesreplace(tmp, string, &c, &i);
-		tmp = sgl_quotesreplace(tmp, string, &c, &i);
-		if (string[i] != '\0')
-		{
-			tmp[c] = string[i];
-			c++;
-			i++;
-		}
-	}
-	tmp[c] = '\0';
-	free(string);
-	return (tmp);
-}
-
-void	echo_logie(t_vars *v, int i, int n)
-{
-	int	count;
-
-	while (v->collected_cmd[i])
-	{
-		count = checkforquotes2(v->collected_cmd[i]);
-		v->collected_cmd[i] = changecollectedcmd(v->collected_cmd[i], count);
-		if (v->collected_cmd[i + 1])
-			printf("%s ", v->collected_cmd[i]);
-		else
-			printf("%s", v->collected_cmd[i]);
-		i++;
-	}
-	if (n != 1)
-		printf("\n");
-}
-
-int	echo(t_vars *v)
-{
-	int	i;
-	int	j;
-	int	n;
-
-	i = 1;
-	if (!(v->collected_cmd) || !v->collected_cmd[1])
-		return (printf("\n") - 1);
-	while (v->collected_cmd[i][0] == '-')
-	{
-		n = 0;
-		j = 1;
-		while (v->collected_cmd[i][j] == 'n' && v->collected_cmd[i][j] != '\0')
-			j++;
-		if (v->collected_cmd[i][j] != 'n' && v->collected_cmd[i][j - 1] == 'n' \
-		&& v->collected_cmd[i][j] == '\0')
-			n = 1;
-		if (n != 1)
-			break ;
-		if (!v->collected_cmd[i + 1] && n == 1)
-			return (0);
-		i++;
-	}
-	echo_logie(v, i, n);
-	return (0);
-}
-
-int	pwd(void)
-{
-	char	cwd[256];
-
-	getcwd(cwd, sizeof(cwd));
-	printf("%s\n", cwd);
-	return (0);
-}
-
-char	*exportenv(t_vars *pl, char *string)
-{
-	int	i;
-	int	count;
-	int	c;
-
-	i = 0;
-	while (pl->envprinc[++i] != NULL)
-	{
-		count = ft_strlen(string);
-		c = thereisequ(pl->envprinc[i]);
-		if (c != -1)
-		{
-			if (count < c)
-				count = c;
-		}
-		else
-		{
-			c = ft_strlen(pl->envprinc[i]);
-			if (count < c)
-				count = c;
-		}
-		if (strncmp(pl->envprinc[i], string, count) == 0)
-			return (ft_substr(pl->envprinc[i], count + 1,
-					ft_strlen(pl->envprinc[i]) - count));
-	}
-	return (NULL);
-}
-
-void	file_manager(t_vars *v)
-{
-	int	count;
-
-	count = 0;
-	
-
-	//dprintf(2,"%s -----n", v->collected_files[0]);
-	while ( v->collected_files && v->collected_files[count])
-	{
-		if (v->out != 0 && (v->collected_type[count] == 4
-				|| v->collected_type[count] == 3))
-			close(v->out);
-		else if (v->in != 1 && (v->collected_type[count] == 2
-				|| v->collected_type[count] == 5))
-			close(v->in);
-		if (v->collected_type[count] == 3)
-			v->out = open(v->collected_files[count],
-					O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		else if (v->collected_type[count] == 4)
-			v->out = open(v->collected_files[count],
-					O_WRONLY | O_CREAT | O_APPEND, 0644);
-		else if (v->collected_type[count] == 2 || v->collected_type[count] == 5)
-		{
-			v->in = open(v->collected_files[count], O_RDONLY, 0644);
-		}
-		if (v->in < 0 || v->out < 0)
-			write(2, "No such file or directory\n", 26);
-		count++;
-	}
-
-	free_pre(v->collected_files, 0);
-}
-
-int	ft_atoi(const char *str)
-{
-	long long	nbr;
-	int			i;
-	int			s;
-
-	i = 0;
-	nbr = 0;
-	s = 1;
-	while (str[i] == 32 || (str[i] < 14 && str[i] > 8))
-		i++;
-	if (str[i] == '-' || str[i] == '+')
-	{
-		if (str[i++] == '-')
-			s = -1;
-	}
-	while (str[i] != '\0' && str[i] >= '0' && str[i] <= '9')
-	{
-		nbr = nbr * 10 + (str[i++] - '0');
-		if (nbr > 4294967295)
-		{
-			return (-1);
-		}
-	}
-	return (nbr * s);
-}
-
-int	is_not_digit(char *s)
-{
-	int i;
-
-	i = 0;
-	while(s[i])
-	{
-		if (s[i] < '0' || s[i] > '9')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-void ft_exit(t_vars *v)
-{
-	char **s;
-
-	s = v->collected_cmd;
-	//curr=NULL exit (0)
-	if (!(s[1]))
-		return (exit(0));
-	else if ((is_not_digit(s[1]) == 0) && !(s[2]))
-		exit(ft_atoi(s[1]));
-	//is digit && next = NULL exit(digit)
-	//else if digit && next != NULL toomany args
-	//else if not digit exit(1)
-}
-
-int	builtve(t_vars *v)
-{
-	g_gl.failed = 0;
-	if (ft_strncmp(v->collected_cmd[0], "echo",
-			ft_strlen(v->collected_cmd[0])) == 0)
-		g_gl.failed = echo(v);
-	if (ft_strncmp(v->collected_cmd[0], "cd",
-			ft_strlen(v->collected_cmd[0])) == 0)
-		g_gl.failed = cd(v);
-	if (ft_strncmp(v->collected_cmd[0], "pwd",
-			ft_strlen(v->collected_cmd[0])) == 0)
-		g_gl.failed = pwd();
-	if (ft_strncmp(v->collected_cmd[0], "unset",
-			ft_strlen(v->collected_cmd[0])) == 0)
-		g_gl.failed = unset(v);
-	if (ft_strncmp(v->collected_cmd[0], "env",
-			ft_strlen(v->collected_cmd[0])) == 0)
-		g_gl.failed = env(v);
-	if (ft_strncmp(v->collected_cmd[0], "exit",
-			ft_strlen(v->collected_cmd[0])) == 0)
-		ft_exit(v);
-	if (ft_strncmp(v->collected_cmd[0], "export",
-			ft_strlen(v->collected_cmd[0])) == 0)
-		g_gl.failed = export(v);
-	//if (g_gl->failed )
-	return (g_gl.failed);
-}
-
-void	piper(t_vars *v, int i)
-{
-	dup2(v->in, 0);
-	dup2(v->out, 1);
-	if (v->in != 0)
-		close(v->in);
-	if (v->out != 1)
-		close(v->out);
-	if (v->pin != 0 && i == 1)
-		close(v->pin);
-}
-
-int	exec_initializer(t_vars *v, t_linked_list *head)
-{
-	t_linked_list	*tmp;
-	int				ret;
-
-	ret = 0;
-	v->collected_cmd = NULL;
-	v->collected_files = NULL;
-	v->collected_type = 0;
-	g_gl.herdo = 0;
-	g_gl.herdoc = 0;
-	v->in = 0;
-	v->pin = 0;
-	v->out = 1;
-	tmp = head;
-	v->cmd_size = 0;
-	while (tmp)
-	{
-		v->lfile = ((t_command *)tmp->data)->files;
-		(v->cmd_size)++;
-		if(v->lfile !=  NULL)
-			ret = heredocs_finder(v);
-
-	//	dprintf(2, "count == %s \n",v->collected_files[0]);
-		tmp = tmp->next;
-	}
-	
-	v->pid = malloc(sizeof(pid_t) * (v->cmd_size));
-	return (ret);
-}
-
-void	fail(char *s, int act)
-{
-	if (act == 0 && s)
-	{
-		write(2, "Minishell: ", 12);
-		write(2, s, ft_strlen(s));
-		write(2, ":command not found\n", 19);
-	}	
-}
-
-void	children(t_vars *v)
-{
-	file_manager(v);
-	piper(v, 1);
-	g_gl.failed = 0;
-	g_gl.status = 0;
-	if (v->collected_cmd && v->collected_cmd[0])
-	{
-		if (builtins(v->collected_cmd[0]))
-			g_gl.status = builtve(v);
-		else
-		{
-			g_gl.failed = execve(v->collected_cmd[0], v->collected_cmd, v->envprinc);
-			if (g_gl.failed == -1)
-				fail(v->collected_cmd[0], 0);
-			exit(127);
-		}
-	}
-	exit(1);
-}
-
-void	forker(t_vars *v, int i)
-{
-	v->pid[i] = fork();
-	if (v->pid[i] == 0)
-		children(v);
-	else
-	{
-		if (v->in != 0)
-			close(v->in);
-		if (v->out != 1)
-			close(v->out);
-		v->in = v->pin;
-	}
-}
-
-void	parent(t_vars *v)
-{
-	int	s_out;
-
-	s_out = dup(1);
-	file_manager(v);
-	piper(v, 0);
-	if (v->collected_cmd && v->collected_cmd[0])
-	{
-		if (builtins(v->collected_cmd[0]))
-		{
-			g_gl.status = builtve(v);
-			// if (g_gl.status == 1)
-			// 	fail(v->collected_cmd[0], g_gl.status);
-		}
-	}
-	dup2(s_out, 1);
-}
 
 int	get_fucking_status(int status)
 {
@@ -506,10 +18,8 @@ int	get_fucking_status(int status)
 		return (WEXITSTATUS(status));
 	if (WIFSIGNALED(status) == 1 && g_gl.failed < 0)
 		return (128 + WTERMSIG(status));
-	else if(g_gl.failed > 0 &&WIFSIGNALED(status) == 1 )
+	else if (g_gl.failed > 0 && WIFSIGNALED(status) == 1)
 		return (1);
-
-		printf("asdasdasdasdas im here \n");
 	return (0);
 }
 
@@ -527,16 +37,24 @@ void	pid_manager(t_vars *v)
 	free(v->pid);
 }
 
-void	executer(t_linked_list *head, t_vars *v, int i)
+void	execinitialisation(t_vars **v)
 {
-	if (v->collected_cmd)
-	{
-		if ((v->collected_cmd && v->collected_cmd[0]
-				&& i == 0 && !(head->next)) && builtins(v->collected_cmd[0]))
-			parent(v);
-		else
-			forker(v, i);
-	}
+	if ((*v)->collected_files)
+		free_pre((*v)->collected_files, 0);
+	if ((*v)->collected_type)
+		free((*v)->collected_type);
+	if ((*v)->collected_cmd)
+		free_pre((*v)->collected_cmd, 0);
+		(*v)->collected_files = NULL;
+		(*v)->collected_files = NULL;
+		(*v)->collected_cmd = NULL;
+}
+
+void	execinistia2(t_vars **v)
+{
+	(*v)->collected_files = NULL;
+	(*v)->collected_files = NULL;
+	(*v)->collected_cmd = NULL;
 }
 
 void	exec(t_linked_list *head, t_vars *v)
@@ -550,6 +68,8 @@ void	exec(t_linked_list *head, t_vars *v)
 	{
 		v->lcmd = ((t_command *)head->data)->nameargs;
 		v->lfile = ((t_command *)head->data)->files;
+		v->collected_type = type_collector(v->lfile);
+		v->collected_files = files_collector(v->lfile);
 		v->collected_cmd = cmd_collector(v->lcmd);
 		pipe(fd);
 		v->pin = fd[0];
@@ -559,25 +79,8 @@ void	exec(t_linked_list *head, t_vars *v)
 		executer(head, v, i);
 		i++;
 		head = head->next;
-		free_pre(v->collected_cmd, 0);
-		free_pre(v->collected_files, 0);
-		// if(v->collected_type)
-		// 	free(v->collected_type);
-		v->collected_cmd = NULL;
+		execinitialisation(&v);
 	}
 	pid_manager(v);
 	g_gl.isin = 0;
 }
-
-/*
-free_pre(v->collected_files, 0);
-free(v->collected_type);
-*free(v->collected_cmd);
-*[free table in nd out cause we dup 
-*the cmd not just assigning the pointer]
-*free(v->collected_files);
-*free(v->collected_type);
-cat << d | << hjsd >f
-cat << k << f
-cat << k > file0 << f> file1
-*/

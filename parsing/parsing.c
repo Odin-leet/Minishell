@@ -6,7 +6,7 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 09:27:51 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/27 09:27:54 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/27 18:52:35 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,12 +124,12 @@ int	funmain22(t_vars *v, char **split, char *buffer)
 		head = NULL;
 		parseur = NULL;
 		buffer = readline("Minishell 0.0$ ");
+		add_history(buffer);
 		if (buffer == NULL)
 		{
 			printf("exit\n");
 			exit(0);
 		}
-		add_history(buffer);
 		if (buffer[0] != '\0' && (checkspace(buffer) == 1))
 		{
 			g_gl.isin = 1;
@@ -138,13 +138,17 @@ int	funmain22(t_vars *v, char **split, char *buffer)
 			if (check_errors(head) != 0)
 			{
 				parseur = parser(head, v->envprinc);
-				free_head2(head);
+				if (parseur == NULL)
+					free_files_linked(head);
+				else
+					free_head2(head);
 				exec(parseur, v);
 				free(split);
 				free_lin_command(parseur);
 			}
 			else
 			{
+				printf("sadasdasdasdasdasdas\n");
 				head1 = head;
 				while (head1)
 				{
