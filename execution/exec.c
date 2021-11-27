@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ashite <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 11:25:30 by ashite            #+#    #+#             */
-/*   Updated: 2021/11/05 11:25:35 by ashite           ###   ########.fr       */
+/*   Updated: 2021/11/27 09:55:40 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -533,6 +533,8 @@ void	exec(t_linked_list *head, t_vars *v)
 		i++;
 		head = head->next;
 		free_pre(v->collected_cmd, 0);
+		free_pre(v->collected_files, 0);
+		free(v->collected_type);
 		v->collected_cmd = NULL;
 	}
 	pid_manager(v);

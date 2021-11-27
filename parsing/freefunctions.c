@@ -1,4 +1,16 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   freefunctions.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/27 09:26:31 by aali-mou          #+#    #+#             */
+/*   Updated: 2021/11/27 09:26:33 by aali-mou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../minishell.h"
 
 void	free_head2(t_linked_list *head)
 {
@@ -17,17 +29,13 @@ void	free_head(t_linked_list *head)
 	free(head->data);
 	free(head);
 }
+
 void	free_head3(t_linked_list *head)
 {
-	//t_file	*file2;
-
 	if (head == NULL)
 		return ;
 	free_head(head->next);
-	//file2 = (t_file *)(head->next->data);
-	//printf("%s||",file2->file);
 	free_files_linked(head->data);
-	//free((char *)file2->file);
 	free(head->data);
 	free(head);
 }

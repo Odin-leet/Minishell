@@ -6,7 +6,7 @@
 /*   By: ashite <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 11:24:56 by ashite            #+#    #+#             */
-/*   Updated: 2021/11/24 07:47:35 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/27 09:06:11 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@
 # include <sys/syslimits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
-
 
 typedef struct s_split{
 	int		k;
@@ -54,9 +53,9 @@ typedef struct s_parser {
 typedef struct s_global {
 	int	status;
 	int	isin;
-	int herdo;
-	int failed;
-	int herdoc;
+	int	herdo;
+	int	failed;
+	int	herdoc;
 }				t_global;
 t_global	g_gl;
 typedef struct s_vars
