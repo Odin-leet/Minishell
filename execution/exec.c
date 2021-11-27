@@ -485,8 +485,8 @@ void	exec(t_linked_list *head, t_vars *v)
 		i++;
 		head = head->next;
 		free_pre(v->collected_cmd, 0);
-		free_pre(v->collected_files, 0);
-		freev->collected_type;
+		// free_pre(v->collected_files, 0);
+		// free(v->collected_type);
 		v->collected_cmd = NULL;
 	}
 	pid_manager(v);

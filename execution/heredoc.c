@@ -146,6 +146,7 @@ int	heredocs_finder(t_vars *v)
 				free(filename);
 				free_pre(v->collected_files, 0);
                 free(v->collected_type);
+				v->collected_type = NULL;
 				return (1);
 			}
 			v->collected_type[i] = 2;

@@ -23,14 +23,17 @@ void	append(t_linked_list **head_ref, void *data)
 
 void	*free_pre(char **split, int k)
 {
-	while (split[k])
+	if (split)
 	{
-		free(split[k]);
-		split[k] = NULL;
-		k++;
+		while (split[k])
+		{
+			free(split[k]);
+			split[k] = NULL;
+			k++;
+		}
+		free(split);
+		split = NULL;
 	}
-	free(split);
-	split = NULL;
 	return (NULL);
 }
 
@@ -113,7 +116,7 @@ int	funmain22(t_vars *v, char **split, char *buffer)
 		buffer = readline("Minishell 0.0$ ");
 		if (buffer == NULL)
 		{
-			printf("Exit");
+			printf("exit\n");
 			exit(0);
 		}
 		add_history(buffer);
