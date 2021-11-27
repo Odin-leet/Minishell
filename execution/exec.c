@@ -61,9 +61,12 @@ void	exec(t_linked_list *head, t_vars *v)
 {
 	int	fd[2];
 	int	i;
+	t_linked_list *tmp;
 
+	tmp = head;
 	i = 0;
 	g_gl.status = exec_initializer(v, head);
+
 	while (head && g_gl.herdoc == 0)
 	{
 		v->lcmd = ((t_command *)head->data)->nameargs;
@@ -81,6 +84,25 @@ void	exec(t_linked_list *head, t_vars *v)
 		head = head->next;
 		execinitialisation(&v);
 	}
+	if (v->in != 0)
+		close(v->in);
+	if (v->out != 1)
+		close(v->out);
+	if (v->pin != 1 && v->pin != 0)
+		close(v->pin);
+	close(fd[0]);
+	close(fd[1]);
 	pid_manager(v);
 	g_gl.isin = 0;
+	while (tmp)
+	{
+		v->lfile =((t_command *)tmp->data)->files;
+		while (v->lfile && v->lfile->data)
+		{
+			if (((t_file *)v->lfile->data)->type == 5)
+				unlink(((t_file *)v->lfile->data)->file);
+			v->lfile = v->lfile->next;
+		}
+		tmp = tmp->next;
+	}
 }
