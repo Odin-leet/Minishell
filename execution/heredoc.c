@@ -51,6 +51,7 @@ int	exit_status(pid_t pid, int fd)
 	int	status;
 
 	waitpid(pid, &status, 0);
+	g_gl.herdo = 0;
 	exit_status = get_status(status);
 	close(fd);
 	if (exit_status == 2)
@@ -67,6 +68,7 @@ void	signals(void)
 {
 	if (signal(SIGINT, ctrl_handler) == SIG_ERR)
 		exit(1);
+	signal(SIGQUIT, SIG_IGN);
 }
 
 int	heredoc(char *delimeter, char *file_name)
@@ -93,9 +95,19 @@ int	heredoc(char *delimeter, char *file_name)
 		}
 		close_and_exit(fd);
 	}
-    g_gl.herdo = 0;
 	return (exit_status(pid, fd));
 }
+
+char	*ft_strjoin_free(char *s1, char *s2)
+{
+	char *ret;
+
+	ret = ft_strjoin(s1, s2);
+	free(s1);
+	s1 = NULL;
+	return (ret);
+}
+
 
 char	*ft_rng(void)
 {
@@ -109,7 +121,7 @@ char	*ft_rng(void)
 	str_nb = ft_itoa(nb);
 	str_modulo = ft_itoa(nb % 3);
 	tmp = ft_strdup("/tmp/", 0);
-	tmp = ft_strjoin(tmp, str_nb);
+	tmp = ft_strjoin_free(tmp, str_nb);
 	name = ft_strjoin(tmp, str_modulo);
 	free(str_nb);
 	free(str_modulo);

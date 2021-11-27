@@ -62,7 +62,6 @@ int	returnthereisenv(int count, int count2, char **env, char *tmp)
 		}
 			if (env[i][j] == '\0')
 				count2 = j;
-		//printf("%s|count = %d || %s|count = %d ||\n",tmp, count,ft_substr(env[i], 0 , count2), count2);	
 		if (count2 > count)
 			count3 = count2;
 		if (strncmp(tmp, env[i], count3) == 0)
@@ -406,8 +405,6 @@ int	checkifitscomp(char **string)
 
 	i = 0;
 	checkforquotes(string);
-			printf("%s\n",*string);
-
 	if (i == 0 && (*string)[i] == '=')
 		return (1);
 	while ((*string)[i] != '\0' && (*string)[i] != '=')
@@ -435,10 +432,7 @@ int	exporthelper(t_vars *pl)
 			return (0);
 		}
 		else
-		{
-		printf("%s\n",pl->collected_cmd[i]);
 			addenv(pl, pl->collected_cmd[i]);
-		}
 		i++;
 	}
 	return (1);

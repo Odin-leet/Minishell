@@ -56,7 +56,7 @@ int	handle_parser(t_parser *p, char **env, t_linked_list **lexer)
 		&& ((*lexer)->next) && ((t_file *)((*lexer)->next->data))->type == 0)
 		else2(token, &(p->command), lexer);
 	else if (token->type != 1)
-		printf("error\n");
+		printf("Error\n");
 	if (token->type == 1 || (*lexer)->next == NULL)
 		lastif(&(p->i), &(p->command), lexer, &(p->head));
 	return (1);

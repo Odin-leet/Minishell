@@ -49,6 +49,8 @@ char	*ft_strdup(char *s, size_t i)
 
 	k = 0;
 	j = i;
+	if (!s)
+		return (NULL);
 	while (s[j] != '\0')
 	{
 		j++;

@@ -74,7 +74,6 @@ t_linked_list	*mainhelper3(char **split)
 		if (checkforpipe(split[n]) == 1)
 		{
 			mainhelper(split[n], j, &head);
-			printf("split == |%s|\n",split[n]);
 			free(split[n]);
 		}
 		else

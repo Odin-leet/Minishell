@@ -81,7 +81,6 @@ int	*type_collector(t_linked_list *lfile)
 	while (lfile != NULL)
 	{
 		tab[size] = ((t_file *)lfile->data)->type;
-		printf("tab[size] == %d\n", tab[size]);
 		lfile = lfile->next;
 		size++;
 	}
@@ -294,7 +293,7 @@ void	file_manager(t_vars *v)
 		else if (v->collected_type[count] == 2 || v->collected_type[count] == 5)
 		{
 			if ((v->in = open(v->collected_files[count], O_RDONLY, 0644)) == -1)
-				printf("la laa mabghiiitch ! : %s\n", v->collected_files[count]);
+				printf("la laa mabghiiitch ! n7el l file : %s\n", v->collected_files[count]);
 		}	
 		count++;
 	}
@@ -469,8 +468,6 @@ void	exec(t_linked_list *head, t_vars *v)
 
 	i = 0;
 	g_gl.status = exec_initializer(v, head);
-		if (g_gl.status == 1)
-			printf("fucked\n");
 	while (head)
 	{
 		v->lcmd = ((t_command *)head->data)->nameargs;
@@ -481,14 +478,15 @@ void	exec(t_linked_list *head, t_vars *v)
 		v->out = fd[1];
 		if (!(head->next))
 			v->out = 1;
-		if ((i == 0 && !(head->next)) && v->collected_cmd && builtins(v->collected_cmd[0]))
+		if ((v->collected_cmd && v->collected_cmd[0] && i == 0 && !(head->next)) && v->collected_cmd[0] && builtins(v->collected_cmd[0]))
 			parent(v);
 		else
 			forker(v, i);
 		i++;
 		head = head->next;
 		free_pre(v->collected_cmd, 0);
-		
+		free_pre(v->collected_files, 0);
+		freev->collected_type;
 		v->collected_cmd = NULL;
 	}
 	pid_manager(v);

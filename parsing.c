@@ -106,14 +106,14 @@ int	funmain22(t_vars *v, char **split, char *buffer)
 	t_linked_list	*head;
 	t_linked_list	*parseur;
 
-		while (1)
+	while (1)
 	{
 		head = NULL;
 		parseur = NULL;
 		buffer = readline("Minishell 0.0$ ");
 		if (buffer == NULL)
 		{
-			printf("exit");
+			printf("Exit");
 			exit(0);
 		}
 		add_history(buffer);
@@ -138,7 +138,6 @@ int	funmain22(t_vars *v, char **split, char *buffer)
 				while(head1)
 				{
 				file = (t_file*)head1->data;
-				printf("head |%s| \n", file->file);
 				head1 = head1->next;
 
 				}
