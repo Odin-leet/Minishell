@@ -12,6 +12,7 @@
 
 #include "../minishell.h"
 
+
 char	**cmd_collector(t_linked_list *cmd)
 {
 	char			**sequance;
@@ -307,6 +308,35 @@ void	file_manager(t_vars *v)
 	free_pre(v->collected_files, 0);
 }
 
+int	is_not_digit(char *s)
+{
+	int i;
+
+	i = 0;
+	while(s[i])
+	{
+		if (c < '0' || c > '9')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+void ft_exit(t_vars *v)
+{
+	char **s;
+
+	s = s;
+	//curr=NULL exit (0)
+	if (!(s[1]))
+		return (exit(0));
+	else if ((is_not_digit(s[1]) == 0) && !(s[2]))
+		exit(ft_atoi(s[1]));
+	//is digit && next = NULL exit(digit)
+	//else if digit && next != NULL toomany args
+	//else if not digit exit(1)
+}
+
 int	builtve(t_vars *v)
 {
 	g_gl.failed = 0;
@@ -327,7 +357,7 @@ int	builtve(t_vars *v)
 		g_gl.failed = env(v);
 	if (ft_strncmp(v->collected_cmd[0], "exit",
 			ft_strlen(v->collected_cmd[0])) == 0)
-		exit(1);
+		ft_exit(1);
 	if (ft_strncmp(v->collected_cmd[0], "export",
 			ft_strlen(v->collected_cmd[0])) == 0)
 		g_gl.failed = export(v);
