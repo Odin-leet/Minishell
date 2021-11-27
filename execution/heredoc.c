@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ashite <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 11:25:30 by ashite            #+#    #+#             */
-/*   Updated: 2021/11/05 11:25:35 by ashite           ###   ########.fr       */
+/*   Updated: 2021/11/27 09:52:28 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,6 +127,7 @@ char	*ft_rng(void)
 	tmp = ft_strdup("/tmp/", 0);
 	tmp = ft_strjoin_free(tmp, str_nb);
 	name = ft_strjoin(tmp, str_modulo);
+	free(tmp);
 	free(str_nb);
 	free(str_modulo);
 	return (name);
@@ -156,7 +157,6 @@ int	heredocs_finder(t_vars *v)
 			v->collected_type[i] = 2;
 			free(v->collected_files[i]);
 			v->collected_files[i] = ft_strdup(filename, 0);
-			
 			free(filename);
 			filename = NULL;
 		}

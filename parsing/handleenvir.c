@@ -1,5 +1,18 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   handleenvir.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/27 09:27:07 by aali-mou          #+#    #+#             */
+/*   Updated: 2021/11/27 09:27:08 by aali-mou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../minishell.h"
 #include <string.h>
+
 char	*replaceenv3(char *string, char **env)
 {
 	int	i;
@@ -80,21 +93,17 @@ char	*handleenvir2(char *string, char *tmp, char *tmp2)
 	return (string);
 }
 
-//char	*replacedolar(char *string, int start, int end)
-//{
-//
-//}
-char 	*checkingforendofaenv(char *string, char *tmp2, int *i, int *end)
+char	*checkingforendofaenv(char *string, char *tmp2, int *i, int *end)
 {
 	(*i)++;
 	while (string[*i] != '\0')
 	{
 		if (string[*i] != '_' && (ft_isdigit(string[*i]) == 0)
-			&& (ft_isalpha(string[*i]) == 0) && string[*i] != '?')
+			&& (ft_isalpha2(string[*i]) == 0) && string[*i] != '?')
 		{
 			*end = *i;
 			tmp2 = ft_substr(string, *end, ft_strlen(string) - *end);
-			return(tmp2);
+			return (tmp2);
 		}
 		else
 			(*i)++;
@@ -107,16 +116,16 @@ char	*handleenvir1(char *string, int i, int start, char **env)
 	char	*tmp2;
 	int		end;
 	char	*tmp;
-	char *tmp3;
+	char	*tmp3;
 
 	tmp2 = NULL;
 	tmp = NULL;
 	if (start != 0)
 		tmp = ft_substr(string, 0, start);
-	//printf("%d %d \n", i, start);		
 	end = 0;
-	tmp2 = checkingforendofaenv(string, tmp2, &i , &end);
-	if ((end != 0 && string[end - 1] == '?') || (end == 0 && string[i - 1] == '?'))
+	tmp2 = checkingforendofaenv(string, tmp2, &i, &end);
+	if ((end != 0 && string[end - 1] == '?')
+		|| (end == 0 && string[i - 1] == '?'))
 	{
 		tmp3 = string;
 		string = handleenvir2(ft_itoa(g_gl.status), tmp, tmp2);
@@ -149,7 +158,7 @@ char	*handleenvir(char *string, char **env)
 			if (string[i] >= 48 && string[i] <= 57)
 				return (ft_substr(string, i + 1, ft_strlen(string) - (i + 1)));
 			else if (string[i] == '_' || (string[i] >= 65 && string[i] <= 90)
-					|| (string[i] >= 97 && string[i] <= 123) || string[i] == '?')
+				|| (string[i] >= 97 && string[i] <= 123) || string[i] == '?')
 				return (string = handleenvir1(string, i, start, env));
 		}
 		i++;

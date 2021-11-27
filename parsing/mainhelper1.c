@@ -1,4 +1,16 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mainhelper1.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/27 09:27:24 by aali-mou          #+#    #+#             */
+/*   Updated: 2021/11/27 09:27:25 by aali-mou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../minishell.h"
 
 int	mainhelperhelper2(int i, char *string, int c, t_linked_list **head)
 {
@@ -17,7 +29,6 @@ int	mainhelperhelper2(int i, char *string, int c, t_linked_list **head)
 		if (string[i] != '|' && string[i] != '>' && string[i] != '<')
 		{	
 			storeinfos(ft_substr(string, c, j), head);
-			//free(string);
 			break ;
 		}
 	}
@@ -36,12 +47,11 @@ int	mainhelperhelper1(int i, char *string, t_linked_list **head)
 	in_db = traitmask(string, 1);
 	in_sgl = traitmask(string, 0);
 	t = i;
-	if(string)
+	if (string)
 	{
-	while (string[i] != '\0' &&( (in_db[i] == 1 || in_sgl[i] == 1)
-			|| (string[i] != '|' && string[i] != '>' && string[i] != '<')))
-		i++;
-
+		while (string[i] != '\0' && ((in_db[i] == 1 || in_sgl[i] == 1)
+				|| (string[i] != '|' && string[i] != '>' && string[i] != '<')))
+			i++;
 	}
 	if (i != 0)
 		storeinfos(ft_substr(string, t, i - t), head);

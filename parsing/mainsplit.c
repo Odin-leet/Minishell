@@ -1,6 +1,18 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mainsplit.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aali-mou <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/27 09:03:15 by aali-mou          #+#    #+#             */
+/*   Updated: 2021/11/27 09:03:24 by aali-mou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-void	traitmaskhelper(int i,const char *s, int *env_sq, int *env_dq)
+#include "../minishell.h"
+
+void	traitmaskhelper(int i, const char *s, int *env_sq, int *env_dq)
 {
 	if (s[i] == '\'' && *env_sq == 0)
 		*env_sq = 1;

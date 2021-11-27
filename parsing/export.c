@@ -1,4 +1,16 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/27 09:26:22 by aali-mou          #+#    #+#             */
+/*   Updated: 2021/11/27 09:29:51 by aali-mou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../minishell.h"
 #include <string.h>
 
 int	ft_isalpha2(int c)
@@ -60,8 +72,8 @@ int	returnthereisenv(int count, int count2, char **env, char *tmp)
 			}
 			j++;
 		}
-			if (env[i][j] == '\0')
-				count2 = j;
+		if (env[i][j] == '\0')
+			count2 = j;
 		if (count2 > count)
 			count3 = count2;
 		if (strncmp(tmp, env[i], count3) == 0)

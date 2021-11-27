@@ -1,4 +1,16 @@
-#include "minishell.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/11/27 09:27:51 by aali-mou          #+#    #+#             */
+/*   Updated: 2021/11/27 09:27:54 by aali-mou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../minishell.h"
 #include <dirent.h>
 
 void	append(t_linked_list **head_ref, void *data)
@@ -57,12 +69,12 @@ int	checkspace(char *buffer)
 	int	i;
 
 	i = 0;
-	while(buffer[i] != '\0')
+	while (buffer[i] != '\0')
 	{
-		if(buffer[i] == ' ')
+		if (buffer[i] == ' ')
 			i++;
 		else
-			return(1);
+			return (1);
 	}
 	return (0);
 }
@@ -73,41 +85,39 @@ void	handlesig(int sig)
 	{
 		if (sig == SIGINT)
 		{
-			if(g_gl.isin == 1)
+			if (g_gl.isin == 1)
 			{
-			write(1, "\n", 1);
+				write(1, "\n", 1);
 				g_gl.isin = 0;
 			}
 			else
 			{
-			write(1, "\n", 1);
-			rl_on_new_line();
-			rl_replace_line("", 0);
-			rl_redisplay();
-			g_gl.status = 1;
+				write(1, "\n", 1);
+				rl_on_new_line();
+				rl_replace_line("", 0);
+				rl_redisplay();
+				g_gl.status = 1;
 			}
 		}
 		if (sig == SIGQUIT)
 		{
-			if (g_gl.isin )
-			write(2, "Quit: 3\n",8);
-			else 
+			if (g_gl.isin)
+				write(2, "Quit: 3\n", 8);
+			else
 			{
-			//write(1, "\n", 1);
 				rl_on_new_line();
-				//rl_replace_line("", 1);
-			rl_redisplay();
-
+				rl_redisplay();
 			}
 		}
 	}
-	//return(0);
 }
 
 int	funmain22(t_vars *v, char **split, char *buffer)
 {
-	t_linked_list	*head;
+	t_linked_list	*head1;
 	t_linked_list	*parseur;
+	t_file			*file;
+	t_linked_list	*head;
 
 	while (1)
 	{
@@ -127,27 +137,23 @@ int	funmain22(t_vars *v, char **split, char *buffer)
 			head = mainhelper3(split);
 			if (check_errors(head) != 0)
 			{
-			parseur = parser(head, v->envprinc);
-			free_head2(head);
-			exec(parseur, v);
-			free(split);
-			free_lin_command(parseur);
+				parseur = parser(head, v->envprinc);
+				free_head2(head);
+				exec(parseur, v);
+				free(split);
+				free_lin_command(parseur);
 			}
 			else
 			{
-				t_file *file;
-				t_linked_list *head1;
 				head1 = head;
-				while(head1)
+				while (head1)
 				{
-				file = (t_file*)head1->data;
-				head1 = head1->next;
-
+					file = (t_file *)head1->data;
+					head1 = head1->next;
 				}
 				free_files_linked(head);
-				free(split);	
+				free(split);
 			}
-
 		}
 		if (buffer)
 			free(buffer);
@@ -171,9 +177,9 @@ int	main(int argc, char **argv, char **env)
 	g_gl.isin = 0;
 	g_gl.herdo = 0;
 	signal(SIGINT, handlesig);
-		signal(SIGQUIT, handlesig);	
-	 if(funmain22(&v, split, buffer) == 0)
-	return (0);
+	signal(SIGQUIT, handlesig);
+	if (funmain22(&v, split, buffer) == 0)
+		return (0);
 	free_pre(v.env1, 0);
 	free_pre(v.envprinc, 0);
 	return (0);
