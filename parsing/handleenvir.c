@@ -6,7 +6,7 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 09:27:07 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/27 09:27:08 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/27 19:50:03 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,16 +146,16 @@ char	*handleenvir(char *string, char **env)
 
 	start = 0;
 	i = 0;
-	while (string[i] != '\0')
+	while (string && string[i] != '\0')
 	{
 		if (string[i] == '\'')
 			return (string);
-		if (string[i] == '$')
+		if (string[i] == '$' && string[i + 1] != '\0' )
 		{
 			if (i != 0)
 				start = i;
 			i++;
-			if (string[i] >= 48 && string[i] <= 57)
+			if ( string[i] >= 48 && string[i] <= 57 )
 				return (ft_substr(string, i + 1, ft_strlen(string) - (i + 1)));
 			else if (string[i] == '_' || (string[i] >= 65 && string[i] <= 90)
 				|| (string[i] >= 97 && string[i] <= 123) || string[i] == '?')

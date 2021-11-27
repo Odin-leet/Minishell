@@ -6,7 +6,7 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 09:27:46 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/27 19:02:30 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/27 21:11:41 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,9 @@ int	handle_parser(t_parser *p, char **env, t_linked_list **lexer)
 	token = (t_file *)((*lexer)->data);
 	if (token->type == 0 && p->i == 0)
 	{
-		printf("tokenfile == %s\n", token->file);
 		token->file = (void *)handleargs((char *)token->file, env);
 		if (token->file == NULL)
 		{
-			free(token->file);
 			free(p->command);
 			return (0);
 		}

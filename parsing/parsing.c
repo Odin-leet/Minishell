@@ -6,7 +6,7 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 09:27:51 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/27 18:52:35 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/27 19:59:28 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ int	funmain22(t_vars *v, char **split, char *buffer)
 		if (buffer == NULL)
 		{
 			printf("exit\n");
-			exit(0);
+			exit(1);
 		}
 		if (buffer[0] != '\0' && (checkspace(buffer) == 1))
 		{

@@ -6,7 +6,7 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 11:24:56 by ashite            #+#    #+#             */
-/*   Updated: 2021/11/27 18:02:34 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/27 21:08:26 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,7 @@ char			**files_collector(t_linked_list *lfile);
 char			**cmd_collector(t_linked_list *cmd);
 int				quotescount(int *i, int count, char *string, char c);
 int				checkforquotes2(char *string);
+void			checkforquotes(char **string);
 char			*sgl_quotesreplace(char *tmp, char *string, int *c, int *i);
 char			*db_quotesreplace(char *tmp, char *string, int *c, int *i);
 char			*changecollectedcmd(char *string, int count);

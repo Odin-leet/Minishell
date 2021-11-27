@@ -6,7 +6,7 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 09:26:22 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/27 09:29:51 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/27 20:32:35 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ void	replaceeenv2(t_vars *pl, char *tmp, int i, int c)
 	j = 0;
 	c = 0;
 	i = 0;
-	while (pl->env1[i])
+	while (pl->env1 && pl->env1[i])
 	{
 		j = ft_strlen(pl->env1[i]);
 		c = 0;

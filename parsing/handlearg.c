@@ -6,7 +6,7 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 09:27:02 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/27 19:06:43 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/27 20:49:53 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char	*checkforpath(char *string, char *str)
 		return (0);
 	}
 	sd = readdir(dir);
-	while (sd != NULL)
+	while (sd != NULL && str[0] != '\0')
 	{
 		if (strncmp(sd->d_name, str, ft_strlen(sd->d_name)) == 0)
 		{
@@ -89,8 +89,6 @@ char	*elsefunctionhelper(char *string, char **tab, int i, char *tmp)
 		free(string);
 		return (tmp3);
 	}
-	free(string);
-	free(tmp);
 	if (!(tmp2))
 		free(tmp2);
 	return (NULL);
@@ -124,8 +122,8 @@ char	*elsefunction(char *string, char **env)
 	tmp = ft_strdup(env[i], 5);
 	else
 	{
-		free(string);
 		printf("bash: %s: No such file or directory \n", string);
+		free(string);
 		return (0);
 	}
 	tab = ft_split1(tmp, ':');

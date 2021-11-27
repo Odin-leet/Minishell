@@ -6,7 +6,7 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 17:36:06 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/27 18:03:47 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/27 20:11:55 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,12 @@ int ft_exit(t_vars *v)
 		return (1);
 	}
 	else if (((is_not_digit(s[1]) == 1)))
-		exit(1);
+	{
+		write(2, "exit\nbash: exit: ", 18);
+        write(2, s[1], ft_strlen(s[1]));
+        write(2, ": numeric argument required\n", 29);
+        exit(1);
+	}	
 	return (1);
 }
 
@@ -93,22 +98,22 @@ int	builtve(t_vars *v)
 	if (ft_strncmp(v->collected_cmd[0], "echo",
 			ft_strlen(v->collected_cmd[0])) == 0)
 		g_gl.failed = echo(v);
-	if (ft_strncmp(v->collected_cmd[0], "cd",
+	else if (ft_strncmp(v->collected_cmd[0], "cd",
 			ft_strlen(v->collected_cmd[0])) == 0)
 		g_gl.failed = cd(v);
-	if (ft_strncmp(v->collected_cmd[0], "pwd",
+	else if (ft_strncmp(v->collected_cmd[0], "pwd",
 			ft_strlen(v->collected_cmd[0])) == 0)
 		g_gl.failed = pwd();
-	if (ft_strncmp(v->collected_cmd[0], "unset",
+	else if (ft_strncmp(v->collected_cmd[0], "unset",
 			ft_strlen(v->collected_cmd[0])) == 0)
 		g_gl.failed = unset(v);
-	if (ft_strncmp(v->collected_cmd[0], "env",
+	else if (ft_strncmp(v->collected_cmd[0], "env",
 			ft_strlen(v->collected_cmd[0])) == 0)
 		g_gl.failed = env(v);
-	if (ft_strncmp(v->collected_cmd[0], "exit",
+	else if (ft_strncmp(v->collected_cmd[0], "exit",
 			ft_strlen(v->collected_cmd[0])) == 0)
-		ft_exit(v);
-	if (ft_strncmp(v->collected_cmd[0], "export",
+		g_gl.failed = ft_exit(v);
+	else if (ft_strncmp(v->collected_cmd[0], "export",
 			ft_strlen(v->collected_cmd[0])) == 0)
 		g_gl.failed = export(v);
 	return (g_gl.failed);
