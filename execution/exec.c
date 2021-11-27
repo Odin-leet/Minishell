@@ -278,7 +278,10 @@ void	file_manager(t_vars *v)
 	int	count;
 
 	count = 0;
-	while (v->collected_files[count])
+	
+
+	//dprintf(2,"%s -----n", v->collected_files[0]);
+	while ( v->collected_files && v->collected_files[count])
 	{
 		if (v->out != 0 && (v->collected_type[count] == 4
 				|| v->collected_type[count] == 3))
@@ -293,11 +296,14 @@ void	file_manager(t_vars *v)
 			v->out = open(v->collected_files[count],
 					O_WRONLY | O_CREAT | O_APPEND, 0644);
 		else if (v->collected_type[count] == 2 || v->collected_type[count] == 5)
+		{
 			v->in = open(v->collected_files[count], O_RDONLY, 0644);
+		}
 		if (v->in < 0 || v->out < 0)
 			write(2, "No such file or directory\n", 26);
 		count++;
 	}
+
 	free_pre(v->collected_files, 0);
 }
 
@@ -326,7 +332,7 @@ int	builtve(t_vars *v)
 			ft_strlen(v->collected_cmd[0])) == 0)
 		g_gl.failed = export(v);
 	//if (g_gl->failed )
-	return (0);
+	return (g_gl.failed);
 }
 
 void	piper(t_vars *v, int i)
@@ -351,6 +357,7 @@ int	exec_initializer(t_vars *v, t_linked_list *head)
 	v->collected_files = NULL;
 	v->collected_type = 0;
 	g_gl.herdo = 0;
+	g_gl.herdoc = 0;
 	v->in = 0;
 	v->pin = 0;
 	v->out = 1;
@@ -360,9 +367,13 @@ int	exec_initializer(t_vars *v, t_linked_list *head)
 	{
 		v->lfile = ((t_command *)tmp->data)->files;
 		(v->cmd_size)++;
-		ret = heredocs_finder(v);
+		if(v->lfile !=  NULL)
+			ret = heredocs_finder(v);
+
+	//	dprintf(2, "count == %s \n",v->collected_files[0]);
 		tmp = tmp->next;
 	}
+	
 	v->pid = malloc(sizeof(pid_t) * (v->cmd_size));
 	return (ret);
 }
@@ -436,8 +447,12 @@ int	get_fucking_status(int status)
 {
 	if (WIFEXITED(status) == 1)
 		return (WEXITSTATUS(status));
-	if (WIFSIGNALED(status) == 1)
+	if (WIFSIGNALED(status) == 1 && g_gl.failed < 0)
 		return (128 + WTERMSIG(status));
+	else if(g_gl.failed > 0 &&WIFSIGNALED(status) == 1 )
+		return (1);
+
+		printf("asdasdasdasdas im here \n");
 	return (0);
 }
 
@@ -457,11 +472,14 @@ void	pid_manager(t_vars *v)
 
 void	executer(t_linked_list *head, t_vars *v, int i)
 {
-	if ((v->collected_cmd && v->collected_cmd[0]
-			&& i == 0 && !(head->next)) && builtins(v->collected_cmd[0]))
-		parent(v);
-	else
-		forker(v, i);
+	if (v->collected_cmd)
+	{
+		if ((v->collected_cmd && v->collected_cmd[0]
+				&& i == 0 && !(head->next)) && builtins(v->collected_cmd[0]))
+			parent(v);
+		else
+			forker(v, i);
+	}
 }
 
 void	exec(t_linked_list *head, t_vars *v)
@@ -471,7 +489,7 @@ void	exec(t_linked_list *head, t_vars *v)
 
 	i = 0;
 	g_gl.status = exec_initializer(v, head);
-	while (head)
+	while (head && g_gl.herdoc == 0)
 	{
 		v->lcmd = ((t_command *)head->data)->nameargs;
 		v->lfile = ((t_command *)head->data)->files;

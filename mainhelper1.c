@@ -36,10 +36,13 @@ int	mainhelperhelper1(int i, char *string, t_linked_list **head)
 	in_db = traitmask(string, 1);
 	in_sgl = traitmask(string, 0);
 	t = i;
-	while (((in_db[i] == 1 || in_sgl[i] == 1)
-			|| (string[i] != '|' && string[i] != '>' && string[i] != '<'))
-		&& string[i] != '\0')
+	if(string)
+	{
+	while (string[i] != '\0' &&( (in_db[i] == 1 || in_sgl[i] == 1)
+			|| (string[i] != '|' && string[i] != '>' && string[i] != '<')))
 		i++;
+
+	}
 	if (i != 0)
 		storeinfos(ft_substr(string, t, i - t), head);
 	free(in_db);

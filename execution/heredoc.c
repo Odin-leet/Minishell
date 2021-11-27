@@ -51,16 +51,19 @@ int	exit_status(pid_t pid, int fd)
 	int	status;
 
 	waitpid(pid, &status, 0);
-	g_gl.herdo = 0;
 	exit_status = get_status(status);
+	g_gl.herdo = 0;
+	g_gl.herdoc = 0;
 	close(fd);
 	if (exit_status == 2)
 		return (1);
+
 	return (0);
 }
 
 void	ctrl_handler(int sig)
 {
+	g_gl.herdoc = 2;
 	exit(sig);
 }
 
@@ -77,6 +80,7 @@ int	heredoc(char *delimeter, char *file_name)
 	char	*line;
 	pid_t	pid;
 
+	g_gl.herdoc = 1;
 	fd = open(file_name, O_RDWR | O_TRUNC | O_CREAT, S_IWUSR | S_IRUSR);
     g_gl.herdo = 1;
 	pid = fork();
@@ -152,6 +156,7 @@ int	heredocs_finder(t_vars *v)
 			v->collected_type[i] = 2;
 			free(v->collected_files[i]);
 			v->collected_files[i] = ft_strdup(filename, 0);
+			
 			free(filename);
 			filename = NULL;
 		}

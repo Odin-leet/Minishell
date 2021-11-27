@@ -208,7 +208,7 @@ int	unset(t_vars *pl)
 		{
 			printf("bash: unset: `%s': not a valid identifier\n",
 				pl->collected_cmd[i]);
-			return (0);
+			return (1);
 		}
 		else if (checkifthereisenv2(pl->env1, pl->collected_cmd[i]) == 1)
 		{
@@ -216,5 +216,5 @@ int	unset(t_vars *pl)
 		}
 		i++;
 	}
-	return (1);
+	return (0);
 }

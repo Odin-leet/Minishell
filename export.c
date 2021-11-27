@@ -455,9 +455,9 @@ int	export(t_vars *pl)
 	else
 	{
 		if (exporthelper(pl) == 0)
-			return (0);
+			return (1);
 	}
-	return (1);
+	return (0);
 }
 
 int	env(t_vars *pl)
@@ -468,7 +468,7 @@ int	env(t_vars *pl)
 	if (pl->collected_cmd[1] != NULL)
 	{
 		printf("env: %s: No such file or directory\n", pl->collected_cmd[1]);
-		return (0);
+		return (1);
 	}
 	while (pl->envprinc[i] != NULL)
 	{
@@ -476,5 +476,5 @@ int	env(t_vars *pl)
 			printf("%s\n", pl->envprinc[i]);
 		i++;
 	}
-	return (1);
+	return (0);
 }

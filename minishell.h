@@ -56,6 +56,7 @@ typedef struct s_global {
 	int	isin;
 	int herdo;
 	int failed;
+	int herdoc;
 }				t_global;
 t_global	g_gl;
 typedef struct s_vars
