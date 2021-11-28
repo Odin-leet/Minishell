@@ -1,4 +1,4 @@
-NAME =	Minishell
+NAME =	minishell
 
 SRC =	parsing/parsing.c\
 		parsing/exporthelper.c\
@@ -24,7 +24,6 @@ SRC =	parsing/parsing.c\
 		execution/executer.c\
 		execution/exechelepr.c\
 		execution/filemanager.c\
-		execution/otherbuiltins.c\
 		execution/builtins1.c\
 		execution/collecter.c\
 		parsing/libftfunc.c\
@@ -43,7 +42,7 @@ SRC =	parsing/parsing.c\
 
 OBJS = ${SRC:.c=.o}
 
- CC = gcc
+CC = gcc
 
 all : $(NAME)
 

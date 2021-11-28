@@ -6,7 +6,7 @@
 /*   By: ashite <ashite@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 11:25:30 by ashite            #+#    #+#             */
-/*   Updated: 2021/11/28 01:18:08 by ashite           ###   ########.fr       */
+/*   Updated: 2021/11/28 20:12:33 by ashite           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,13 @@ void	cd_init(t_vars *v)
 
 int	cd_extention(t_vars *v, char **cwd)
 {
-	char	*tmp;
 	int		i;
 
-	checkforquotes(&v->collected_cmd[1]);
-	tmp = v->collected_cmd[1];
-	if (tmp[0] == '-')
+	v->collected_cmd[1] = changecollectedcmd(v->collected_cmd[1],
+			checkforquotes2(v->collected_cmd[1]));
+	if (v->collected_cmd[1][0] == '-')
 		return (cdtier(v));
-	else if (tmp[0] == '~')
+	else if (v->collected_cmd[1][0] == '~')
 		return (cd_moja(v));
 	else if (v->collected_cmd[1][0] == '/')
 		return (change_dir(v, v->collected_cmd[1]));
@@ -36,7 +35,7 @@ int	cd_extention(t_vars *v, char **cwd)
 	{
 		getcwd(*cwd, PATH_MAX);
 		strcat(*cwd, "/");
-		strcat(*cwd, tmp);
+		strcat(*cwd, v->collected_cmd[1]);
 		i = 2;
 		while (v->collected_cmd[i])
 		{

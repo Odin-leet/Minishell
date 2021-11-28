@@ -6,11 +6,23 @@
 /*   By: ashite <ashite@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 11:25:30 by ashite            #+#    #+#             */
-/*   Updated: 2021/11/28 05:58:00 by ashite           ###   ########.fr       */
+/*   Updated: 2021/11/28 19:44:44 by ashite           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	piper(t_vars *v, int i)
+{
+	dup2(v->in, 0);
+	dup2(v->out, 1);
+	if (v->in != 0)
+		close(v->in);
+	if (v->out != 1)
+		close(v->out);
+	if (v->pin != 0 && i == 1)
+		close(v->pin);
+}
 
 int	builtinns(char *string)
 {

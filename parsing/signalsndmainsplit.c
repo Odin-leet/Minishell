@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signalsndmainsplit.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ashite <ashite@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/28 02:34:32 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/28 02:38:52 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/28 20:00:58 by ashite           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void	handlesig(int sig)
 		}
 		if (sig == SIGQUIT)
 		{
-			handlesig1();
+			handlesig2();
 		}
 	}
 }

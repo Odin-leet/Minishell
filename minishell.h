@@ -6,7 +6,7 @@
 /*   By: ashite <ashite@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 11:24:56 by ashite            #+#    #+#             */
-/*   Updated: 2021/11/28 05:50:59 by ashite           ###   ########.fr       */
+/*   Updated: 2021/11/28 20:31:43 by ashite           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct s_global {
 	int	isin;
 	int	herdo;
 	int	failed;
+	int	special;
 	int	herdoc;
 }				t_global;
 t_global	g_gl;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executer.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ashite <ashite@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 17:33:43 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/28 06:18:42 by ashite           ###   ########.fr       */
+/*   Updated: 2021/11/28 21:04:39 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,20 @@ char	**cmd_collector2(t_linked_list *cmd)
 	return (sequance);
 }
 
+void	execvequotes(t_vars *v)
+{
+	int	i;
+	int	count;
+
+	i = 1;
+	while (v->collected_cmd2[i])
+	{
+		count = checkforquotes2(v->collected_cmd2[i]);
+		v->collected_cmd2[i] = changecollectedcmd(v->collected_cmd2[i], count);
+		i++;
+	}
+}
+
 void	children(t_vars *v)
 {
 	file_manager(&v);
@@ -51,7 +65,8 @@ void	children(t_vars *v)
 			g_gl.status = builtve(v);
 		else
 		{
-			v->collected_cmd2 = cmd_collector2(v->lcmd);
+			v->collected_cmd2 = cmd_collector(v->lcmd);
+			execvequotes(v);
 			g_gl.failed = execve(v->collected_cmd2[0],
 					v->collected_cmd2, v->envprinc);
 			if (g_gl.failed == -1)
@@ -81,27 +96,18 @@ void	parent(t_vars *v)
 {
 	int	s_out;
 
-	s_out = dup(1);
+	s_out = 1;
 	file_manager(&v);
 	piper(v, 0);
 	if (v->collected_cmd && v->collected_cmd[0])
 	{
+		printf("speeeeeecail %d\n",g_gl.special);
 		if (builtins(v->collected_cmd[0]))
 		{
 			g_gl.status = builtve(v);
 		}
 	}
+	if (v->collected_files)
+		printf("kayn file");
 	dup2(s_out, 1);
-}
-
-void	piper(t_vars *v, int i)
-{
-	dup2(v->in, 0);
-	dup2(v->out, 1);
-	if (v->in != 0)
-		close(v->in);
-	if (v->out != 1)
-		close(v->out);
-	if (v->pin != 0 && i == 1)
-		close(v->pin);
 }

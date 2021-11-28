@@ -3,21 +3,46 @@
 /*                                                        :::      ::::::::   */
 /*   filemanager.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ashite <ashite@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 17:38:54 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/28 06:26:37 by ashite           ###   ########.fr       */
+/*   Updated: 2021/11/28 21:04:29 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	case_checker(t_vars *v)
+{
+	int	count1;
+	int	count;
+	int	count2;
+
+	count1 = 0;
+	count2 = 0;
+	count = 0;
+	g_gl.special = 0;
+	while (v->collected_files && v->collected_files[count])
+	{
+		if (v->collected_type[count] == 4)
+			count1 = count;
+		if (v->collected_type[count] == 2)
+			count2 = count;
+		count++;
+	}
+	if (v->collected_files[count1] == v->collected_files[count2])
+		return (0);
+	else
+		return (1);
+}
 
 void	file_manager(t_vars **v)
 {
 	int	count;
 
 	count = 0;
-	while ((*v)->collected_files && (*v)->collected_files[count])
+	while ((*v)->collected_files && (*v)->collected_files[count]
+		&& case_checker(*v))
 	{
 		if ((*v)->out != 0 && ((*v)->collected_type[count] == 4
 				|| (*v)->collected_type[count] == 3))
