@@ -31,9 +31,7 @@ char	**cmd_collector(t_linked_list *cmd)
 	while (cmd != NULL)
 	{
 		sequance[size] = ft_strdup((char *)cmd->data, 0);
-        cmd = cmd->next;
-       // if (sequance[size] && builtins(sequance[0]))
-       //     checkforquotes(&sequance[size]);
+		cmd = cmd->next;
 		size++;
 	}
 	return (sequance);
@@ -58,7 +56,7 @@ char	**files_collector(t_linked_list *lfile)
 	while (lfile != NULL)
 	{
 		sequance[size] = ft_strdup(((t_file *)lfile->data)->file, 0);
-        checkforquotes(&sequance[size]);
+		checkforquotes(&sequance[size]);
 		lfile = lfile->next;
 		size++;
 	}

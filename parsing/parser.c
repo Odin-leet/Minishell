@@ -78,7 +78,7 @@ int	handle_parser(t_parser *p, char **env, t_linked_list **lexer)
 		}
 	else if (token->type != 1)
 	{
-		printf("erroorororororororororor\n");
+		printf("bash: syntax error near unexpected token `newline'\n");
 		free(token->file);
 	}
 	if (token->type == 1 || (*lexer)->next == NULL)

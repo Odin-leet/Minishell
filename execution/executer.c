@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   executer.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ashite <ashite@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 17:33:43 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/28 00:01:38 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/28 01:21:33 by ashite           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-
 
 char	**cmd_collector2(t_linked_list *cmd)
 {
@@ -33,13 +31,12 @@ char	**cmd_collector2(t_linked_list *cmd)
 	while (cmd != NULL)
 	{
 		sequance[size] = ft_strdup((char *)cmd->data, 0);
-        cmd = cmd->next;
-        checkforquotes(&sequance[size]);
+		cmd = cmd->next;
+		checkforquotes(&sequance[size]);
 		size++;
 	}
 	return (sequance);
 }
-
 
 void	children(t_vars *v)
 {
@@ -53,7 +50,7 @@ void	children(t_vars *v)
 			g_gl.status = builtve(v);
 		else
 		{
-           v->collected_cmd2 =  cmd_collector2(v->lcmd);
+			v->collected_cmd2 = cmd_collector2(v->lcmd);
 			g_gl.failed = execve(v->collected_cmd2[0],
 					v->collected_cmd2, v->envprinc);
 			if (g_gl.failed == -1)
@@ -94,18 +91,6 @@ void	parent(t_vars *v)
 		}
 	}
 	dup2(s_out, 1);
-}
-
-void	executer(t_linked_list *head, t_vars *v, int i)
-{
-	if (v->collected_cmd)
-	{
-		if ((v->collected_cmd && v->collected_cmd[0]
-				&& i == 0 && !(head->next)) && builtins(v->collected_cmd[0]))
-			parent(v);
-		else
-			forker(v, i);
-	}
 }
 
 void	piper(t_vars *v, int i)

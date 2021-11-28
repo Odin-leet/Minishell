@@ -6,6 +6,9 @@ SRC =	parsing/parsing.c\
 		parsing/unset.c\
 		execution/exec.c\
 		execution/cd.c\
+		execution/cd_opt.c\
+		execution/cd_tools.c\
+		execution/exec_tools.c\
 		execution/heredoc.c\
 		execution/herdoc2.c\
 		execution/executer.c\

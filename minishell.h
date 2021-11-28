@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ashite <ashite@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 11:24:56 by ashite            #+#    #+#             */
-/*   Updated: 2021/11/27 23:59:22 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/28 01:28:43 by ashite           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,8 +176,13 @@ int				get_status(int status);
 void			close_and_exit(int fd);
 int				ft_strcmp(const char *s1, const char *s2);
 void			ctrl_handler(int sig);
-
-
-
+void			pid_manager(t_vars *v);
+void			execinitialisation(t_vars **v);
+int				cdtier(t_vars *v);
+int				cd_moja(t_vars *v);
+int				change_dir(t_vars *v, char *dir);
+int				cdhome(t_vars *v);
+int				cdback(t_vars *v);
+int				cd_cleanup(t_vars *v, int ret);
 
 #endif

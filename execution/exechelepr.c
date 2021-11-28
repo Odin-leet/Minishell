@@ -18,7 +18,7 @@ int	quotescount(int *i, int count, char *string, char c)
 	{
 		count++;
 		(*i)++;
-		if (string[*i] != '\0' && string[*i] == c )
+		if (string[*i] != '\0' && string[*i] == c)
 		{
 			(*i)++;
 			count++;
@@ -48,7 +48,7 @@ int	checkforquotes2(char *string)
 	{
 		count = quotescount(&i, count, string, '\"');
 		count = quotescount(&i, count, string, '\'');
-		if(string[i] != '\0')
+		if (string[i] != '\0')
 			i++;
 	}
 	return (count);
@@ -95,11 +95,12 @@ char	*changecollectedcmd(char *string, int count)
 	char	*tmp;
 	int		i;
 	int		c;
+	int		j;
 
 	i = 0;
 	c = 0;
 	tmp = NULL;
-	int j = ft_strlen(string);
+	j = ft_strlen(string);
 	tmp = malloc(sizeof(char) * (j - count + 1));
 	while (string[i] != '\0')
 	{
