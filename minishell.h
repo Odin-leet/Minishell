@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ashite <ashite@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 11:24:56 by ashite            #+#    #+#             */
-/*   Updated: 2021/11/28 03:14:19 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/28 05:50:59 by ashite           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,5 +223,6 @@ int				change_dir(t_vars *v, char *dir);
 int				cdhome(t_vars *v);
 int				cdback(t_vars *v);
 int				cd_cleanup(t_vars *v, int ret);
+int				builtinns(char *string);
 
 #endif

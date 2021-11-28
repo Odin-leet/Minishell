@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executer.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ashite <ashite@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 17:33:43 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/28 05:13:17 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/28 06:18:42 by ashite           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ void	children(t_vars *v)
 	g_gl.status = 0;
 	if (v->collected_cmd && v->collected_cmd[0])
 	{
-		if (builtins(v->collected_cmd[0]))
+		if (builtinns(v->collected_cmd[0])
+			|| builtinns(v->collected_cmd[0]) < 0)
 			g_gl.status = builtve(v);
 		else
 		{
@@ -101,7 +102,6 @@ void	piper(t_vars *v, int i)
 		close(v->in);
 	if (v->out != 1)
 		close(v->out);
-		i =0;
 	if (v->pin != 0 && i == 1)
 		close(v->pin);
 }

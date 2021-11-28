@@ -37,6 +37,7 @@ SRC =	parsing/parsing.c\
 		parsing/mainhelper2.c\
 		parsing/mainhelper3.c\
 		parsing/ft_strtrim.c\
+		parsing/mainhelper22.c\
 		parsing/parser.c\
 		parsing/ft_itoa.c
 

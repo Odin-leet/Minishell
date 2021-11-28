@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mainhelper2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ashite <ashite@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 09:27:29 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/28 04:46:17 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/28 06:02:24 by ashite           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	check1(t_file *file, t_file *file2, t_linked_list *ptr, char *checks)
 		file2 = NULL;
 		if (((file->file[ft_strlen(file->file) - 1] == checks[1])
 				|| (file->file[ft_strlen(file->file) - 1] == checks[0]))
-			&& ((ptr->next == NULL) ))
+			&& ((ptr->next == NULL)))
 		{
 			printf("bash: syntax error near unexpected token \n");
 			free(checks);
@@ -80,7 +80,7 @@ int	check1(t_file *file, t_file *file2, t_linked_list *ptr, char *checks)
 	return (1);
 }
 
-char 	*remplirchecks(char *checks)
+char	*remplirchecks(char *checks)
 {
 	checks = malloc(sizeof(char) * 4);
 	checks[1] = '<';
@@ -116,41 +116,4 @@ int	check_errors(t_linked_list *ptr)
 	}
 	free(checks);
 	return (1);
-}
-
-int	mainhelper2(int j, int i, t_linked_list **head, char *string)
-{
-	if (j > 1)
-	{
-		printf("error here \n");
-		return (0);
-	}
-	if (string[i] != '\0')
-		storeinfos(ft_substr(string, i, strlen(string) - i), head);
-	return (1);
-}
-
-t_linked_list	*mainhelper3(char **split)
-{
-	int				n;
-	int				j;
-	t_linked_list	*head;
-
-	n = 0;
-	head = NULL;
-	j = 0;
-	while (split[n] != NULL)
-	{
-		if (checkforpipe(split[n]) == 1)
-		{
-			mainhelper(split[n], j, &head);
-			free(split[n]);
-		}
-		else
-		{
-			storeinfos(split[n], &head);
-		}
-		n++;
-	}
-	return (head);
 }

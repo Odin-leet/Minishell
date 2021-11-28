@@ -3,14 +3,33 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ashite <ashite@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 11:25:30 by ashite            #+#    #+#             */
-/*   Updated: 2021/11/28 03:58:27 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/28 05:58:00 by ashite           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	builtinns(char *string)
+{
+	if (ft_strncmp(string, "echo", ft_strlen(string)) == 0)
+		return (-1);
+	if (ft_strncmp(string, "cd", ft_strlen(string)) == 0)
+		return (1);
+	if (ft_strncmp(string, "pwd", ft_strlen(string)) == 0)
+		return (1);
+	if (ft_strncmp(string, "unset", ft_strlen(string)) == 0)
+		return (1);
+	if (ft_strncmp(string, "env", ft_strlen(string)) == 0)
+		return (1);
+	if (ft_strncmp(string, "exit", ft_strlen(string)) == 0)
+		return (1);
+	if (ft_strncmp(string, "export", ft_strlen(string)) == 0)
+		return (1);
+	return (0);
+}
 
 void	delete_close_file(t_linked_list *tmp, t_vars *v, int *fd)
 {
@@ -42,7 +61,8 @@ void	executer(t_linked_list *head, t_vars *v, int i)
 	if (v->collected_cmd)
 	{
 		if ((v->collected_cmd && v->collected_cmd[0]
-				&& i == 0 && !(head->next)) && builtins(v->collected_cmd[0]))
+				&& i == 0 && !(head->next))
+			&& builtinns(v->collected_cmd[0]) > 0)
 			parent(v);
 		else
 			forker(v, i);
