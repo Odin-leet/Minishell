@@ -67,16 +67,15 @@ int	pwd(void)
 	return (0);
 }
 
-int ft_exit(t_vars *v)
+int	ft_exit(t_vars *v)
 {
-	char    **s;
+	char	**s;
 
 	s = v->collected_cmd;
-	
 	if (!(s[1]))
 		exit(0);
 	else if ((is_not_digit(s[1]) == 0) && !(s[2]))
-        exit(ft_atoi(s[1]));
+		exit(ft_atoi(s[1]));
 	else if (((is_not_digit(s[1]) == 0) && (s[2])))
 	{
 		write(2, "bash: exit: too many arguments\n", 31);
@@ -85,9 +84,9 @@ int ft_exit(t_vars *v)
 	else if (((is_not_digit(s[1]) == 1)))
 	{
 		write(2, "exit\nbash: exit: ", 18);
-        write(2, s[1], ft_strlen(s[1]));
-        write(2, ": numeric argument required\n", 29);
-        exit(1);
+		write(2, s[1], ft_strlen(s[1]));
+		write(2, ": numeric argument required\n", 29);
+		exit(1);
 	}	
 	return (1);
 }

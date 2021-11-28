@@ -6,7 +6,7 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 09:27:46 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/28 02:45:21 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/28 04:13:17 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	else2(t_file *token, t_command **command,
 
 	tmp = (t_file *)((*lexer)->next->data);
 	f = (t_file *)malloc(sizeof(t_file));
-	if (token->type != 5)
+	if (token->type != 5 )
 		tmp->file = (void *)handleenvir((char *)tmp->file, env);
 	f->file = tmp->file;
 	free(token->file);
@@ -77,8 +77,11 @@ int	handle_parser(t_parser *p, char **env, t_linked_list **lexer)
 		else2(token, &(p->command), lexer, env);
 	else if (token->type != 1)
 	{
-		printf("error undefind arg\n");
-		free(token->file);
+		printf("bash: syntax error near unexpected token `newline'\n");
+		
+			//free_files_linked(p);
+			return (0);
+			//free_head2(lexer);
 	}
 	if (token->type == 1 || (*lexer)->next == NULL)
 		lastif(&(p->i), &(p->command), lexer, &(p->head));
@@ -97,7 +100,7 @@ t_linked_list	*parser(t_linked_list *lexer, char **env)
 	while (lexer)
 	{
 		if (!handle_parser(&p, env, &lexer))
-			return (NULL);
+			break;
 		lexer = lexer->next;
 	}
 	return (p.head);

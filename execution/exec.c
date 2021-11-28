@@ -6,67 +6,58 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 11:25:30 by ashite            #+#    #+#             */
-/*   Updated: 2021/11/27 21:49:52 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/28 03:58:27 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	get_fucking_status(int status)
+void	delete_close_file(t_linked_list *tmp, t_vars *v, int *fd)
 {
-	if (WIFEXITED(status) == 1)
-		return (WEXITSTATUS(status));
-	if (WIFSIGNALED(status) == 1 && g_gl.failed < 0)
-		return (128 + WTERMSIG(status));
-	else if (g_gl.failed > 0 && WIFSIGNALED(status) == 1)
-		return (1);
-	return (0);
+	pid_manager(v);
+	g_gl.isin = 0;
+	if (v->in != 0)
+		close(v->in);
+	if (v->out != 1)
+		close(v->out);
+	if (v->pin != 1 && v->pin != 0)
+		close(v->pin);
+	close(fd[0]);
+	close(fd[1]);
+	while (tmp)
+	{
+		v->lfile = ((t_command *)tmp->data)->files;
+		while (v->lfile && v->lfile->data)
+		{
+			if (((t_file *)v->lfile->data)->type == 5)
+				unlink(((t_file *)v->lfile->data)->file);
+			v->lfile = v->lfile->next;
+		}
+		tmp = tmp->next;
+	}
 }
 
-void	pid_manager(t_vars *v)
+void	executer(t_linked_list *head, t_vars *v, int i)
 {
-	int	i;
-
-	i = 0;
-	while (i < v->cmd_size)
-		waitpid(v->pid[i++], &g_gl.status, 0);
-	if (g_gl.status > 255)
-		g_gl.status = g_gl.status % 255;
-	else
-		g_gl.status = get_fucking_status(g_gl.status);
-	free(v->pid);
-}
-
-void	execinitialisation(t_vars **v)
-{
-	if ((*v)->collected_files)
-		free_pre((*v)->collected_files, 0);
-	if ((*v)->collected_type)
-		free((*v)->collected_type);
-	if ((*v)->collected_cmd)
-		free_pre((*v)->collected_cmd, 0);
-		(*v)->collected_files = NULL;
-		(*v)->collected_files = NULL;
-		(*v)->collected_cmd = NULL;
-}
-
-void	execinistia2(t_vars **v)
-{
-	(*v)->collected_files = NULL;
-	(*v)->collected_files = NULL;
-	(*v)->collected_cmd = NULL;
+	if (v->collected_cmd)
+	{
+		if ((v->collected_cmd && v->collected_cmd[0]
+				&& i == 0 && !(head->next)) && builtins(v->collected_cmd[0]))
+			parent(v);
+		else
+			forker(v, i);
+	}
 }
 
 void	exec(t_linked_list *head, t_vars *v)
 {
-	int	fd[2];
-	int	i;
-	t_linked_list *tmp;
+	int				fd[2];
+	int				i;
+	t_linked_list	*tmp;
 
 	tmp = head;
 	i = 0;
 	g_gl.status = exec_initializer(v, head);
-
 	while (head && g_gl.herdoc == 0)
 	{
 		v->lcmd = ((t_command *)head->data)->nameargs;
@@ -84,25 +75,5 @@ void	exec(t_linked_list *head, t_vars *v)
 		head = head->next;
 		execinitialisation(&v);
 	}
-	if (v->in != 0)
-		close(v->in);
-	if (v->out != 1)
-		close(v->out);
-	if (v->pin != 1 && v->pin != 0)
-		close(v->pin);
-	close(fd[0]);
-	close(fd[1]);
-	pid_manager(v);
-	g_gl.isin = 0;
-	while (tmp)
-	{
-		v->lfile =((t_command *)tmp->data)->files;
-		while (v->lfile && v->lfile->data)
-		{
-			if (((t_file *)v->lfile->data)->type == 5)
-				unlink(((t_file *)v->lfile->data)->file);
-			v->lfile = v->lfile->next;
-		}
-		tmp = tmp->next;
-	}
+	delete_close_file(tmp, v, fd);
 }

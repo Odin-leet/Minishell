@@ -6,7 +6,7 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 09:27:51 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/28 02:39:32 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/28 04:39:26 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,13 @@ void	parserndexecute(t_vars *v, t_linked_list *head, t_linked_list *parseur)
 {
 	parseur = parser(head, v->envprinc);
 	if (parseur == NULL)
+	{
 		free_files_linked(head);
+	}
 	else
+	{
 		free_head2(head);
+	}
 	exec(parseur, v);
 	free(v->split);
 	free_lin_command(parseur);
@@ -27,15 +31,6 @@ void	parserndexecute(t_vars *v, t_linked_list *head, t_linked_list *parseur)
 
 void	passtoanewcommand(t_linked_list *head, t_vars *v)
 {
-	t_linked_list	*head1;
-	t_file			*file;
-
-	head1 = head;
-	while (head1)
-	{
-		file = (t_file *)head1->data;
-		head1 = head1->next;
-	}
 	free_files_linked(head);
 	free(v->split);
 }
