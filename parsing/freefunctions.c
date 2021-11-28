@@ -6,7 +6,7 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 09:26:31 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/27 09:26:33 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/28 02:19:15 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,4 @@ void	free_lin_command(t_linked_list *command)
 	free_files_linked(cmd->files);
 	free(command->data);
 	free(command);
-}
-
-void	free_files_linked2(t_linked_list *files)
-{
-	if (!files)
-		return ;
-	free(((t_file *)(files->data))->file);
 }

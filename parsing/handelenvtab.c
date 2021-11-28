@@ -6,7 +6,7 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 09:26:55 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/27 09:26:56 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/28 02:34:30 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,46 +94,4 @@ char	**transferenv(char **tmp)
 	}
 	tmp1[i] = NULL;
 	return (tmp1);
-}
-
-void	get_env1(char **env, t_vars *pl)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (env[i] != NULL)
-	{
-		j = 0;
-		while (env[i][j] != '\0')
-		{
-			pl->envprinc[i][j] = env[i][j];
-			j++;
-		}
-		pl->envprinc[i][j] = '\0';
-		i++;
-	}
-	pl->envprinc[i] = NULL;
-	pl->env1 = transferenv(pl->envprinc);
-}
-
-void	get_env(t_vars *pl, char **env)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (env[i] != NULL)
-		i++;
-	pl->envprinc = malloc(sizeof (char *) * (i + 1));
-	i = 0;
-	while (env[i])
-	{
-		j = 0;
-		j = ft_strlen(env[i]);
-		pl->envprinc[i] = malloc(sizeof(char) * (j + 1));
-		i++;
-	}
-	get_env1(env, pl);
 }

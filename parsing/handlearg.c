@@ -6,7 +6,7 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 09:27:02 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/27 23:33:57 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/28 02:25:08 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,86 +106,4 @@ int	findenvi(char **env)
 		i++;
 	}
 	return (-1);
-}
-
-char	*elsefunction(char *string, char **env)
-{
-	int		i;
-	char	*tmp;
-	char	**tab;
-	char	*tmp2;
-
-	tmp = NULL;
-	tmp2 = NULL;
-	i = findenvi(env);
-	if (i != -1)
-	tmp = ft_strdup(env[i], 5);
-	else
-	{
-		printf("bash: %s: No such file or directory \n", string);
-		free(string);
-		return (0);
-	}
-	tab = ft_split1(tmp, ':');
-	i = 0;
-	while (tab[i] != NULL)
-	{
-		tmp2 = elsefunctionhelper(string, tab, i, tmp);
-		if (tmp2 != NULL)
-		{
-			return (tmp2);
-		}
-		i++;
-	}
-	free_pre(tab, 0);
-	free(tmp);
-	return (string);
-}
-
-char	*handleargshelper(char *string, int j, char *ptr, char *ptr2)
-{
-	int	i;
-
-	i = 0;
-	while (string[i] != '\0')
-	{
-		if (string[i] == '/')
-			j = i;
-		i++;
-	}
-	ptr = ft_substr(string, 0, j);
-	ptr2 = ft_strdup(string, j + 1);
-	if (checkforpath(ptr, ptr2) == NULL)
-	{
-		free(ptr);
-		free(ptr2);
-		return (string);
-	}
-	free(ptr2);
-	free(ptr);
-	return (string);
-}
-
-char	*handleargs(char *string, char **env)
-{
-	char	*ptr;
-	char	*ptr2;
-	int		j;
-
-	j = 0;
-	ptr = NULL;
-	ptr2 = NULL;
-	if (string)
-	{
-		
-	if (builtins(string) == 1)
-		return (string);
-	else if (thereisslach(string) == 1)
-	{
-		string = handleargshelper(string, j, ptr, ptr2);
-	}
-	else
-		string = elsefunction(string, env);
-	}
-	return (string);
 }

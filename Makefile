@@ -1,6 +1,16 @@
 NAME =	Minishell
 
 SRC =	parsing/parsing.c\
+		parsing/exporthelper.c\
+		parsing/exporthelper2.c\
+		parsing/exporthelper3.c\
+		parsing/exporthelper4.c\
+		parsing/handelenvtab.c\
+		parsing/handlargshelper.c\
+		parsing/handleenviren2.c\
+		parsing/signalsndmainsplit.c\
+		parsing/unsethelper.c\
+		parsing/utils_parsing.c\
 		parsing/ft_split1.c\
 		parsing/export.c\
 		parsing/unset.c\
@@ -18,7 +28,6 @@ SRC =	parsing/parsing.c\
 		parsing/libftfunc1.c\
 		parsing/mainsplit.c\
 		parsing/handleenvir.c\
-		parsing/handelenvtab.c\
 		parsing/handlearg.c\
 		parsing/freefunctions.c\
 		parsing/mainhelper1.c\

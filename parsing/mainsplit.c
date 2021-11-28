@@ -6,7 +6,7 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 09:03:15 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/27 18:39:42 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/28 03:01:31 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	*traitmask(const char *s, int c)
 	return (env);
 }
 
-static int	len_word(const char *s, t_split split1, int *in_sgl, int *in_db)
+int	len_word(const char *s, t_split split1, int *in_sgl, int *in_db)
 {
 	int		i;
 	size_t	len;
@@ -78,7 +78,7 @@ static int	len_word(const char *s, t_split split1, int *in_sgl, int *in_db)
 	return (len);
 }
 
-static int	count_word(char *s, char c)
+int	count_word(char *s, char c)
 {
 	size_t	i;
 	size_t	count;
@@ -132,20 +132,4 @@ int	splithelper(t_split split1, const char *s, char c)
 	free(in_db);
 	free(in_sgl);
 	return (split1.k);
-}
-
-char	**ft_split(char *s, char c)
-{
-	t_split	split1;
-
-	split1.i = -1;
-	split1.k = 0;
-	split1.c = c;
-	split1.split = (char **)malloc(sizeof(char *) * (count_word(s, c) + 1));
-	if (!s || !(split1.split))
-		return (NULL);
-	while (++split1.i < count_word(s, c))
-		split1.k = splithelper(split1, s, c);
-	split1.split[split1.i] = NULL;
-	return (split1.split);
 }

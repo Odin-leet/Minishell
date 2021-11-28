@@ -6,7 +6,7 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 11:24:56 by ashite            #+#    #+#             */
-/*   Updated: 2021/11/27 23:59:22 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/28 03:12:02 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,20 +77,44 @@ typedef struct s_vars
 	int				status;
 	char			**collected_files;
 	int				*collected_type;
+	char			**split;
 	t_linked_list	*newhead;
 	t_linked_list	*lcmd;
 	t_linked_list	*herdoc;
 	t_linked_list	*lfile;
 }				t_vars;
+
 int				get_next_line(int fd, char **line, int BUFFER_SIZE);
+void			else1(t_file *token, char **env, t_command **command);
+char			*elsefunctionhelper(char *s, char **ta, int i, char *tm);
+char			*elsefunctionhelper2(char *t, char *s, char **e, int i);
+int				count_word(char *s, char c);
+char			*checkingforendofaenv(char *s, char *t, int *i, int *end);
+void			else2(t_file *t, t_command **c, t_linked_list **l, char **e);
+void			get_env1(char **env, t_vars *pl);
+int				findenvi(char **env);
+void			handlesig1(void);
+char			*handleargs(char *string, char **env);
+void			handlesig1(void);
+void			handlesig(int sig);
+int				checkspace(char *buffer);
+char			**unsettaballoc(char **env, char **tmp, int count);
 char			*replaceenv2(char *string, int start, int end, char **env);
+char			**remplirtmp(char **tmp1, char **env, char *string, int c);
 void			get_env(t_vars *pl, char **env);
+int				unsetenv1returncount(char **env, char *tmp, int count, int i);
 char			*handleenvir2(char *string, char *tmp, char *tmp2);
 char			*handleenvir1(char *string, int i, int start, char **env);
+char			**remplirtableunset(char **env, char **tmp, int count, int i);
+void			unsetenv1(t_vars *pl, char *string);
 char			*handleenvir(char *string, char **env);
 t_linked_list	*parser(t_linked_list *lexer, char **env);
 char			**collector(t_linked_list *cmd);
+int				returnquotescount(char *string);
+int				returnthereisenv(int count, int count2, char **env, char *tmp);
 int				unset(t_vars *pl);
+int				helpercount(char **env, int count2, int j, int i);
+int				returncount(char *string, char *tmp, int i, int j);
 char			*ft_strchr(char *s, int c);
 char			*ft_strdup(char *s1, size_t i);
 char			*ft_strjoin(char *s1, char *s2);
@@ -105,8 +129,10 @@ char			**ft_split1(char const *s, char c);
 char			**ft_split(char *s, char c);
 int				splithelper(t_split split1, const char *s, char c);
 int				*traitmask(const char *s, int c);
+void			replaceeenv2(t_vars *pl, char *tmp, int i, int c);
 int				export(t_vars *pl);
 int				ft_isdigit(int c);
+int				exporthelper(t_vars *pl);
 int				ft_isalpha2(int c);
 int				ft_isalpha(int c);
 char			*ft_strjoin(char *s1, char *s2);
@@ -114,15 +140,27 @@ char			*ft_substr(char *s, unsigned int start, size_t len);
 char			*traitement1(char *str, int j);
 char			*traitement2(char *str);
 char			**transferenv(char **tmp);
+void			freesomething(char *tmp, t_vars *pl);
 int				thereisequ(char *env);
+void			replaceeenv1(t_vars *pl, char *string1, int i, int c);
+void			addenvfinal(char **tmp1, char **tmp3, t_vars *pl, char *tmp);
+void			addenvhelperif( char **tmp3, char **tmp1, char *s, t_vars *pl);
+void			addenvhelperelse( char **tmp3, char **t, char *s, t_vars *pl);
 int				counttab(char **tab);
 void			replaceenv(t_vars *pl, char *string);
 char			**addenv(t_vars *pl, char *string);
+int				errorexport2(void);
+int				errorexport(char *string);
 int				checkifthereisenv2(char **env, char *string);
+void			replaceenv(t_vars *pl, char *string);
+int				checkifthereisenv(char **env, char *string);
+char			**addenv2(char *string, t_vars *pl);
 int				thereisequ(char *env);
 t_linked_list	*mainhelper3(char **split);
 void			free_lin_command(t_linked_list *command);
+int				checkifitscomp1(char *string);
 void			free_files_linked(t_linked_list *files);
+int				checkifthereisquotes(char *string);
 void			free_head(t_linked_list *head);
 char			*ft_itoa(int n);
 void			free_head2(t_linked_list *head);
@@ -139,6 +177,7 @@ int				thereisslach(char *string);
 char			*checkforpath(char *string, char *str);
 int				builtins(char *string);
 int				findtype(char *s);
+int				checkifitscomp(char **string);
 void			*free_pre(char **split, int k);
 void			append(t_linked_list **head_ref, void *data);
 int				env(t_vars *pl);
@@ -176,8 +215,4 @@ int				get_status(int status);
 void			close_and_exit(int fd);
 int				ft_strcmp(const char *s1, const char *s2);
 void			ctrl_handler(int sig);
-
-
-
-
 #endif
