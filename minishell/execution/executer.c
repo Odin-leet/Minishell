@@ -6,7 +6,7 @@
 /*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 17:33:43 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/28 21:04:39 by aali-mou         ###   ########.fr       */
+/*   Updated: 2021/11/28 21:07:09 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,13 +101,10 @@ void	parent(t_vars *v)
 	piper(v, 0);
 	if (v->collected_cmd && v->collected_cmd[0])
 	{
-		printf("speeeeeecail %d\n",g_gl.special);
 		if (builtins(v->collected_cmd[0]))
 		{
 			g_gl.status = builtve(v);
 		}
 	}
-	if (v->collected_files)
-		printf("kayn file");
 	dup2(s_out, 1);
 }

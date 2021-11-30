@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mainhelper2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ashite <ashite@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aali-mou <aali-mou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/27 09:27:29 by aali-mou          #+#    #+#             */
-/*   Updated: 2021/11/28 06:02:24 by ashite           ###   ########.fr       */
+/*   Updated: 2021/11/28 21:39:22 by aali-mou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	check_errors1(t_file *file, int j, char *checks)
 	return (1);
 }
 
-int	check_errors_pipe(t_file *file, t_linked_list *ptr)
+int	check_errors_pipe(t_file *file, t_linked_list *ptr, char *checks)
 {
 	t_file	*file2;
 
@@ -45,6 +45,7 @@ int	check_errors_pipe(t_file *file, t_linked_list *ptr)
 		if (file->file[0] == '|' && file2->file[0] == '|')
 		{
 			printf("bash: syntax error near unexpected token `|'\n");
+			free(checks);
 			return (0);
 		}
 	}
@@ -103,7 +104,7 @@ int	check_errors(t_linked_list *ptr)
 	while (ptr != NULL)
 	{
 		file = (t_file *)ptr->data;
-		if (check_errors_pipe(file, ptr) == 0)
+		if (check_errors_pipe(file, ptr, checks) == 0)
 			return (0);
 		if (check_errors1(file, j, checks) == 0)
 		{
